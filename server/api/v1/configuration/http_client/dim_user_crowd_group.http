@@ -1,0 +1,45 @@
+### GET /configuratioin/dimusercrowdgroup/info/{id}
+GET http://localhost:8888/configuration/dimusercrowdgroup/info/6
+Accept: application/json
+
+### GET /configuratioin/dimusercrowdgroup/list
+GET http://localhost:8888/configuration/dimusercrowdgroup/list?page=1&limit=2&key=
+Accept: application/json
+
+### POST /configuratioin/dimusercrowdgroup/save
+POST http://localhost:8888/configuration/dimusercrowdgroup/save
+Content-Type: application/json
+
+{
+  "groupName": "555",
+  "remark": "5555",
+  "crowdIds": [
+    1,
+    5
+  ]
+}
+
+### POST /configuratioin/dimusercrowdgroup/update
+POST http://localhost:8888/configuration/dimusercrowdgroup/update
+Content-Type: application/json
+
+{
+  "id": 3,
+  "groupName": "group2222",
+  "remark": "update 22222222222222",
+  "crowdIds": [
+    1
+  ]
+}
+
+### POST /configuratioin/dimusercrowdgroup/delete
+POST http://localhost:8888/configuration/dimusercrowdgroup/delete
+Content-Type: application/json
+
+[
+  2,4
+]
+
+### GET /configuratioin/dimusercrowdgroup/getGroupTree/{level}
+GET http://localhost:8888/configuration/dimusercrowdgroup/getGroupTree/1
+Accept: application/json

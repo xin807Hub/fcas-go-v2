@@ -1,0 +1,36 @@
+#### 运营商数据 1级
+POST http://localhost:8888/traffic/isp/rankData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level1",
+  "startTime": "2024-11-12 00:00:00",
+  "endTime": "2024-11-13 23:00:00"
+}
+
+#### 运营商表格数据 1级+2级
+POST http://localhost:8888/traffic/isp/rankTableData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level2",
+  "startTime": "2024-11-05 00:00:00",
+  "endTime": "2024-11-09 23:00:00",
+  "isp": "未知"
+}
+
+#### 运营商 - 导出
+POST http://localhost:8888/traffic/isp/export
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "rankLevel": "level1",
+  "page": 1,
+  "startTime": "2024-11-08 00:00:00",
+  "endTime": "2024-11-09 23:00:00"
+}

@@ -1,0 +1,4 @@
+/*! 
+ Build based on BoycentAdmin 
+ Time : 1742993886000 */
+System.register(["./087AC4D233B64EB0index-legacy.26e8c65e.js","./087AC4D233B64EB0index-legacy.bd8574ed.js"],(function(t,e){"use strict";var n,u,i,o,r,a,c,f,s,l,h;return{setters:[function(t){n=t.u,u=t.H},function(t){i=t.a,o=t.O,r=t.o,a=t.h,c=t.F,f=t.D,s=t.f,l=t.U,h=t.C}],execute:function(){t("u",(function(t){var e=l(),n=h((function(){return"dark"===e.theme}));return{chartOption:h((function(){return t(n.value)}))}})),t("_",{__name:"index",props:{options:{type:Object,default:function(){return{}}},autoResize:{type:Boolean,default:!0},width:{type:String,default:"100%"},height:{type:String,default:"100%"}},setup:function(t){var e=i(!1);return o((function(){e.value=!0})),n((function(){e.value=!1,o((function(){e.value=!0}))})),function(n,i){return e.value?(r(),a(f(u),{key:0,option:t.options,autoresize:t.autoResize,style:c({width:t.width,height:t.height})},null,8,["option","autoresize","style"])):s("",!0)}}})}}}));

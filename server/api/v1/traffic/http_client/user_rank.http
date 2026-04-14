@@ -1,0 +1,58 @@
+### POST /traffic/userRank/level1Pie
+POST http://localhost:8888/traffic/userRank/level1Pie
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-20 01:00:00"
+}
+
+### POST /traffic/userRank/level1Table
+POST http://localhost:8888/traffic/userRank/level1Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-20 01:00:00"
+}
+
+### POST /traffic/userRank/level2Trend
+POST http://localhost:8888/traffic/userRank/level2Trend
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-20 01:00:00",
+    "userIdList": [0]
+}
+
+### POST /traffic/userRank/level2Table
+POST http://localhost:8888/traffic/userRank/level2Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-11-27 00:00:00",
+  "endTime": "2024-11-29 00:00:00",
+  "userIdList": [17],
+  "topN": 15,
+  "srcIp": "194.41.59.218"
+}
+
+### POST /traffic/userRank/level3Table
+POST http://localhost:8888/traffic/userRank/level3Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00",
+  "srcIp": "218.242.129.138"
+}
+
+### POST /traffic/userRank/export
+POST http://localhost:8888/traffic/userRank/export
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00"
+}

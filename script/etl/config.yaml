@@ -1,0 +1,75 @@
+system: # 业务相关配置不支持动态加载
+  # path：绝对路径
+  prom-port: 9663
+  transforms: 10 # transform个数
+  readers-num: 10 # file_reader个数
+  decompressors: 10 # 解压线程数
+  max-open-conn: 10 # clickhouse最大连接数
+  err-dir: './log/err-dir' # 处理过程中报错的文件/记录存放处
+  dict-dir: './dict'
+  reader-mode: 'file' # file/zmq/udp
+  zmq-conf:
+  file-conf:
+    tmp-file-path: '/home/shm/udpi_log/dfyx_fa_stat_1/tmp-file' # 该目录与scan目录要在一个磁盘下，否则移动文件会很耗时
+    file-ok-flag: false # 是否根据.ok文件确认可读
+
+
+influx-db:
+  org: "etl"
+  bucket: "etl_counter"
+  token: "lAIlbek50o7frRCi1blBDHAkz4YQYpb8s0ZJRhpjsBBKV0BtXpN8DvkMiBGLtWbtg1dqWsYoUMGfLYx5qLfe7Q=="
+  url: "http://127.0.0.1:8086"
+
+
+conn-check-timer:
+  start: true
+  spec: "@every 5s" # 定时任务，每5s执行1次
+
+zap:
+  level: info
+  format: console
+  prefix: "[etl]"
+  director: log
+  showLine: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+
+etl-nodes:
+  - etl-node-id: 1 # 最大64
+    path: "/home/shm/udpi_log/dfyx_fa_stat_1"
+    suffix: ".txt"
+    compress: ".gz"
+    remote-ip: "127.0.0.1"
+    remote-port: 9000
+    remote-db: "bigdata_fcas_v2"
+    remote-table: "ods_gen_traffic"
+    username: "default"
+    password: "123456"
+    cache-max: 200000
+    cache-timer: 1 # 单位s
+    trans-conf:
+      delim: "|"
+      trans-nodes:
+        - log-index: 0 # o_start_time
+        - value: ""
+        - log-index: 1 # src_ip
+        - log-index: 2 # dst_ip
+        - log-index: 3 # app_type
+        - log-index: 4 # app_id
+        - log-index: 5 # link_id
+        - log-index: 6 # host
+        - log-index: 7 # src_city_id
+        - log-index: 8 # dst_city_id
+        - log-index: 1 # src_ip => src_user_id
+          trans-dict: 2
+        - log-index: 2 # dst_ip => dst_user_id
+          trans-dict: 2
+        - log-index: 8 # dst_city_id => dst_province
+          trans-dict: 5
+        - log-index: 7 # src_city_id => isp 运营商库转换成文字
+          trans-dict: 3
+        - log-index: 8 # dst_city_id => d_isp 运营商库转换成文字
+          trans-dict: 3
+        - log-index: 9 # bytes_up 5min上报一次 合并了端口之后的累计值
+        - log-index: 10 # bytes_dn 5min上报一次 合并了端口之后的累计值

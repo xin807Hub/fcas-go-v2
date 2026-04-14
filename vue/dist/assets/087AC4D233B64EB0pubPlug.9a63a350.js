@@ -1,0 +1,4 @@
+/*! 
+ Build based on BoycentAdmin 
+ Time : 1742993886000 */
+import{a,o as s,c as e,b as t,e as o,w as l,g as r,i as m,k as u,E as i}from"./087AC4D233B64EB0index.ec102100.js";/* empty css                               *//* empty css                              */import{_ as n}from"./087AC4D233B64EB0warningBar.1a26dd5b.js";import{m as p}from"./087AC4D233B64EB0autoCode.b7dbc8ba.js";const c={class:"gva-form-box"},d={class:"p-4 bg-white dark:bg-slate-900"},B={class:"flex items-center gap-3"},g={__name:"pubPlug",setup(g){const b=a(""),f=async()=>{const a=await p({plugName:b.value});0===a.code&&m.success(a.msg)};return(a,m)=>{const p=u,g=i;return s(),e("div",c,[t("div",d,[o(n,{title:"目前只支持标准插件（通过插件模板生成的标准目录插件），非标准插件请自行打包"}),t("div",B,[o(p,{modelValue:b.value,"onUpdate:modelValue":m[0]||(m[0]=a=>b.value=a),placeholder:"插件模板处填写的【插件名】"},null,8,["modelValue"]),o(g,{type:"primary",onClick:f},{default:l((()=>m[1]||(m[1]=[r("打包插件")]))),_:1})])])])}}};export{g as default};

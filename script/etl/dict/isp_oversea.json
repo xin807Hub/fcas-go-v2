@@ -1,0 +1,14 @@
+{
+  "id": 4,
+  "type": "hash",
+  "source": "sql",
+  "sql_server_ip": "127.0.0.1",
+  "sql_server_port": 3306,
+  "sql_username": "root",
+  "sql_password": "123456",
+  "sql_database": "fcas_service",
+  "sql_table": "is_oversea_view",
+  "sql_watch_table": "biz_isp",
+  "check_period": 17,
+  "default_value": "3"
+}

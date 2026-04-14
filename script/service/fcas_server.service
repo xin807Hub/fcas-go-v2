@@ -1,0 +1,13 @@
+[Unit]
+Description=fcas_server service
+After=network.service
+
+[Service]
+WorkingDirectory=/home/fcas/server
+Type=simple
+LimitNOFILE=819200
+ExecStart=/home/fcas/server/fcas_server  -c /home/fcas/server/config.yaml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

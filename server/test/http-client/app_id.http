@@ -1,0 +1,57 @@
+#### 小类数据 1级(包含饼图和趋势图） 2级包含趋势图和横向柱状图  3级包含趋势图
+POST http://localhost:8888/traffic/appId/rankData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level1",
+  "startTime": "2024-11-12 00:00:00",
+  "endTime": "2024-11-12 23:00:00",
+  "provinceList": [
+    "上海"
+  ],
+  "dstIpParam": "D6E4:58D1:0000:0000:0000:0000:0000:0000"
+}
+
+#### 小类表格数据 1级+2级+3级
+POST http://localhost:8888/traffic/appId/trendTableData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level3",
+  "startTime": "2024-11-12 00:00:00",
+  "endTime": "2024-11-13 23:00:00",
+  "appIdList": [
+    220142
+  ],
+  "dstIpParam": "153.225.19.14"
+}
+
+#### 小类【排名】的表格数据 【只有2级】(根据appIdList得出域名和ip)
+POST http://localhost:8888/traffic/appId/rankTableData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "startTime": "2024-11-11 16:00:00",
+  "endTime": "2024-11-13 23:00:00",
+  "rankLevel": "level2",
+  "appIdList": [
+    229999
+  ],
+  "rankType": "dstIp"
+}
+
+#### 小类数据导出
+POST http://localhost:8888/traffic/appId/export
+Content-Type: application/json
+
+{
+  "rankLevel": "level1",
+  "startTime": "2024-11-05 00:00:00",
+  "endTime": "2024-11-09 23:00:00"
+}

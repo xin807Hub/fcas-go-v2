@@ -1,0 +1,39 @@
+### GET /configuratioin/dimdeviceinfo/info/{id}
+GET http://localhost:8888/configuration/dimlineinfo/info/26
+Accept: application/json
+
+### GET /configuratioin/dimlineinfo/list
+GET http://localhost:8888/configuration/dimlineinfo/list?page=2&limit=-1&key=
+Accept: application/json
+
+### POST /configuratioin/dimlineinfo/save
+POST http://localhost:8888/configuration/dimlineinfo/save
+Content-Type: application/json
+
+{
+  "lineName": "wjl-test",
+  "lineNum": "2222",
+  "lineRemark": "aadfadfdasf",
+  "lineVlan": 3333
+}
+
+### POST /configuratioin/dimlineinfo/update
+POST http://localhost:8888/configuration/dimlineinfo/update
+Content-Type: application/json
+
+{
+  "id": 40,
+  "lineName": "123dddd",
+  "lineNum": "",
+  "lineRemark": "markkkkkk",
+  "lineVlan": 22222222
+}
+
+### POST /configuratioin/dimlineinfo/delete
+POST http://localhost:8888/configuration/dimlineinfo/delete
+Content-Type: application/json
+
+[
+  41,
+  42
+]

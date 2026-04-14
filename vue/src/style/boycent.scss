@@ -1,0 +1,73 @@
+.el-card {
+  --el-card-padding: 10px;
+}
+
+.el-table .el-table__cell {
+  padding: 0 0;
+}
+
+.el-tabs--top .el-tabs__item.is-top:nth-child(2), .el-tabs--top .el-tabs__item.is-bottom:nth-child(2), .el-tabs--bottom .el-tabs__item.is-top:nth-child(2), .el-tabs--bottom .el-tabs__item.is-bottom:nth-child(2) {
+  padding-left: 20px;
+}
+
+.el-tabs--top .el-tabs__item.is-top:last-child, .el-tabs--top .el-tabs__item.is-bottom:last-child, .el-tabs--bottom .el-tabs__item.is-top:last-child, .el-tabs--bottom .el-tabs__item.is-bottom:last-child {
+  padding-right: 20px;
+}
+
+/*.el-tabs__item, .el-tabs--card > .el-tabs__header {*/
+/*  --el-tabs-header-height: 30px;*/
+/*  height: var(--el-tabs-header-height);*/
+/*}*/
+
+.el-picker-panel__icon-btn {
+  height: 15px;
+}
+
+.el-dialog__title {
+  font-size: 15px;
+}
+
+.el-dialog__header {
+  padding: 0 0 10px 0 !important;
+  border-bottom: 1px solid #ccc;
+}
+
+.el-dialog__footer {
+  border-top: 1px solid #ccc;
+}
+
+.el-range-editor--small.el-input__wrapper {
+  --el-component-size-small: 28px;
+  height: var(--el-component-size-small);
+}
+
+.el-select--small .el-select__wrapper{
+  min-height: 28px;
+  line-height: 28px;
+}
+
+.el-input--small .el-input__wrapper {
+  min-height: 28px;
+  line-height: 28px;
+  padding: 0 8px;
+}
+
+.el-dialog__body {
+  margin-top: 20px;
+}
+
+.el-transfer__buttons {
+  padding: 0 5px;
+}
+
+.el-transfer-panel__filter {
+  padding: 8px;
+}
+
+.el-transfer-panel .el-transfer-panel__header .el-checkbox .el-checkbox__label {
+  font-size: 13px;
+}
+
+.el-table__expand-icon {
+  height: 26px;
+}

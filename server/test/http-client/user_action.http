@@ -1,0 +1,35 @@
+#### 用户行为分析
+POST http://localhost:8888/traffic/userAction/pageData
+Content-Type: application/json
+
+{
+  "page": 1,
+  "startTime": "2024-11-12 00:00:00",
+  "endTime": "2024-11-13 23:00:00",
+  "dataType": "app_id",
+  "srcIp": "111."
+}
+
+#### 用户行为分析-详情
+POST http://localhost:8888/traffic/userAction/detail
+Content-Type: application/json
+
+{
+  "page": 1,
+  "startTime": "2024-11-12 00:00:00",
+  "endTime": "2024-11-13 23:00:00",
+  "dataType": "app_id",
+  "srcIp": "111."
+}
+
+#### 用户行为分析-导出
+POST http://localhost:8888/traffic/userAction/export
+Content-Type: application/json
+
+{
+  "page": 1,
+  "startTime": "2024-10-01 00:00:00",
+  "endTime": "2024-11-05 23:00:00",
+  "dataType": "dst_ip",
+  "srcIp": "0504:A8C0:0000:0000:0000:0000:0000:0000"
+}

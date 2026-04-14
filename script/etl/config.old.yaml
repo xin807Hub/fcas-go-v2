@@ -1,0 +1,82 @@
+system: # 业务相关配置不支持动态加载
+  # path：绝对路径
+  prom-port: 9663
+  transforms: 10 # transform个数
+  readers-num: 10 # file_reader个数
+  decompressors: 10 # 解压线程数
+  max-open-conn: 10 # clickhouse最大连接数
+  err-dir: './log/err-dir' # 处理过程中报错的文件/记录存放处
+  dict-dir: './dict'
+  reader-mode: 'file' # file/zmq/udp
+  zmq-conf:
+  file-conf:
+    tmp-file-path: '/home/tmp-file' # 该目录与scan目录要在一个磁盘下，否则移动文件会很耗时
+    file-ok-flag: false # 是否根据.ok文件确认可读
+
+
+influx-db:
+  org: "etl"
+  bucket: "etl_counter"
+  token: "lAIlbek50o7frRCi1blBDHAkz4YQYpb8s0ZJRhpjsBBKV0BtXpN8DvkMiBGLtWbtg1dqWsYoUMGfLYx5qLfe7Q=="
+  url: "http://127.0.0.1:8086"
+
+
+conn-check-timer:
+  start: true
+  spec: "@every 5s" # 定时任务，每5s执行1次
+
+zap:
+  level: info
+  format: console
+  prefix: "[etl]"
+  director: log
+  showLine: true
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  log-in-console: true
+
+etl-nodes:
+  - etl-node-id: 1 # 最大64
+    path: "/home/ftpuser"
+    suffix: ".txt"
+    compress: ".gz"
+    remote-ip: "127.0.0.1"
+    remote-port: 9000
+    remote-db: "bigdata_fcas_v2"
+    remote-table: "ods_gen_traffic"
+    username: "default"
+    password: "BoyDB2022"
+    cache-max: 200000
+    cache-timer: 1 # 单位s
+    trans-conf:
+      delim: "|"
+      trans-nodes:
+        - log-index: 0 # o_start_time
+        - log-index: 1 # user_id 根据IP转换
+          trans-dict: 2
+        - log-index: 2 # d_user_id 根据IP转换
+          trans-dict: 2
+        - log-index: 10 # isp 根据地区码转换
+          trans-dict: 3
+        - log-index: 11 # d_isp 根据地区码转换
+          trans-dict: 3
+        - log-index: 1 # src_ip
+        - log-index: 2 # dst_ip
+        - log-index: 3 # src_port
+        - log-index: 4 # dst_port
+        - log-index: 5 # protocol
+        - log-index: 6 # app_type
+        - log-index: 7 # app_id
+        - log-index: 8 # bytes_up
+        - log-index: 9 # bytes_dn
+        - log-index: 10 # src_area_id
+        - log-index: 11 # dst_area_id
+        - log-index: 12 # link_id
+        - log-index: 11 # is_oversea 根据目的地区码转换
+          trans-dict: 4
+          trans-value: 1
+        - log-index: 11 # dst_province 根据目的地区码转换
+          trans-dict: 5
+          trans-value: 2
+        - log-index: 13 # host
+

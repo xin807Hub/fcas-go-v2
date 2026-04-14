@@ -1,0 +1,46 @@
+### GET /configuratioin/dimuserinfo/info/{id}
+GET http://localhost:8888/configuration/dimuserinfo/info/8
+Accept: application/json
+
+### GET /configuratioin/dimuserinfo/list
+GET http://localhost:8888/configuration/dimuserinfo/list?page=2&limit=2&key=
+Accept: application/json
+
+### POST /configuratioin/dimuserinfo/save
+POST http://localhost:8888/configuration/dimuserinfo/save
+Content-Type: application/json
+
+{
+  "userName": "wjl-8",
+  "userType": 0,
+  "userRemark": "",
+  "ipAddress": [
+    "2001:db8:1::100"
+  ]
+}
+
+### POST /configuratioin/dimuserinfo/update
+POST http://localhost:8888/configuration/dimuserinfo/update
+Content-Type: application/json
+
+{
+  "id": 19,
+  "userName": "wjl-6",
+  "ipAddress": [
+    "2001:db8:1::1,2001:db8:1::ffff"
+  ],
+  "userType": 0,
+  "userRemark": ""
+}
+
+### POST /configuratioin/dimuserinfo/delete
+POST http://localhost:8888/configuration/dimuserinfo/delete
+Content-Type: application/json
+
+[
+  18
+]
+
+### GET /configuratioin/dimuserinfo/list
+GET http://localhost:8888/configuration/dimuserinfo/export
+Accept: application/json

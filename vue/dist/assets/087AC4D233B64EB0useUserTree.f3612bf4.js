@@ -1,0 +1,4 @@
+/*! 
+ Build based on BoycentAdmin 
+ Time : 1742993886000 */
+import{cP as a,a as e}from"./087AC4D233B64EB0index.ec102100.js";import{userCrowdGroupTreeApi as n}from"./087AC4D233B64EB0traffic.5e3a2cb8.js";const t=a("useUserTreeStore",(()=>{const a=e({}),t=e({}),i=e({}),l=e(!1);async function u(){l.value||await async function(){const e=await n(3);0===e.code&&(a.value=r(e.data,1),t.value=r(e.data,2),i.value=r(e.data,3),l.value=!0)}()}return{init:u,getUserTree:async function(){return await u(),i.value},getCrowdTree:async function(){return await u(),t.value},getGroupTree:async function(){return await u(),a.value}}}));function r(a,e){const n=(a,t)=>{var r;return a?t===e?{id:a.id,label:a.label,children:[]}:{id:a.id,label:a.label,children:null==(r=a.children)?void 0:r.map((a=>n(a,t+1))).filter(Boolean)}:null};return n(a,0)}export{t as u};

@@ -1,0 +1,36 @@
+#### 大类数据 1级
+POST http://localhost:8888/traffic/appType/rankData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level1",
+  "startTime": "2024-11-05 00:00:00",
+  "endTime": "2024-11-09 23:00:00"
+}
+
+#### 大类数据表格 1级+2级
+POST http://localhost:8888/traffic/appType/rankTableData
+Content-Type: application/json
+
+{
+  "limit": 10,
+  "page": 1,
+  "rankLevel": "level2",
+  "startTime": "2024-11-05 00:00:00",
+  "endTime": "2024-11-09 23:00:00",
+  "appTypeIdList": [
+    14
+  ]
+}
+
+#### 大类数据导出
+POST http://localhost:8888/traffic/appType/export
+Content-Type: application/json
+
+{
+  "rankLevel": "level1",
+  "startTime": "2024-11-05 00:00:00",
+  "endTime": "2024-11-09 23:00:00"
+}

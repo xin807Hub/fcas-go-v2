@@ -1,0 +1,112 @@
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 0
+  open-captcha-timeout: 3600
+cors:
+  mode: strict-whitelist
+  whitelist:
+    - allow-origin: example1.com
+      allow-methods: POST, GET
+      allow-headers: Content-Type,AccessToken,X-CSRF-Token, Authorization, Token,X-Token,X-User-Id
+      expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+      allow-credentials: true
+    - allow-origin: example2.com
+      allow-methods: GET, POST
+      allow-headers: content-type
+      expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
+      allow-credentials: true
+
+disk-list:
+  - mount-point: /
+
+jwt:
+  signing-key: 3845bb37-197d-43c2-90d6-1f2152476105
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: qmPlus
+local:
+  path: uploads/file
+  store-path: uploads/file
+
+mysql:
+  prefix: ""
+  path: 10.104.6.66
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  username: root
+  password: "123456"
+  engine: ""
+  dbname:
+    system: fcas_system
+    service: fcas_service
+  log-mode: error
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: true
+
+clickhouse:
+  prefix: ""
+  path: 10.104.6.66
+  port: "9000"
+  config: dial_timeout=10s&read_timeout=10s
+  username: default
+  password: BoyDB2022
+  dbname:
+    v1: bigdata_fcas
+    v2: bigdata_fcas_v2
+  log-mode: debug
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: true
+
+redis:
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0
+
+system:
+  db-type: mysql
+  router-prefix: ""
+  addr: 8888
+  iplimit-count: 15000
+  iplimit-time: 3600
+
+zap:
+  level: debug
+  prefix: '[fcas_v2_server]'
+  format: console
+  director: log
+  encode-level: LowercaseColorLevelEncoder
+  stacktrace-key: stacktrace
+  show-line: true
+  log-in-console: true
+  retention-day: -1
+
+deployment-date: 2024-10-24 # 查询数据库切换临界时间点
+select-isp: "东方有线,移动,电信,腾讯,联通,阿里巴巴,其他,国外,百度,华为,教育网,铁通,金山云,斐讯,广电,中华电信,美团,字节跳动,世纪互联,鹏博士" #大类,小类选出来需要分析的运营商
+
+policy:
+  sendUrl: tcp://*:6901
+  dir: conf
+  ftp:
+    ip: 127.0.0.1
+    userName: sinoup
+    userPwd: DFyx@2023
+    port: 21
+    path: ./policy_action
+  shunt:
+    port: 8080
+email:
+  to: xxx@qq.com
+  port: 465
+  from: xxx@163.com
+  host: smtp.163.com
+  is-ssl: true
+  secret: xxx
+  nickname: test
+
+export-limit: 100000 # 导出数量限制

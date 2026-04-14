@@ -1,0 +1,3 @@
+### GET /configuratioin/dimuserinfo/list
+GET http://localhost:8888/traffic/alarmLog/list?page=1&limit=10
+Accept: application/json

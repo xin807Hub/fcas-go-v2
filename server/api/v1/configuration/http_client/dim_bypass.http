@@ -1,0 +1,55 @@
+### GET /configuratioin/dimdeviceinfo/info/{id}
+GET http://localhost:8888/configuration/dimbypass/info/13
+Accept: application/json
+
+### GET /configuratioin/dimbypass/list
+GET http://localhost:8888/configuration/dimbypass/list?page=2&limit=2&key=
+Accept: application/json
+
+### POST /configuratioin/dimbypass/save
+POST http://localhost:8888/configuration/dimbypass/save
+Content-Type: application/json
+
+{
+  "olpId": 444,
+  "bypassName": "wjlxxx",
+  "bypassIp": "1.2.1.2",
+  "bypassPort": 9999,
+  "remark": "adfasdf"
+}
+
+### POST /configuratioin/dimbypass/update
+POST http://localhost:8888/configuration/dimbypass/update
+Content-Type: application/json
+
+{
+  "id": 41,
+  "olpId": 2,
+  "bypassName": "wjlxxxssssssssssssssssss",
+  "bypassIp": "1.2.1.2",
+  "bypassPort": 9999,
+  "remark": "adfasdf"
+}
+
+### POST /configuratioin/dimbypass/delete
+POST http://localhost:8888/configuration/dimbypass/delete
+Content-Type: application/json
+
+[
+  40,
+  41
+]
+
+### POST /configuratioin/dimbypass/setStatus
+POST http://localhost:8888/configuration/dimbypass/setStatus
+Content-Type: application/json
+
+{
+  "id": 14,
+  "olpId": 1,
+  "bypassName": "张江出口CR16K HGE3/0/3-临空NE40 50|100GE4/1/0",
+  "bypassIp": "10.104.1.219",
+  "bypassPort": 8080,
+  "remark": "临空",
+  "status": 1
+}

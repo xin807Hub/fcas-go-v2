@@ -1,0 +1,48 @@
+### POST /traffic/userCrowdGroupRank/level1Pie
+POST http://localhost:8888/traffic/userCrowdGroupRank/level1Pie
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00"
+}
+
+### POST /traffic/userCrowdGroupRank/level1Table
+POST http://localhost:8888/traffic/userCrowdGroupRank/level1Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00"
+}
+
+### POST /traffic/userCrowdGroupRank/level2Trend
+POST http://localhost:8888/traffic/userCrowdGroupRank/level2Trend
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00",
+  "groupIdList": [1]
+}
+
+### POST /traffic/userCrowdGroupRank/level2Table
+POST http://localhost:8888/traffic/userCrowdGroupRank/level2Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00",
+  "groupIdList": [1],
+  "topN": 3
+}
+
+### POST /traffic/userCrowdGroupRank/level3Table
+POST http://localhost:8888/traffic/userCrowdGroupRank/level3Table
+Content-Type: application/json
+
+{
+  "startTime": "2024-10-31 00:00:00",
+  "endTime": "2024-11-01 01:00:00",
+  "srcIp": "211.144.71.1"
+}

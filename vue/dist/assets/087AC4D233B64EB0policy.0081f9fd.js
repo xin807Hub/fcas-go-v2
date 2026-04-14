@@ -1,0 +1,4 @@
+/*! 
+ Build based on BoycentAdmin 
+ Time : 1742993886000 */
+import{s as o}from"./087AC4D233B64EB0index.ec102100.js";const t=t=>o({url:"/policy/alarmConfig/page",method:"post",data:t}),a=t=>o({url:"/policy/alarmConfig/delete",method:"post",data:t}),l=t=>o({url:"/policy/alarmConfig/saveOrUpdate",method:"post",data:t}),e=t=>o({url:"/policy/whitePolicy/page",method:"post",data:t}),p=t=>o({url:"/policy/whitePolicy/saveOrUpdate",method:"post",data:t}),d=t=>o({url:"/policy/whitePolicy/delete",method:"post",data:t}),i=t=>o({url:"/policy/controlPolicy/page",method:"post",data:t}),r=t=>o({url:"/policy/controlPolicy/saveOrUpdate",method:"post",data:t}),c=t=>o({url:"/policy/controlPolicy/delete",method:"post",data:t});export{p as White_createPolicyApi,d as White_deletePolicyApi,e as White_policyListApi,t as alarmConfigPageApi,r as control_createPolicyApi,c as control_deletePolicyApi,i as control_policyListApi,a as deleteAlarmConfigApi,l as saveOrUpdateAlarmConfigApi};

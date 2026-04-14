@@ -1,0 +1,42 @@
+### GET /configuratioin/dimusercrowd/info/{id}
+GET http://localhost:8888/configuration/dimusercrowd/info/1
+Accept: application/json
+
+### GET /configuratioin/dimusercrowd/list
+GET http://localhost:8888/configuration/dimusercrowd/list?page=1&limit=2&key=
+Accept: application/json
+
+### POST /configuratioin/dimusercrowd/save
+POST http://localhost:8888/configuration/dimusercrowd/save
+Content-Type: application/json
+
+{
+  "crowdName": "wjl4",
+  "remark": "4444",
+  "userIds": [
+    7,
+    8,
+    9
+  ]
+}
+
+### POST /configuratioin/dimusercrowd/update
+POST http://localhost:8888/configuration/dimusercrowd/update
+Content-Type: application/json
+
+{
+  "id": 2,
+  "crowdName": "wjl2",
+  "remark": "",
+  "userIds": [
+    19
+  ]
+}
+
+### POST /configuratioin/dimusercrowd/delete
+POST http://localhost:8888/configuration/dimusercrowd/delete
+Content-Type: application/json
+
+[
+  2
+]

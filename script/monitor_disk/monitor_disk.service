@@ -1,0 +1,14 @@
+[Unit]
+Description=monitor-disk service
+Wants=sysinit.service
+After=network.service
+
+[Service]
+Type=simple
+LimitNOFILE=500000
+ExecStart=/home/monitor_disk/monitor_disk.sh
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
