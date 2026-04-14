@@ -1,4 +1,0 @@
-/*! 
- Build based on BoycentAdmin 
- Time : 1742993886000 */
-import{l as e,u as s,o as t,c as n,b as a,e as l,w as r,E as o,g as i}from"./087AC4D233B64EB0index.ec102100.js";/* empty css                               */const u={class:"w-full h-screen bg-gray-50 flex items-center justify-center"},c={class:"flex flex-col items-center text-2xl gap-4"},f=Object.assign({name:"Error"},{__name:"index",setup(f){const m=e(),p=s(),x=()=>{p.push({name:m.userInfo.authority.defaultRouter})};return(e,s)=>{const f=o;return t(),n("div",null,[a("div",u,[a("div",c,[s[1]||(s[1]=a("img",{src:"/assets/087AC4D233B64EB0notFound.4e921f05.png"},null,-1)),s[2]||(s[2]=a("p",{style:{"font-size":"18px","line-height":"40px"}},"常见问题为当前此角色无当前路由，如果确定要使用本路由，请到角色管理进行分配",-1)),l(f,{onClick:x},{default:r((()=>s[0]||(s[0]=[i("返回首页")]))),_:1})])])])}}});export{f as default};

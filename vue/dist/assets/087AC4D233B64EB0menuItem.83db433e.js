@@ -1,4 +1,0 @@
-/*! 
- Build based on BoycentAdmin 
- Time : 1742993886000 */
-import{U as e,V as t,C as a,o as s,h as n,w as o,g as r,t as i,G as u,f as l,F as m,H as d}from"./087AC4D233B64EB0index.ec102100.js";import{a as f}from"./087AC4D233B64EB0index.8cc4dcc3.js";import"./087AC4D233B64EB0index.08b96cd9.js";import"./087AC4D233B64EB0index.a44cd7cc.js";import"./087AC4D233B64EB0index.c055e6de.js";const x=Object.assign({name:"MenuItem"},{__name:"menuItem",props:{routerInfo:{default:function(){return null},type:Object}},setup(x){const p=e(),{config:c}=t(p),B=a((()=>c.value.layout_side_item_height+"px"));return(e,t)=>{const a=d,p=f;return s(),n(p,{index:x.routerInfo.name,class:"dark:text-slate-300 overflow-x-hidden",style:m({height:B.value})},{title:o((()=>[r(i(x.routerInfo.meta.title),1)])),default:o((()=>[x.routerInfo.meta.icon?(s(),n(a,{key:0},{default:o((()=>[(s(),n(u(x.routerInfo.meta.icon)))])),_:1})):l("",!0)])),_:1},8,["index","style"])}}});export{x as default};
