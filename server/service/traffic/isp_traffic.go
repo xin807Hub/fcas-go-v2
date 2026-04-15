@@ -50,75 +50,47 @@ func getIspDb(param traffic.IspReqParam) (ckDb *gorm.DB, err error) {
 	tableNameNew := IspTrafficNewTableNameMap[particle]
 	tableNameOld := IspTrafficOldTableNameMap[particle]
 
-	subSrcDbV2 := global.V2ClickhouseDB.Table(tableNameNew)
-	subDstDbV2 := global.V2ClickhouseDB.Table(tableNameNew)
-	subSrcDbV1 := global.V1ClickhouseDB.Table(tableNameOld)
-	subDstDbV1 := global.V1ClickhouseDB.Table(tableNameOld)
+	// v2 新库在无 user 视角时，同一条流量两侧 ISP 都已落到同一行。
+	// 这里必须按行选出唯一“对端 ISP”，否则双分支 union 会把同一批流量算两次。
+	if len(param.UserIdList) == 0 {
+		ckDbV2, buildErr := buildV2IspDbWithoutUserScope(tableNameNew, particle, param)
+		if buildErr != nil {
+			return nil, buildErr
+		}
 
-	if param.IsOversea != nil {
-		if *param.IsOversea == OverSea { // 查询国外运营商
-			subSrcDbV2 = subSrcDbV2.Where("isp = '国外'")
-			subDstDbV2 = subDstDbV2.Where("d_isp = '国外'")
-			subSrcDbV1 = subSrcDbV1.Where("isp = '国外'")
-			subDstDbV1 = subDstDbV1.Where("d_isp = '国外'")
-		} else { // 国内
-			subSrcDbV2 = subSrcDbV2.Where("isp != '国外'")
-			subDstDbV2 = subDstDbV2.Where("d_isp != '国外'")
-			subSrcDbV1 = subSrcDbV1.Where("isp != '国外'")
-			subDstDbV1 = subDstDbV1.Where("d_isp != '国外'")
+		queryTimeRangeType := utils.GetDbTypeByTimeRange(param.StartTime, param.EndTime)
+		switch queryTimeRangeType {
+		case global.QueryNew:
+			return ckDbV2.Where("start_time >= ? AND start_time < ?", param.StartTime, param.EndTime), nil
+		case global.QueryCrossOld2New:
+			ckDbV2 = ckDbV2.Where("start_time >= ? AND start_time < ?", global.CONFIG.DeploymentDate, param.EndTime)
+			ckDbV1, oldErr := buildLegacyIspDb(tableNameOld, particle, param, global.V1ClickhouseDB)
+			if oldErr != nil {
+				return nil, oldErr
+			}
+			ckDbV1 = ckDbV1.Where("start_time >= ? AND start_time < ?", param.StartTime, global.CONFIG.DeploymentDate)
+			return global.V2ClickhouseDB.Table("(? UNION ALL ?)", ckDbV2, ckDbV1), nil
+		case global.QueryOld:
+			ckDbV1, oldErr := buildLegacyIspDb(tableNameOld, particle, param, global.V1ClickhouseDB)
+			if oldErr != nil {
+				return nil, oldErr
+			}
+			return ckDbV1.Where("start_time >= ? AND start_time < ?", param.StartTime, param.EndTime), nil
+		default:
+			return nil, errors.New("开始、结束时间解析错误")
 		}
 	}
 
-	if len(param.LinkIdList) > 0 {
-		subSrcDbV2 = subSrcDbV2.Where("link_id IN (?)", param.LinkIdList)
-		subDstDbV2 = subDstDbV2.Where("link_id IN (?)", param.LinkIdList)
-		subSrcDbV1 = subSrcDbV1.Where("link_id IN (?)", param.LinkIdList)
-		subDstDbV1 = subDstDbV1.Where("link_id IN (?)", param.LinkIdList)
+	ckDbV2, err := buildLegacyIspDb(tableNameNew, particle, param, global.V2ClickhouseDB)
+	if err != nil {
+		return nil, err
 	}
-
-	if param.DstProvince != "" {
-		subSrcDbV2 = subSrcDbV2.Where("dst_province = ?", param.DstProvince)
-		subDstDbV2 = subDstDbV2.Where("dst_province = ?", param.DstProvince)
-		subSrcDbV1 = subSrcDbV1.Where("dst_province = ?", param.DstProvince)
-		subDstDbV1 = subDstDbV1.Where("dst_province = ?", param.DstProvince)
-	}
-
-	if len(param.UserIdList) > 0 {
-		subSrcDbV2 = subSrcDbV2.Where("user_id IN (?)", param.UserIdList)
-		subDstDbV2 = subDstDbV2.Where("d_user_id IN (?)", param.UserIdList)
-		subSrcDbV1 = subSrcDbV1.Where("user_id IN (?)", param.UserIdList)
-		subDstDbV1 = subDstDbV1.Where("d_user_id IN (?)", param.UserIdList)
-	}
-	if param.Isp != "" { // 2级排名传参
-		subSrcDbV2 = subSrcDbV2.Where("isp = ?", param.Isp)
-		subDstDbV2 = subDstDbV2.Where("d_isp = ?", param.Isp)
-		subSrcDbV1 = subSrcDbV1.Where("isp = ?", param.Isp)
-		subDstDbV1 = subDstDbV1.Where("d_isp = ?", param.Isp)
+	ckDbV1, err := buildLegacyIspDb(tableNameOld, particle, param, global.V1ClickhouseDB)
+	if err != nil {
+		return nil, err
 	}
 
 	queryTimeRangeType := utils.GetDbTypeByTimeRange(param.StartTime, param.EndTime)
-
-	subSrcSelectSql := "isp,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn, Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
-	subSrcSelectSql = strings.ReplaceAll(subSrcSelectSql, "{{.interval}}", strconv.Itoa(particle))
-	subDstSelectSql := "d_isp AS isp,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn, Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
-	subDstSelectSql = strings.ReplaceAll(subDstSelectSql, "{{.interval}}", strconv.Itoa(particle))
-	GroupBySql := "isp,start_time"
-
-	subSrcDbV2 = subSrcDbV2.Select(subSrcSelectSql).Group(GroupBySql)
-	subDstDbV2 = subDstDbV2.Select(subDstSelectSql).Group(GroupBySql)
-	subSrcDbV1 = subSrcDbV1.Select(subSrcSelectSql).Group(GroupBySql)
-	subDstDbV1 = subDstDbV1.Select(subDstSelectSql).Group(GroupBySql)
-
-	selectSql := "isp,start_time,traffic_up,traffic_dn,traffic_up_bps,traffic_dn_bps"
-
-	ckDbV2 := global.V2ClickhouseDB.
-		Table("((?) Union Distinct (?))", subSrcDbV2, subDstDbV2).
-		Select(selectSql)
-
-	ckDbV1 := global.V1ClickhouseDB.
-		Table("((?) Union Distinct (?))", subSrcDbV1, subDstDbV1).
-		Select(selectSql)
-
 	switch queryTimeRangeType {
 	case global.QueryNew:
 		ckDb = ckDbV2.Where("start_time >= ? AND start_time < ?", param.StartTime, param.EndTime)
@@ -132,6 +104,93 @@ func getIspDb(param traffic.IspReqParam) (ckDb *gorm.DB, err error) {
 		return nil, errors.New("开始、结束时间解析错误")
 	}
 	return ckDb, err
+}
+
+func buildLegacyIspDb(tableName string, particle int, param traffic.IspReqParam, baseDB *gorm.DB) (*gorm.DB, error) {
+	// Keep the ISP direction aligned with v1:
+	// - user_id branch uses peer ISP d_isp
+	// - d_user_id branch uses peer ISP isp
+	subUserDb := applyNonEmptyIspFilter(baseDB.Table(tableName), "d_isp")
+	subDUserDb := applyNonEmptyIspFilter(baseDB.Table(tableName), "isp")
+
+	if param.IsOversea != nil {
+		ispNames, lookupErr := getIspNamesByOversea(*param.IsOversea)
+		if lookupErr != nil {
+			return nil, lookupErr
+		}
+		subUserDb = applyIspNamesFilter(subUserDb, "d_isp", ispNames)
+		subDUserDb = applyIspNamesFilter(subDUserDb, "isp", ispNames)
+	}
+
+	if len(param.LinkIdList) > 0 {
+		subUserDb = subUserDb.Where("link_id IN (?)", param.LinkIdList)
+		subDUserDb = subDUserDb.Where("link_id IN (?)", param.LinkIdList)
+	}
+
+	if param.DstProvince != "" {
+		subUserDb = subUserDb.Where("dst_province = ?", param.DstProvince)
+		subDUserDb = subDUserDb.Where("dst_province = ?", param.DstProvince)
+	}
+
+	if len(param.UserIdList) > 0 {
+		subUserDb = subUserDb.Where("user_id IN (?)", param.UserIdList)
+		subDUserDb = subDUserDb.Where("d_user_id IN (?)", param.UserIdList)
+	}
+
+	if len(param.IspNameList) > 0 {
+		subUserDb = subUserDb.Where("d_isp IN (?)", param.IspNameList)
+		subDUserDb = subDUserDb.Where("isp IN (?)", param.IspNameList)
+	}
+
+	if param.Isp != "" {
+		subUserDb = subUserDb.Where("d_isp = ?", param.Isp)
+		subDUserDb = subDUserDb.Where("isp = ?", param.Isp)
+	}
+
+	subUserSelectSQL := "d_isp AS isp,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn"
+	subDUserSelectSQL := "isp,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn"
+
+	subUserDb = subUserDb.Select(subUserSelectSQL).Group("d_isp,start_time")
+	subDUserDb = subDUserDb.Select(subDUserSelectSQL).Group("isp,start_time")
+
+	return buildIspTrafficQuery(baseDB, subUserDb, subDUserDb, particle, true), nil
+}
+
+func buildV2IspDbWithoutUserScope(tableName string, particle int, param traffic.IspReqParam) (*gorm.DB, error) {
+	selectedIspExpr := "if(user_id != 0, d_isp, isp)"
+	baseDb := applyNonEmptyIspExprFilter(global.V2ClickhouseDB.Table(tableName), selectedIspExpr)
+
+	if param.IsOversea != nil {
+		ispNames, err := getIspNamesByOversea(*param.IsOversea)
+		if err != nil {
+			return nil, err
+		}
+		baseDb = applyIspNamesExprFilter(baseDb, selectedIspExpr, ispNames)
+	}
+
+	if len(param.LinkIdList) > 0 {
+		baseDb = baseDb.Where("link_id IN (?)", param.LinkIdList)
+	}
+
+	if param.DstProvince != "" {
+		baseDb = baseDb.Where("dst_province = ?", param.DstProvince)
+	}
+
+	if len(param.IspNameList) > 0 {
+		baseDb = applyIspNamesExprFilter(baseDb, selectedIspExpr, param.IspNameList)
+	}
+
+	if param.Isp != "" {
+		baseDb = baseDb.Where(fmt.Sprintf("%s = ?", selectedIspExpr), param.Isp)
+	}
+
+	materializedQuery := global.V2ClickhouseDB.Table("(?)", baseDb.Select(
+		fmt.Sprintf("%s AS selected_isp,start_time,bytes_up_view,bytes_dn_view", selectedIspExpr),
+	))
+	sourceQuery := materializedQuery.
+		Select("selected_isp AS isp,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn").
+		Group("selected_isp,start_time")
+	return buildIspTrafficQuery(global.V2ClickhouseDB, sourceQuery, nil, particle, false), nil
 }
 
 // GetIspRankLevel1 1级运营商排名入口
@@ -159,34 +218,24 @@ func (service IspService) GetLevel1TableData(param traffic.IspReqParam) (respons
 	if param.Limit == 0 {
 		param.Limit = 10
 	}
+
 	ckDb, _ := getIspDb(param)
-
-	selectSql := "isp," +
-		"max(traffic_up_bps) AS max_up_bps, " +
-		"max(traffic_dn_bps) AS max_dn_bps, " +
-		"avg(traffic_up_bps) AS avg_up_bps, " +
-		"avg(traffic_dn_bps) AS avg_dn_bps, " +
-		"sum(traffic_up) AS up_byte," +
-		"sum(traffic_dn) AS dn_byte, " +
-		"up_byte + dn_byte AS total_byte "
-
-	err := global.V2ClickhouseDB.Table("(?)", ckDb).
-		Select(selectSql).
-		Group("isp").
+	err := buildIspLevel1TableQuery(ckDb).
 		Count(&total).
-		Limit(param.Limit).Offset((param.Page - 1) * param.Limit).Order("total_byte DESC").Find(&ispTables).Error
+		Limit(param.Limit).
+		Offset((param.Page - 1) * param.Limit).
+		Order("total_byte DESC").
+		Find(&ispTables).Error
 	if err != nil {
 		global.Log.Error("获取运营商1级排名表格分页数据失败", zap.Error(err))
 		return result, err
 	}
 
-	ispMap, mapErr := getIspMap() // 获取运营商-国内外类型键值对
-	if mapErr == nil {            // 没有err就赋值
-		if len(ispTables) > 0 {
-			for i := range ispTables {
-				if isOversea, ok := ispMap[ispTables[i].Isp]; ok {
-					ispTables[i].IsOversea = isOversea
-				}
+	ispMap, mapErr := getIspMap()
+	if mapErr == nil && len(ispTables) > 0 {
+		for i := range ispTables {
+			if isOversea, ok := ispMap[ispTables[i].Isp]; ok {
+				ispTables[i].IsOversea = isOversea
 			}
 		}
 	}
@@ -195,18 +244,12 @@ func (service IspService) GetLevel1TableData(param traffic.IspReqParam) (respons
 	result.List = ispTables
 	result.PageSize = param.Limit
 	result.CurrPage = param.Page
-
 	return result, nil
 }
 
 func getIspMap() (map[string]uint8, error) {
-	var ispMap = make(map[string]uint8)
-	type ispOversea struct {
-		Name      string
-		IsOversea uint8
-	}
-	var ispList []ispOversea
-	err := global.ServiceDB.Table("isp_view").Select("name,is_oversea").Group("name,is_oversea").Find(&ispList).Error
+	ispMap := make(map[string]uint8)
+	ispList, err := listIspOversea()
 	if err != nil {
 		return ispMap, err
 	}
@@ -215,6 +258,99 @@ func getIspMap() (map[string]uint8, error) {
 		ispMap[ispList[i].Name] = ispList[i].IsOversea
 	}
 	return ispMap, nil
+}
+
+type ispOversea struct {
+	Name      string
+	IsOversea uint8
+}
+
+func listIspOversea() ([]ispOversea, error) {
+	var ispList []ispOversea
+	err := global.ServiceDB.Table("isp_view").Select("name,is_oversea").Group("name,is_oversea").Find(&ispList).Error
+	if err != nil {
+		return nil, err
+	}
+	return ispList, nil
+}
+
+func getIspNamesByOversea(isOversea uint8) ([]string, error) {
+	ispList, err := listIspOversea()
+	if err != nil {
+		return nil, err
+	}
+
+	ispNames := make([]string, 0, len(ispList))
+	for _, item := range ispList {
+		if item.IsOversea == isOversea {
+			ispNames = append(ispNames, item.Name)
+		}
+	}
+	return ispNames, nil
+}
+
+func applyIspNamesFilter(db *gorm.DB, column string, ispNames []string) *gorm.DB {
+	if len(ispNames) == 0 {
+		return db.Where("1 = 0")
+	}
+	return db.Where(fmt.Sprintf("%s IN (?)", column), ispNames)
+}
+
+func applyIspNamesExprFilter(db *gorm.DB, expr string, ispNames []string) *gorm.DB {
+	if len(ispNames) == 0 {
+		return db.Where("1 = 0")
+	}
+	return db.Where(fmt.Sprintf("%s IN (?)", expr), ispNames)
+}
+
+func applyNonEmptyIspFilter(db *gorm.DB, column string) *gorm.DB {
+	return db.Where(fmt.Sprintf("ifNull(%s, '') != ''", column))
+}
+
+func applyNonEmptyIspExprFilter(db *gorm.DB, expr string) *gorm.DB {
+	return db.Where(fmt.Sprintf("ifNull(%s, '') != ''", expr))
+}
+
+func buildIspTrafficQuery(baseDB *gorm.DB, subUserDb *gorm.DB, subDUserDb *gorm.DB, particle int, useDualBranch bool) *gorm.DB {
+	unionSelectSQL := "isp,start_time,traffic_up,traffic_dn"
+	aggregateSelectSQL := "" +
+		"isp,start_time," +
+		"sum(traffic_up) AS grouped_traffic_up," +
+		"sum(traffic_dn) AS grouped_traffic_dn," +
+		"Round(if(isNaN(sum(traffic_up)), 0, sum(traffic_up)) * 8 / {{.interval}}, 2) AS grouped_traffic_up_bps," +
+		"Round(if(isNaN(sum(traffic_dn)), 0, sum(traffic_dn)) * 8 / {{.interval}}, 2) AS grouped_traffic_dn_bps"
+	aggregateSelectSQL = strings.ReplaceAll(aggregateSelectSQL, "{{.interval}}", strconv.Itoa(particle))
+	finalSelectSQL := "" +
+		"isp,start_time," +
+		"grouped_traffic_up AS traffic_up," +
+		"grouped_traffic_dn AS traffic_dn," +
+		"grouped_traffic_up_bps AS traffic_up_bps," +
+		"grouped_traffic_dn_bps AS traffic_dn_bps"
+
+	sourceQuery := subUserDb
+	if useDualBranch {
+		sourceQuery = baseDB.Table("((?) Union Distinct (?))", subUserDb, subDUserDb).Select(unionSelectSQL)
+	}
+
+	ckDb := baseDB.Table("(?)", sourceQuery).
+		Select(aggregateSelectSQL).
+		Group("isp,start_time")
+	ckDb = baseDB.Table("(?)", ckDb).Select(finalSelectSQL)
+	return applyNonEmptyIspFilter(ckDb, "isp")
+}
+
+func buildIspLevel1TableQuery(ckDb *gorm.DB) *gorm.DB {
+	selectSQL := "isp," +
+		"max(traffic_up_bps) AS max_up_bps, " +
+		"max(traffic_dn_bps) AS max_dn_bps, " +
+		"avg(traffic_up_bps) AS avg_up_bps, " +
+		"avg(traffic_dn_bps) AS avg_dn_bps, " +
+		"sum(traffic_up) AS up_byte," +
+		"sum(traffic_dn) AS dn_byte, " +
+		"up_byte + dn_byte AS total_byte "
+
+	return applyNonEmptyIspFilter(global.V2ClickhouseDB.Table("(?)", ckDb).Select(selectSQL), "isp").
+		Group("isp")
 }
 
 // GetIspRankLevel2 2级运营商排名入口
@@ -231,24 +367,27 @@ func (service IspService) GetLevel2TableData(param traffic.IspReqParam) (respons
 	if param.Limit == 0 {
 		param.Limit = 10
 	}
-	var result = response.PageResult{
+
+	result := response.PageResult{
 		PageSize: param.Limit,
 		CurrPage: param.Page,
 	}
 	ckDb, _ := getIspDb(param)
+
 	var trendTableData []chart.FlowTrendDot
 	var total int64
-	selectSql := "start_time, " +
+	selectSQL := "start_time, " +
 		"sum(traffic_dn_bps) AS dn_bps, " +
 		"sum(traffic_up_bps) AS up_bps, " +
-		"(dn_bps + up_bps)  AS total_bps"
-	selectSql = strings.ReplaceAll(selectSql, "{{.interval}}", strconv.Itoa(600))
+		"(dn_bps + up_bps) AS total_bps"
+	selectSQL = strings.ReplaceAll(selectSQL, "{{.interval}}", strconv.Itoa(600))
 
-	err := global.V2ClickhouseDB.Table("(?)", ckDb).Select(selectSql).
+	err := global.V2ClickhouseDB.Table("(?)", ckDb).Select(selectSQL).
 		Group("start_time").
 		Count(&total).
 		Limit(param.Limit).
-		Offset(param.Limit * (param.Page - 1)).Order("start_time desc").
+		Offset(param.Limit * (param.Page - 1)).
+		Order("start_time desc").
 		Find(&trendTableData).
 		Error
 	if err != nil {
@@ -265,23 +404,25 @@ func (service IspService) ExportData(param traffic.IspReqParam) ([]byte, error) 
 	headers := []string{"运营商", "运营商国内外类型", "上行峰值(Mbps)", "下行峰值(Mbps)", "上行平均(Mbps)", "下行平均(Mbps)", "上行总量(MB)", "下行总量(MB)", "总流量(MB)", "总量占比"}
 	param.Page = 1
 	param.Limit = global.CONFIG.ExportLimit
+
 	pageInfo, err := service.GetLevel1TableData(param)
 	if err != nil {
 		return nil, err
 	}
+
 	ckDb, _ := getIspDb(param)
 	totalByte, err := GetTotalByte(ckDb)
 	if err != nil {
 		return nil, err
 	}
-	list := pageInfo.List
 
-	// 将查询结果转换为 []map[string]interface{} 格式
+	list := pageInfo.List
 	dataList, ok := list.([]traffic.IspLevel1TableData)
 	if !ok {
 		global.Log.Error(err.Error())
 		return nil, err
 	}
+
 	dataMapList := make([]map[string]interface{}, len(dataList))
 	for i, dataItem := range dataList {
 		dataMapList[i] = map[string]interface{}{
@@ -297,5 +438,6 @@ func (service IspService) ExportData(param traffic.IspReqParam) ([]byte, error) 
 			fields[9]: fmt.Sprintf("%.4f%%", float64(dataItem.TotalByte)*100/float64(totalByte)),
 		}
 	}
+
 	return utils.ExportToExcel(fields, headers, dataMapList)
 }

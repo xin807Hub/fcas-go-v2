@@ -28,3 +28,6 @@ server/log/
 *.tar
 *.gz
 *.rar
+
+*.cmd
+*.ps1
