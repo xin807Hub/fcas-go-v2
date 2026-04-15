@@ -4,10 +4,6 @@ Thumbs.db
 .idea/
 .vscode/
 
-.env
-.env.*
-!.env.example
-
 *.log
 *.out
 *.err
