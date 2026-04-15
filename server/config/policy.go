@@ -1,9 +1,10 @@
 package config
 
 type Policy struct {
-	SendUrl string `mapstructure:"sendUrl" json:"sendUrl" yaml:"sendUrl"`
-	Dir     string `mapstructure:"dir" json:"dir" yaml:"dir"`
-	Ftp
+	SendUrl   string `mapstructure:"sendUrl" json:"sendUrl" yaml:"sendUrl"`
+	Dir       string `mapstructure:"dir" json:"dir" yaml:"dir"`
+	Ftp       Ftp    `mapstructure:"ftp" json:"ftp" yaml:"ftp"`
+	ShuntPort int    `mapstructure:"shunt-port" json:"shunt-port" yaml:"shunt-port"`
 }
 
 type Ftp struct {

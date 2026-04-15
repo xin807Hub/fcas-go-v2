@@ -27,6 +27,26 @@ func getHoursBetween(startTime, endTime string) (int64, error) {
 	return int64(duration.Hours()), nil
 }
 
+// GetHoursBetween 计算从 startTime 到 endTime 的小时差值
+func GetHoursBetween(startTime, endTime string) (int64, error) {
+	// 将 startTime 和 endTime 从字符串转换为 time.Time
+	startTimeParsed, err := time.Parse(global.DateTimeLayout, startTime)
+	if err != nil {
+		global.Log.Error("failed to parse start time: %w", zap.Error(err))
+		return 0, err
+	}
+
+	endTimeParsed, err := time.Parse(global.DateTimeLayout, endTime)
+	if err != nil {
+		global.Log.Error("failed to parse end time: %w", zap.Error(err))
+		return 0, err
+	}
+
+	// 计算两个时间之间的差值
+	duration := endTimeParsed.Sub(startTimeParsed)
+	return int64(duration.Hours()), nil
+}
+
 // GetDaysBetween 计算从 startTime 到 endTime 的天数差值
 func GetDaysBetween(startTime, endTime string) (int, error) {
 	hours, err := getHoursBetween(startTime, endTime)

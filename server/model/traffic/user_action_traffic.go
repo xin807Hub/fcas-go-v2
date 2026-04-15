@@ -5,11 +5,11 @@ import "fcas_server/model/common/request"
 type UserActionReqParam struct {
 	StartTime string `json:"startTime" form:"startTime" binding:"required"`
 	EndTime   string `json:"endTime"   form:"endTime" binding:"required"`
-	SrcIp     string `json:"srcIp"     form:"srcIp" binding:"required"`
+	SrcIp     string `json:"srcIp"     form:"srcIp" `
 	DstIp     string `json:"dstIp"     form:"dstIp"`
 	AppId     uint64 `json:"appId"     form:"appId"`
 	// @Enum dst_ip,app_id
-	DataType         string `json:"dataType" form:"dataType" binding:"required"`
+	DataType         string `json:"dataType" form:"dataType" `
 	request.PageInfo `binding:"required"`
 }
 

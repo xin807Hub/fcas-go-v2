@@ -34,11 +34,10 @@ func version() {
 }
 
 //go:generate go env -w GO111MODULE=on
-////go:generate go env -w GOPROXY=http://192.168.3.243:8001,direct
-//go:generate go env -w GOPROXY=https://goproxy.cn,direct
+//go:generate go env -w GOPROXY=http://192.168.3.243:8001,direct
 //go:generate go mod tidy
 //go:generate go mod download
-////go:generate swag init --parseDependency --parseInternal
+//go:generate swag init --parseDependency --parseInternal
 
 func main() {
 	version()

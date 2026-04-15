@@ -8,7 +8,7 @@ CHECK_INTERVAL="3600*3"                # 检查频率（秒）
 IPADDRS=("127.0.0.1" "192.168.5.246")  # 包含多个IP地址的数组
 DATABASE="bigdata_fcas_v2"
 USERNAME="default"
-PASSWORD="123456"  #RootSi314
+PASSWORD="BoyDB2022"
 
 # 获取当前磁盘使用量
 get_disk_usage() {

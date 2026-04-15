@@ -20,7 +20,7 @@ func (svc DimDictService) GetDictByType(dictType string) (result interface{}, er
 		err = db.Table("isp_view").Find(&list).Error
 	case global.DictTypeSelectIsp:
 		ispList := strings.Split(global.CONFIG.SelectIsp, ",")
-		err = db.Table("isp_view").Where("name in (?)", ispList).Find(&list).Error
+		err = db.Table("isp_view").Select("name").Where("name in (?)", ispList).Group("name").Find(&list).Error
 	case global.DictTypeAppType:
 		err = db.Table("app_type_view").Find(&list).Error
 	case global.DictTypeAppId:

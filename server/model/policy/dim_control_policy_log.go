@@ -3,7 +3,7 @@ package policy
 import "time"
 
 type DimControlPolicyLog struct {
-	Id         int       `json:"id"`
+	Id         int       `json:"id" gorm:"primarykey"`
 	RecordTime time.Time `json:"record_time"`
 	PolicyId   int       `json:"policy_id"`
 	UpTraffic  int       `json:"up_traffic"`

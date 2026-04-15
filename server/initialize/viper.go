@@ -54,7 +54,7 @@ func Config(path ...string) {
 	v.WatchConfig()
 
 	v.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Println("config file changed:", e.Name)
+		fmt.Println("config file changed: ", e.Name)
 		if err = v.Unmarshal(&global.CONFIG); err != nil {
 			fmt.Println(err)
 		}

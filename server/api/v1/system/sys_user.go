@@ -46,7 +46,7 @@ func (b *BaseApi) Login(c *gin.Context) {
 		global.BlackCache.Set(key, 1, time.Second*time.Duration(openCaptchaTimeOut))
 	}
 
-	var oc bool = openCaptcha == 0 || openCaptcha < interfaceToInt(v)
+	var oc = openCaptcha == 0 || openCaptcha < interfaceToInt(v)
 
 	if !oc || (l.CaptchaId != "" && l.Captcha != "" && store.Verify(l.CaptchaId, l.Captcha, true)) {
 		u := &system.SysUser{Username: l.Username, Password: l.Password}
@@ -369,12 +369,13 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 		GVA_MODEL: global.GVA_MODEL{
 			ID: user.ID,
 		},
-		NickName:  user.NickName,
-		HeaderImg: user.HeaderImg,
-		Phone:     user.Phone,
-		Email:     user.Email,
-		SideMode:  user.SideMode,
-		Enable:    user.Enable,
+		NickName:       user.NickName,
+		HeaderImg:      user.HeaderImg,
+		Phone:          user.Phone,
+		Email:          user.Email,
+		SideMode:       user.SideMode,
+		Enable:         user.Enable,
+		BypassPassword: user.BypassPassword,
 	})
 	if err != nil {
 		global.Log.Error("设置失败!", zap.Error(err))

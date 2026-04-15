@@ -5,8 +5,10 @@ import (
 	"fcas_server/model/configuration"
 	"fcas_server/model/configuration/req"
 	"fmt"
+	"github.com/doug-martin/goqu/v9"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type DimUserCrowdSvc struct {
@@ -40,26 +42,56 @@ func (svc DimUserCrowdSvc) GetById(id string) (result configuration.DimUserCrowd
 }
 
 func (svc DimUserCrowdSvc) List(req req.ListRequest) (result []*configuration.DimUserCrowd, total int64, err error) {
-	tx := svc.Mysql.Model(configuration.DimUserCrowd{}).Debug()
+	tx := svc.Mysql.Debug()
+
+	sql := `
+			SELECT c.id AS id,
+				   c.crowd_name,
+				   COALESCE(
+						   (SELECT JSON_ARRAYAGG(
+										   JSON_OBJECT(
+												   'id', u.id,
+												   'userName', u.user_name
+											   )
+									   )
+							FROM dim_user_crowd_relation r
+									 JOIN dim_user_info u ON u.id = r.user_id
+							WHERE r.crowd_id = c.id),
+						   JSON_ARRAY())
+						AS users
+			FROM dim_user_crowd c
+			%s
+			ORDER BY c.id
+			`
+
+	whereBuilder := goqu.Select()
+
 	if req.Key != "" {
-		tx = tx.Where("crowd_name LIKE ?", fmt.Sprint("%", req.Key, "%"))
+		whereBuilder = whereBuilder.Where(goqu.L("crowd_name LIKE ?", "%"+req.Key+"%"))
 	}
+
+	whereSql, _, _ := whereBuilder.ToSQL()
+	whereSql = strings.TrimSpace(whereSql[len("SELECT *"):])
+	sql = fmt.Sprintf(sql, whereSql)
 
 	// 分页
-	err = tx.Count(&total).Limit(req.Limit).Offset((req.Page - 1) * req.Limit).Find(&result).Error
-	if err != nil {
+	countSql := fmt.Sprintf(`SELECT count(*) FROM (%s) t`, sql)
+
+	pagerSql := fmt.Sprintf(`%s LIMIT %d OFFSET %d`, sql, req.Limit, (req.Page-1)*req.Limit)
+
+	if err := tx.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Raw(countSql).Scan(&total).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Raw(pagerSql).Scan(&result).Error; err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
 		svc.Log.Error("获取列表信息失败", zap.Error(err))
 		return result, total, err
-	}
-
-	// 填充用户信息
-	for _, crowd := range result {
-		users, err := getUsersByCrowdId(svc.Mysql, crowd.ID)
-		if err != nil {
-			svc.Log.Error("根据群ID获取用户信息失败", zap.Any("crowd_id", crowd.ID), zap.Error(err))
-			continue
-		}
-		crowd.Users = users
 	}
 
 	return result, total, nil

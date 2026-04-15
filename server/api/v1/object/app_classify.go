@@ -2,6 +2,7 @@ package object
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	objectModel "fcas_server/model/object"
 	"fcas_server/service/object"
@@ -15,7 +16,7 @@ type appClassifyApi struct {
 
 func NewAppClassifyRouter(rg *gin.RouterGroup) {
 
-	router := rg.Group("object/appClassify")
+	router := rg.Group("object/appClassify").Use(middleware.OperationRecord())
 
 	api := appClassifyApi{
 		svc: object.NewAppClassifySvc(global.Log, global.ServiceDB),

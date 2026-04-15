@@ -15,16 +15,17 @@ func TestAddMultipleAddr(t *testing.T) {
 	as := NewAddrSet()
 
 	// 添加单个地址：192.168.1.3, 192.168.1.8
-	addrs := []string{"192.168.1.3", "192.168.1.8"}
+	// addrs := []string{"192.168.1.3-192.168.1.10", "192.168.1.8"}
+	addrs := []string{"192.168.1.8", "192.168.1.3-192.168.1.10"}
 	fmt.Printf("AddAddr: %v\nResult: %v\nTreeSetSize: %d\nTreeSetValues: %v\n%s\n", addrs, as.AddMultipleAddr(addrs), as.set.Size(), as.set.Values(), strings.Repeat("*", length))
 
 	// 添加范围段：192.168.1.1-192.168.1.15，验证分割成多个子段
-	addrs = []string{"192.168.1.1,192.168.1.15", "192.168.0.0/16"}
-	fmt.Printf("AddAddr: %v\nResult: %v\nTreeSetSize: %d\nTreeSetValues: %v\n%s\n", addrs, as.AddMultipleAddr(addrs), as.set.Size(), as.set.Values(), strings.Repeat("*", length))
-
-	// 验证IPv6类型
-	addrs = []string{"2001:db8::1", "200:db8::1", "2001:db8::5,2001:db8::10", "2001:db8::/120"}
-	fmt.Printf("AddAddr: %v\nResult: %v\nTreeSetSize: %d\nTreeSetValues: %v\n%s\n", addrs, as.AddMultipleAddr(addrs), as.set.Size(), as.set.Values(), strings.Repeat("*", length))
+	//addrs = []string{"192.168.1.1,192.168.1.15", "192.168.0.0/16"}
+	//fmt.Printf("AddAddr: %v\nResult: %v\nTreeSetSize: %d\nTreeSetValues: %v\n%s\n", addrs, as.AddMultipleAddr(addrs), as.set.Size(), as.set.Values(), strings.Repeat("*", length))
+	//
+	//// 验证IPv6类型
+	//addrs = []string{"2001:db8::1", "200:db8::1", "2001:db8::5,2001:db8::10", "2001:db8::/120"}
+	//fmt.Printf("AddAddr: %v\nResult: %v\nTreeSetSize: %d\nTreeSetValues: %v\n%s\n", addrs, as.AddMultipleAddr(addrs), as.set.Size(), as.set.Values(), strings.Repeat("*", length))
 
 }
 
@@ -147,12 +148,7 @@ func TestUpdate(t *testing.T) {
 
 	// 首先添加一些地址到 AddrSet
 	initialAddrs := []string{
-		"1.1.1.1-1.1.1.10",
-		"1.1.1.15",
-		"10.0.0.1,10.0.0.100",
-		"172.16.0.0/16",
-		"2001:db8::/32",
-		"2001:db8:1::1,2001:db8:1::ffff",
+		"1.1.1.1-1.1.1.255",
 	}
 	if _, _, err := as.Add(initialAddrs); err != nil {
 		fmt.Println(err)
@@ -161,10 +157,19 @@ func TestUpdate(t *testing.T) {
 
 	fmt.Println(as.set.Values())
 
-	if _, _, err := as.Update([]string{"1.1.1.1-1.1.1.10"}, []string{"1.1.1.15"}); err != nil {
-		fmt.Println(err)
-	}
+	newAddr := append([]string{"1.1.1.15"}, initialAddrs...)
 
+	as.Remove(initialAddrs...)
+	addrResult := as.AddMultipleAddr(newAddr)
+	fmt.Println(addrResult)
+
+	//if _, _, err := as.Update(initialAddrs, ); err != nil {
+	//	fmt.Println(err)
+	//}
+
+	as.Remove(addrResult...)
+	addrResult2 := as.AddMultipleAddr(append([]string{"1.1.1.25"}, addrResult...))
+	fmt.Println(addrResult2)
 	fmt.Println(as.set.Values())
 
 }

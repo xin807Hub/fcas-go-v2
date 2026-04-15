@@ -41,8 +41,7 @@ func (svc DimUserInfoSvc) GetById(id string) (result configuration.DimUserInfo, 
 func (svc DimUserInfoSvc) List(req req.ListRequest) (result []*configuration.DimUserInfo, total int64, err error) {
 	tx := svc.Mysql.Model(configuration.DimUserInfo{})
 	if req.Key != "" {
-		key := fmt.Sprint("%", req.Key, "%")
-		tx = tx.Where("user_name LIKE ?", key).Or("JSON_UNQUOTE(ip_address) LIKE ?", key)
+		tx = tx.Where("user_name LIKE ?", "%"+req.Key+"%").Or(`ip_address->"$[*]" LIKE ?`, "%"+req.Key+"%")
 	}
 
 	// 分页
@@ -69,7 +68,7 @@ func (svc DimUserInfoSvc) Save(req req.DimUserInfoSaveRequest) error {
 	err = svc.Mysql.Create(&configuration.DimUserInfo{
 		UserName:     req.UserName,
 		UserType:     req.UserType,
-		UserRemark:   req.UserRemark,
+		Remark:       req.Remark,
 		IpAddress:    addrs,
 		IpAddressNum: addrNum,
 	}).Error
@@ -102,7 +101,7 @@ func (svc DimUserInfoSvc) Update(req req.DimUserInfoSaveRequest) error {
 		ID:           req.ID,
 		UserName:     req.UserName,
 		UserType:     req.UserType,
-		UserRemark:   req.UserRemark,
+		Remark:       req.Remark,
 		IpAddress:    addrs,
 		IpAddressNum: addrNum,
 	}).Error
@@ -175,7 +174,7 @@ func (svc DimUserInfoSvc) Export(req req.ListRequest) (output []byte, err error)
 		row.AddCell().SetString(r.UserName)
 		row.AddCell().SetString(strings.Join(r.IpAddress, ", "))
 		row.AddCell().SetString(r.IpAddressNum)
-		row.AddCell().SetString(r.UserRemark)
+		row.AddCell().SetString(r.Remark)
 	}
 
 	var buf bytes.Buffer

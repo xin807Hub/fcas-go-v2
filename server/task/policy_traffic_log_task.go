@@ -6,145 +6,222 @@ import (
 	policyModel "fcas_server/model/policy"
 	"fcas_server/service/policy"
 	"fcas_server/utils"
-	"io"
+	"fmt"
+	"go.uber.org/zap"
 	"strconv"
 	"time"
 )
 
-const shuntPort = 8080
+var dimControlPolicyService = policy.DimControlPolicyService{}
 
-var (
-	dimControlPolicyService = policy.DimControlPolicyService{}
-)
+// TrafficResponse 定义响应数据结构体
+type TrafficResponse struct {
+	Data []TrafficData `json:"data"`
+}
+
+type TrafficData struct {
+	Code               int    `json:"code"`
+	Msg                string `json:"msg"`
+	ActionID           string `json:"actionId"`
+	AllTrafficData     int    `json:"allTrafficData"`
+	ThroughTrafficData int    `json:"throughTrafficData"`
+}
 
 func RunPolicyTrafficLogTask() {
-	date := time.Time{}
+	policyIds, err := dimControlPolicyService.GetPolicyIdList()
+	if err != nil {
+		global.Log.Error("策略查询失败：" + err.Error())
+		return
+	}
+	if len(policyIds) < 1 {
+		global.Log.Info("暂无策略, 退出")
+		return
+	}
+
 	policyActionList, err := dimControlPolicyActionService.List()
 	if err != nil {
-		global.Log.Error("ControlPolicyAction查询失败：" + err.Error())
+		global.Log.Error("Action查询失败：" + err.Error())
+		return
+	}
+	if len(policyActionList) < 1 {
+		global.Log.Info("暂无action, 退出")
 		return
 	}
 
-	controlPolicyList, err := dimControlPolicyService.List()
+	upActionIdArr, dnActionIdArr, actionIdPolicyIdMap, shuntIpActionIdsMap := initData(policyActionList, policyIds)
+
+	// 以分流器分组，逐个分流拉取最新的数据, 将每个actionId的结果保存在map中
+	resultMap := postShuntAndGetResp(shuntIpActionIdsMap)
+
+	// 将结果持久化
+	err = ProcessAndStoreTrafficData(resultMap, actionIdPolicyIdMap, upActionIdArr, dnActionIdArr)
 	if err != nil {
-		global.Log.Error("ControlPolicy查询失败：" + err.Error())
-		return
+		global.Log.Error("处理响应的结果集并批量入库失败", zap.Error(err))
 	}
+}
 
-	policyIdList := make([]int, 0)
-	for _, item := range controlPolicyList {
-		policyIdList = append(policyIdList, item.Id)
-	}
-	upList := make([]int, 0)
-	dnList := make([]int, 0)
-
-	acyionToPolicy := map[int]int{}
-	ipToAction := map[string][]int{}
-	resultMap := map[int]string{}
-
-	resultDtoMap := map[int]*policyModel.DimControlPolicyLog{}
+func initData(policyActionList []policyModel.DimControlPolicyAction, policyIdList []int) ([]int, []int, map[int]int, map[string][]int) {
+	upActionIdArr := make([]int, 0)
+	dnActionIdArr := make([]int, 0)
+	actionIdPolicyIdMap := make(map[int]int)
+	shuntIpActionIdsMap := make(map[string][]int)
 
 	for i := 0; i < len(policyActionList); i++ {
-		entity := policyActionList[0]
-		if !utils.Contains(policyIdList, entity.PolicyId) {
+		action := policyActionList[0]
+		if !utils.Contains(policyIdList, action.PolicyId) {
+			global.Log.Info(fmt.Sprintf("该action所对应的策略不存在，actionId=%d, policyId=%d, 退出", action.Id, action.PolicyId))
 			continue
 		}
-		upList = append(upList, entity.UploadActionId)
-		dnList = append(dnList, entity.DownloadActionId)
-		acyionToPolicy[entity.DownloadActionId] = entity.PolicyId
-		acyionToPolicy[entity.UploadActionId] = entity.PolicyId
+		if action.UploadActionId == 0 {
+			global.Log.Info(fmt.Sprintf("该action所对应的upload_action_id=0，actionId=%d, policyId=%d, 退出", action.Id, action.PolicyId))
+			continue
+		}
+		if action.DownloadActionId == 0 {
+			global.Log.Info(fmt.Sprintf("该action所对应的download_action_id=0，actionId=%d, policyId=%d, 退出", action.Id, action.PolicyId))
+			continue
+		}
+		if action.UploadDeviceId == 0 {
+			global.Log.Info(fmt.Sprintf("该action所对应的upload_device_id=0，actionId=%d, policyId=%d, 退出", action.Id, action.PolicyId))
+			continue
+		}
 
-		if ipToAction[entity.ShuntIp] != nil {
-			ints := ipToAction[entity.ShuntIp]
-			ints = append(ints, entity.UploadActionId)
-			ints = append(ints, entity.DownloadActionId)
-			ipToAction[entity.ShuntIp] = ints
+		upActionIdArr = append(upActionIdArr, action.UploadActionId)
+		dnActionIdArr = append(dnActionIdArr, action.DownloadActionId)
+		actionIdPolicyIdMap[action.DownloadActionId] = action.PolicyId
+		actionIdPolicyIdMap[action.UploadActionId] = action.PolicyId
+		if actionIds, exists := shuntIpActionIdsMap[action.ShuntIp]; exists {
+			actionIds = append(actionIds, action.UploadActionId)
+			actionIds = append(actionIds, action.DownloadActionId)
+			shuntIpActionIdsMap[action.ShuntIp] = actionIds
 		} else {
-			ints := make([]int, 0)
-			ints = append(ints, entity.UploadActionId)
-			ints = append(ints, entity.DownloadActionId)
-			ipToAction[entity.ShuntIp] = ints
+			initActionIds := make([]int, 0)
+			initActionIds = append(initActionIds, action.UploadActionId)
+			initActionIds = append(initActionIds, action.DownloadActionId)
+			shuntIpActionIdsMap[action.ShuntIp] = initActionIds
 		}
 	}
+	return upActionIdArr, dnActionIdArr, actionIdPolicyIdMap, shuntIpActionIdsMap
+}
 
-	for key, value := range ipToAction {
-		url := "http://" + key + ":" + strconv.Itoa(shuntPort) + "/controlAction-get"
-		postData := map[string]interface{}{}
-		postData["actionIds"] = value
-		resp, err := utils.HttpRequest(url, "post", nil, nil, postData)
-		if err == nil {
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				global.Log.Error("分流器接口数据获取失败，分流器IP：" + key)
-				continue
-			}
-			bodyRest := map[string]string{}
-			json.Unmarshal(body, &bodyRest)
-			dataArr := bodyRest["data"]
-			if len(dataArr) > 0 {
-				global.Log.Info("查询actionId对应流量数据成功，分流器IP：" + string(body))
-				var dataMapArr []map[string]interface{}
-				json.Unmarshal([]byte(dataArr), &dataMapArr)
-				for j := 0; j < len(dataMapArr); j++ {
-					if dataMapArr[j]["code"] == 1 {
-						resultMap[dataMapArr[j]["actionId"].(int)] = resultMap[j]
+func postShuntAndGetResp(shuntIpActionIdsMap map[string][]int) map[int]TrafficData {
+	var shuntPort = global.CONFIG.Policy.ShuntPort
+	resultMap := make(map[int]TrafficData)
+	for shuntIp, actionIds := range shuntIpActionIdsMap {
+		global.Log.Info(fmt.Sprintf("开始请求分流数据：shuntIp = %s, port = %d, actionIds= %v", shuntIp, shuntPort, actionIds))
+
+		url := fmt.Sprintf("http://%s:%d/controlAction-get", shuntIp, shuntPort)
+		postParam := map[string]interface{}{
+			"actionIds": actionIds,
+		}
+		resp, httpErr := utils.HttpRequest(url, "post", nil, nil, postParam)
+		if httpErr != nil {
+			global.Log.Error(fmt.Sprintf("查询actionId对于的流量数据失败，分流器IP：%s, post参数= %v", shuntIp, postParam), zap.Error(httpErr))
+			continue
+		}
+
+		var response TrafficResponse
+		err := json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			global.Log.Error("解析分流的响应数据失败", zap.Error(err))
+			continue
+		}
+		global.Log.Info(fmt.Sprintf("查询actionId对应流量数据成功，body：%v", response))
+
+		if len(response.Data) > 0 {
+			for _, data := range response.Data {
+				if data.Code == 1 {
+					actionId, atoiErr := strconv.Atoi(data.ActionID)
+					if atoiErr != nil {
+						global.Log.Error(fmt.Sprintf("该actionId转成数字失败，data = %v", data))
+						continue
 					}
+					resultMap[actionId] = data
+				} else {
+					global.Log.Error(fmt.Sprintf("该action的响应失败，data = %v", data))
+					continue
 				}
 			}
 		} else {
-			global.Log.Error("查询actionId对于的流量数据失败，分流器IP：" + key)
+			global.Log.Info(fmt.Sprintf("response.Data 无响应数据，response = %v", response))
 		}
 	}
+	return resultMap
+}
 
-	for actionId, value := range resultMap {
-		jsonMap := map[string]interface{}{}
-		json.Unmarshal([]byte(value), &jsonMap)
-		allTraffic := jsonMap["allTrafficData"]
-		throughTraffic := jsonMap["throughTrafficData"]
+// ProcessAndStoreTrafficData 处理结果集并持久化
+func ProcessAndStoreTrafficData(
+	resultMap map[int]TrafficData,
+	actionToPolicy map[int]int,
+	upList, dnList []int,
+) error {
+	// 初始化结果集map
+	policyIdLogMap := make(map[int]*policyModel.DimControlPolicyLog)
+	currentTime := time.Now()
 
-		policyId := acyionToPolicy[actionId]
+	// 需要根据policyId的维度重组日志
+	for actionId, trafficData := range resultMap {
+		policyID := actionToPolicy[actionId]
+		allTraffic := trafficData.AllTrafficData
+		throughTraffic := trafficData.ThroughTrafficData
+		discarded := allTraffic - throughTraffic
 
-		if utils.Contains(upList, actionId) {
-			if resultDtoMap[policyId] != nil {
-				controlPolicyLog := resultDtoMap[policyId]
-				controlPolicyLog.UpTraffic = allTraffic.(int) + controlPolicyLog.UpTraffic
-				controlPolicyLog.UpPass = allTraffic.(int) + controlPolicyLog.UpPass
-				controlPolicyLog.UpDiscard = throughTraffic.(int) + controlPolicyLog.UpDiscard
-				resultDtoMap[policyId] = controlPolicyLog
+		if contains(upList, actionId) {
+			if entity, exists := policyIdLogMap[policyID]; exists {
+				entity.UpTraffic += allTraffic
+				entity.UpPass += throughTraffic
+				entity.UpDiscard += discarded
 			} else {
-				controlPolicy := policyModel.DimControlPolicyLog{}
-				controlPolicy.PolicyId = policyId
-				controlPolicy.UpTraffic = allTraffic.(int)
-				controlPolicy.UpPass = throughTraffic.(int)
-				controlPolicy.UpDiscard = allTraffic.(int) - throughTraffic.(int)
-				resultDtoMap[policyId] = &controlPolicy
+				policyIdLogMap[policyID] = &policyModel.DimControlPolicyLog{
+					PolicyId:   policyID,
+					UpTraffic:  allTraffic,
+					UpPass:     throughTraffic,
+					UpDiscard:  discarded,
+					RecordTime: currentTime,
+				}
 			}
-		} else if utils.Contains(dnList, actionId) {
-			if resultDtoMap[policyId] != nil {
-				controlPolicyLog := resultDtoMap[policyId]
-				controlPolicyLog.DnTraffic = allTraffic.(int) + controlPolicyLog.DnTraffic
-				controlPolicyLog.DnPass = throughTraffic.(int) + controlPolicyLog.DnPass
-				controlPolicyLog.DnDiscard = allTraffic.(int) - throughTraffic.(int) + controlPolicyLog.DnDiscard
-				resultDtoMap[policyId] = controlPolicyLog
+			continue
+		}
+
+		if contains(dnList, actionId) {
+			if entity, exists := policyIdLogMap[policyID]; exists {
+				entity.DnTraffic += allTraffic
+				entity.DnPass += throughTraffic
+				entity.DnDiscard += discarded
 			} else {
-				controlPolicy := policyModel.DimControlPolicyLog{}
-				controlPolicy.PolicyId = policyId
-				controlPolicy.DnTraffic = allTraffic.(int)
-				controlPolicy.DnPass = throughTraffic.(int)
-				controlPolicy.DnDiscard = allTraffic.(int) - throughTraffic.(int)
-				resultDtoMap[policyId] = &controlPolicy
+				policyIdLogMap[policyID] = &policyModel.DimControlPolicyLog{
+					PolicyId:   policyID,
+					DnTraffic:  allTraffic,
+					DnPass:     throughTraffic,
+					DnDiscard:  discarded,
+					RecordTime: currentTime, // Set to current time
+				}
 			}
 		}
 	}
 
-	logEntityArr := make([]policyModel.DimControlPolicyLog, 0)
-	for _, valueDto := range resultDtoMap {
-		valueDto.RecordTime = date
-		logEntityArr = append(logEntityArr, *valueDto)
+	var logEntities []*policyModel.DimControlPolicyLog
+	for _, logs := range policyIdLogMap {
+		logEntities = append(logEntities, logs)
 	}
-	if len(logEntityArr) > 0 {
-		if err := global.ServiceDB.Model(&policyModel.DimControlPolicyLog{}).CreateInBatches(logEntityArr, 10000).Error; err != nil {
-			global.Log.Error("policyLog日志入库失败：" + err.Error())
+
+	// 批量存储日志
+	if len(logEntities) > 0 {
+		if result := global.ServiceDB.CreateInBatches(logEntities, 1000); result.Error != nil {
+			global.Log.Error("policyLog日志入库失败：", zap.Error(result.Error))
+			return result.Error
+		} else {
+			global.Log.Info(fmt.Sprintf("分流日志数据成功入库%d条：", result.RowsAffected))
 		}
 	}
+	return nil
+}
+
+// contains checks if a slice contains a specific string value
+func contains(slice []int, val int) bool {
+	for _, item := range slice {
+		if item == val {
+			return true
+		}
+	}
+	return false
 }

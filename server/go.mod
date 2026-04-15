@@ -7,7 +7,6 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.18.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emirpasic/gods v1.18.1
-	github.com/flipped-aurora/ws v1.0.2
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.1
@@ -22,6 +21,7 @@ require (
 	github.com/jlaffaye/ftp v0.2.0
 	github.com/jordan-wright/email v0.0.0-20200824153738-3f5bafa1cd84
 	github.com/mojocn/base64Captcha v1.3.6
+	github.com/pebbe/zmq4 v1.2.7
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -43,8 +43,7 @@ require (
 	golang.org/x/sync v0.8.0
 	gorm.io/driver/clickhouse v0.4.2
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.10
-	nhooyr.io/websocket v1.8.17
+	gorm.io/gorm v1.25.2
 )
 
 require (

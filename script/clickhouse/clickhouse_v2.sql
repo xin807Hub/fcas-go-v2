@@ -1,7 +1,7 @@
--- DROP database if exists bigdata_fcas_v2;
--- USE default;
--- CREATE DATABASE IF NOT EXISTS bigdata_fcas;
+DROP database if exists bigdata_fcas_v2;
+USE default;
 
+CREATE DATABASE IF NOT EXISTS bigdata_fcas;
 CREATE DATABASE IF NOT EXISTS bigdata_fcas_v2;
 USE bigdata_fcas_v2;
 
@@ -32,6 +32,7 @@ ORDER BY (o_start_time, link_id, user_id, d_user_id,isp, d_isp, app_type, app_id
 TTL toDate(o_start_time) + toIntervalDay(7)
 SETTINGS index_granularity = 8192;
 CREATE TABLE IF NOT EXISTS ods_gen_traffic_distributed AS ods_gen_traffic ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2', 'ods_gen_traffic', rand());
+
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_app_type_10m_local
 (
@@ -68,6 +69,7 @@ FROM ods_gen_traffic
 GROUP BY (start_time, link_id, user_id, d_user_id, isp, d_isp, app_type, dst_province);
 CREATE TABLE IF NOT EXISTS dws_app_type_10m AS bigdata_fcas_v2.dws_app_type_10m_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_app_type_10m_local',rand());
 
+
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_app_type_1h_local
 (
     `start_time` DateTime,
@@ -103,6 +105,7 @@ FROM ods_gen_traffic
 GROUP BY (start_time, user_id, link_id, d_user_id, isp, d_isp, app_type, dst_province);
 CREATE TABLE IF NOT EXISTS dws_app_type_1h AS bigdata_fcas_v2.dws_app_type_1h_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_app_type_1h_local',rand());
 
+
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_app_type_1d_local
 (
     `start_time` DateTime,
@@ -137,6 +140,7 @@ SELECT toStartOfDay(o_start_time) AS start_time,
 FROM ods_gen_traffic
 GROUP BY (start_time, user_id, link_id, d_user_id, isp, d_isp, app_type, dst_province);
 CREATE TABLE IF NOT EXISTS dws_app_type_1d AS bigdata_fcas_v2.dws_app_type_1d_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_app_type_1d_local',rand());
+
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_dstip_top_10m_local
 (
@@ -324,24 +328,11 @@ FROM ods_gen_traffic
 GROUP BY (start_time, d_user_id, link_id, isp, dst_ip);
 CREATE TABLE IF NOT EXISTS dws_dstip_top_1d_no_params AS bigdata_fcas_v2.dws_dstip_top_1d_no_params_local ENGINE = Distributed('fcas_cluster', 'bigdata_fcas_v2', 'dws_dstip_top_1d_no_params_local', rand());
 
+DROP TABLE IF EXISTS bigdata_fcas_v2.dws_gen_traffic_1d;
+DROP TABLE IF EXISTS bigdata_fcas_v2.dws_gen_traffic_1d_local;
+DROP TABLE IF EXISTS bigdata_fcas_v2.dws_gen_traffic_1d_mv;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_gen_traffic_1d_local
+CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_gen_traffic_hour_local
 (
     `start_time` DateTime,
     `src_ip` String,
@@ -357,9 +348,9 @@ PRIMARY KEY (start_time, src_ip, dst_ip, app_id, host)
 ORDER BY (start_time, src_ip, dst_ip, app_id, host)
 TTL toDate(start_time) + toIntervalMonth(6)
 SETTINGS index_granularity = 8192;
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_gen_traffic_1d_mv TO bigdata_fcas_v2.dws_gen_traffic_1d_local
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_gen_traffic_hour_mv TO bigdata_fcas_v2.dws_gen_traffic_hour_local
 AS
-SELECT toStartOfDay(o_start_time) AS start_time,
+SELECT toStartOfHour(o_start_time) AS start_time,
        src_ip,
        dst_ip,
        app_id,
@@ -368,7 +359,8 @@ SELECT toStartOfDay(o_start_time) AS start_time,
        sumState(bytes_dn)          AS bytes_dn_view
 FROM ods_gen_traffic
 GROUP BY (start_time, src_ip, dst_ip, app_id, host);
-CREATE TABLE IF NOT EXISTS dws_gen_traffic_1d AS bigdata_fcas_v2.dws_gen_traffic_1d_local ENGINE = Distributed('fcas_cluster', 'bigdata_fcas_v2', 'dws_gen_traffic_1d_local', rand());
+CREATE TABLE IF NOT EXISTS dws_gen_traffic_hour AS bigdata_fcas_v2.dws_gen_traffic_hour_local ENGINE = Distributed('fcas_cluster', 'bigdata_fcas_v2', 'dws_gen_traffic_hour_local', rand());
+
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_dstip_top_1d_no_params_local
 (
@@ -403,123 +395,107 @@ CREATE TABLE IF NOT EXISTS dws_dstip_top_1d_no_params AS bigdata_fcas_v2.dws_dst
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_isp_10m_local
 (
     `start_time` DateTime,
-    `user_id` UInt32,
     `link_id` UInt32,
+    `user_id` UInt32,
+    `d_user_id` UInt32,
     `isp` String,
+    `d_isp` String,
     `dst_province` String,
     `bytes_up_view` AggregateFunction(sum, UInt64),
     `bytes_dn_view` AggregateFunction(sum, UInt64)
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, user_id, link_id, isp)
-ORDER BY (start_time, user_id, link_id, isp)
-TTL toDate(start_time) + toIntervalDay(7)
+PRIMARY KEY (start_time, link_id, user_id, d_user_id, isp, d_isp)
+ORDER BY (start_time, link_id, user_id, d_user_id, isp, d_isp)
+TTL toDate(start_time) + toIntervalDay(15)
 SETTINGS index_granularity = 8192;
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_10m_src_mv to bigdata_fcas_v2.dws_isp_10m_local
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_10m_mv to bigdata_fcas_v2.dws_isp_10m_local
 AS
 SELECT toStartOfTenMinutes(o_start_time) AS start_time,
-       d_user_id as user_id,
        link_id,
-       isp,
-       dst_province,
-       sumState(bytes_up)                AS bytes_up_view,
-       sumState(bytes_dn)                AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, user_id,link_id, isp, dst_province);
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_10m_dst_mv to bigdata_fcas_v2.dws_isp_10m_local
-AS
-SELECT toStartOfTenMinutes(o_start_time) AS start_time,
        user_id,
-       link_id,
-       d_isp as isp,
+       d_user_id,
+       isp,
+       d_isp,
        dst_province,
        sumState(bytes_up)                AS bytes_up_view,
        sumState(bytes_dn)                AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, user_id,link_id, isp, dst_province);
+GROUP BY (start_time,link_id, user_id,d_user_id, isp,d_isp, dst_province);
+
 CREATE TABLE IF NOT EXISTS dws_isp_10m AS bigdata_fcas_v2.dws_isp_10m_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_isp_10m_local',rand());
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_isp_1h_local
 (
     `start_time` DateTime,
-    `user_id` UInt32,
     `link_id` UInt32,
+    `user_id` UInt32,
+    `d_user_id` UInt32,
     `isp` String,
-    `is_oversea` UInt8,
+    `d_isp` String,
     `dst_province` String,
     `bytes_up_view` AggregateFunction(sum, UInt64),
     `bytes_dn_view` AggregateFunction(sum, UInt64)
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, user_id, link_id, isp, is_oversea)
-ORDER BY (start_time, user_id, link_id, isp, is_oversea)
-TTL toDate(start_time) + toIntervalMonth(1)
+PRIMARY KEY (start_time, link_id, user_id, d_user_id, isp, d_isp)
+ORDER BY (start_time, link_id, user_id, d_user_id, isp, d_isp)
+TTL toDate(start_time) + toIntervalDay(32)
 SETTINGS index_granularity = 8192;
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1h_src_mv to bigdata_fcas_v2.dws_isp_1h_local
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1h_mv to bigdata_fcas_v2.dws_isp_1h_local
 AS
 SELECT toStartOfHour(o_start_time) AS start_time,
-       d_user_id as user_id,
-       link_id,
+        link_id,
+        user_id,
+        d_user_id,
        isp,
+       d_isp,
        dst_province,
        sumState(bytes_up)          AS bytes_up_view,
        sumState(bytes_dn)          AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, user_id, link_id, isp, dst_province);
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1h_dst_mv to bigdata_fcas_v2.dws_isp_1h_local
-AS
-SELECT toStartOfHour(o_start_time) AS start_time,
-       user_id,
-       link_id,
-       d_isp as isp,
-       dst_province,
-       sumState(bytes_up)          AS bytes_up_view,
-       sumState(bytes_dn)          AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, user_id, link_id, isp, dst_province);
-CREATE TABLE IF NOT EXISTS dws_isp_1h AS  bigdata_fcas_v2.dws_isp_1h_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_isp_1h_local',rand());
+GROUP BY (start_time,link_id, user_id,d_user_id, isp,d_isp, dst_province);
+
+CREATE TABLE IF NOT EXISTS dws_isp_1h AS bigdata_fcas_v2.dws_isp_1h_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_isp_1h_local',rand());
+
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_isp_1d_local
 (
     `start_time` DateTime,
-    `user_id` UInt32,
     `link_id` UInt32,
+    `user_id` UInt32,
+    `d_user_id` UInt32,
     `isp` String,
-    `is_oversea` UInt8,
+    `d_isp` String,
     `dst_province` String,
     `bytes_up_view` AggregateFunction(sum, UInt64),
     `bytes_dn_view` AggregateFunction(sum, UInt64)
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, user_id, link_id, isp, is_oversea)
-ORDER BY (start_time, user_id, link_id, isp, is_oversea)
+PRIMARY KEY (start_time, link_id, user_id, d_user_id, isp, d_isp)
+ORDER BY (start_time, link_id, user_id, d_user_id, isp, d_isp)
 TTL toDate(start_time) + toIntervalMonth(6)
 SETTINGS index_granularity = 8192;
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1d_src_mv to bigdata_fcas_v2.dws_isp_1d_local
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1d_mv to bigdata_fcas_v2.dws_isp_1d_local
 AS
 SELECT toStartOfDay(o_start_time) AS start_time,
-       d_user_id as user_id,
-       link_id,
-       isp,
-       dst_province,
-       sumState(bytes_up)          AS bytes_up_view,
-       sumState(bytes_dn)          AS bytes_dn_view
+link_id,
+user_id,
+d_user_id,
+isp,
+d_isp,
+dst_province,
+sumState(bytes_up)          AS bytes_up_view,
+sumState(bytes_dn)          AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, user_id, link_id, isp, dst_province);
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_isp_1d_dst_mv to bigdata_fcas_v2.dws_isp_1d_local
-AS
-SELECT toStartOfDay(o_start_time) AS start_time,
-       user_id,
-       link_id,
-       d_isp as isp,
-       dst_province,
-       sumState(bytes_up)          AS bytes_up_view,
-       sumState(bytes_dn)          AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, user_id, link_id, isp, dst_province);
+GROUP BY (start_time,link_id, user_id,d_user_id, isp,d_isp, dst_province);
+
 CREATE TABLE IF NOT EXISTS dws_isp_1d AS bigdata_fcas_v2.dws_isp_1d_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_isp_1d_local',rand());
 
 
@@ -536,7 +512,6 @@ PRIMARY KEY (start_time, link_id)
 ORDER BY (start_time, link_id)
 TTL toDate(start_time) + toIntervalMonth(6)
 SETTINGS index_granularity = 8192;
-
 CREATE MATERIALIZED VIEW IF NOT EXISTS bigdata_fcas_v2.dws_link_10m_mv TO dws_link_10m_local
 AS
 SELECT toStartOfTenMinutes(o_start_time) AS start_time,
@@ -545,8 +520,8 @@ SELECT toStartOfTenMinutes(o_start_time) AS start_time,
        sumState(bytes_dn)                AS bytes_dn_view
 FROM ods_gen_traffic
 GROUP BY (start_time, link_id);
-
 CREATE TABLE IF NOT EXISTS dws_link_10m AS bigdata_fcas_v2.dws_link_10m_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_link_10m_local',rand());
+
 
 CREATE VIEW IF NOT EXISTS dws_link_10m_view
 AS
@@ -560,6 +535,7 @@ SELECT start_time,
        up_bps + dn_bps                   AS total_bps
 FROM bigdata_fcas_v2.dws_link_10m
 GROUP BY (start_time, link_id);
+
 
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_link_app_local
 (
@@ -605,13 +581,15 @@ SELECT start_time,
 FROM bigdata_fcas_v2.dws_link_app_view
 GROUP BY (start_time, link_id, app_type, app_id);
 
-
+-----------server start------------------------
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_server_10m_local
 (
     `start_time` DateTime,
     `user_id` UInt32,
+    `d_user_id` UInt32,
     `link_id` UInt32,
     `isp` String,
+    `d_isp` String,
     `app_type` UInt32,
     `app_id` UInt32,
     `host` String,
@@ -622,33 +600,19 @@ CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_server_10m_local
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, app_type, app_id,user_id, link_id,isp, host,dst_ip,dst_area_id)
-ORDER BY (start_time, app_type, app_id,user_id, link_id,isp, host,dst_ip,dst_area_id)
+PRIMARY KEY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
+ORDER BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
 TTL toDate(start_time) + toIntervalDay(7)
 SETTINGS index_granularity = 8192;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_10m_src_mv TO bigdata_fcas_v2.dws_server_10m_local
-AS
-SELECT toStartOfTenMinutes(o_start_time) AS start_time,
-       d_user_id AS user_id,
-       link_id,
-       isp,
-       app_type,
-       app_id,
-       host,
-       dst_ip,
-       dst_area_id,
-       sumState(bytes_up)                AS bytes_up_view,
-       sumState(bytes_dn)                AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp,host, dst_ip, dst_area_id);
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_10m_dst_mv TO bigdata_fcas_v2.dws_server_10m_local
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_10m_mv TO bigdata_fcas_v2.dws_server_10m_local
 AS
 SELECT toStartOfTenMinutes(o_start_time) AS start_time,
        user_id,
+       d_user_id,
        link_id,
-       d_isp AS isp,
+       isp,
+       d_isp,
        app_type,
        app_id,
        host,
@@ -657,7 +621,7 @@ SELECT toStartOfTenMinutes(o_start_time) AS start_time,
        sumState(bytes_up)                AS bytes_up_view,
        sumState(bytes_dn)                AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp, host, dst_ip, dst_area_id);
+GROUP BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id);
 
 CREATE TABLE IF NOT EXISTS dws_server_10m as bigdata_fcas_v2.dws_server_10m_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_server_10m_local',rand());
 
@@ -665,8 +629,10 @@ CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_server_1h_local
 (
     `start_time` DateTime,
     `user_id` UInt32,
+    `d_user_id` UInt32,
     `link_id` UInt32,
     `isp` String,
+    `d_isp` String,
     `app_type` UInt32,
     `app_id` UInt32,
     `host` String,
@@ -677,33 +643,19 @@ CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_server_1h_local
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, app_type, app_id,user_id,link_id,isp, host,dst_ip,dst_area_id)
-ORDER BY (start_time, app_type, app_id,user_id,link_id,isp, host,dst_ip,dst_area_id)
+PRIMARY KEY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
+ORDER BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
 TTL toDate(start_time) + toIntervalMonth(1)
 SETTINGS index_granularity = 8192;
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1h_src_mv TO bigdata_fcas_v2.dws_server_1h_local
-AS
-SELECT toStartOfHour(o_start_time) AS start_time,
-       d_user_id AS user_id,
-       link_id,
-       isp,
-       app_type,
-       app_id,
-       host,
-       dst_ip,
-       dst_area_id,
-       sumState(bytes_up)                AS bytes_up_view,
-       sumState(bytes_dn)                AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp,host, dst_ip, dst_area_id);
-
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1h_dst_mv TO bigdata_fcas_v2.dws_server_1h_local
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1h_mv TO bigdata_fcas_v2.dws_server_1h_local
 AS
 SELECT toStartOfHour(o_start_time) AS start_time,
        user_id,
+       d_user_id,
        link_id,
-       d_isp AS isp,
+       isp,
+       d_isp,
        app_type,
        app_id,
        host,
@@ -712,7 +664,7 @@ SELECT toStartOfHour(o_start_time) AS start_time,
        sumState(bytes_up)                AS bytes_up_view,
        sumState(bytes_dn)                AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp, host, dst_ip, dst_area_id);
+GROUP BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id);
 
 CREATE TABLE IF NOT EXISTS dws_server_1h AS bigdata_fcas_v2.dws_server_1h_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_server_1h_local',rand());
 
@@ -720,41 +672,33 @@ CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_server_1d_local
 (
     `start_time` DateTime,
     `user_id` UInt32,
+    `d_user_id` UInt32,
     `link_id` UInt32,
     `isp` String,
+    `d_isp` String,
     `app_type` UInt32,
     `app_id` UInt32,
+    `host` String,
+    `dst_ip` String,
     `dst_area_id` UInt32,
     `bytes_up_view` AggregateFunction(sum, UInt64),
     `bytes_dn_view` AggregateFunction(sum, UInt64)
 )
 ENGINE = AggregatingMergeTree
 PARTITION BY toYYYYMMDD(start_time)
-PRIMARY KEY (start_time, app_type, app_id,user_id, link_id,isp, dst_area_id)
-ORDER BY (start_time, app_type, app_id,user_id, link_id,isp, dst_area_id)
+PRIMARY KEY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
+ORDER BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id)
 TTL toDate(start_time) + toIntervalMonth(6)
 SETTINGS index_granularity = 8192;
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1d_src_mv TO bigdata_fcas_v2.dws_server_1d_local
-AS
-SELECT toStartOfDay(o_start_time) AS start_time,
-       d_user_id AS user_id,
-       link_id,
-       isp,
-       app_type,
-       app_id,
-       host,
-       dst_ip,
-       dst_area_id,
-       sumState(bytes_up)                AS bytes_up_view,
-       sumState(bytes_dn)                AS bytes_dn_view
-FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp,host, dst_ip, dst_area_id);
-CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1h_dst_mv TO bigdata_fcas_v2.dws_server_1h_local
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS dws_server_1d_mv TO bigdata_fcas_v2.dws_server_1d_local
 AS
 SELECT toStartOfDay(o_start_time) AS start_time,
        user_id,
+       d_user_id,
        link_id,
-       d_isp AS isp,
+       isp,
+       d_isp,
        app_type,
        app_id,
        host,
@@ -763,8 +707,13 @@ SELECT toStartOfDay(o_start_time) AS start_time,
        sumState(bytes_up)                AS bytes_up_view,
        sumState(bytes_dn)                AS bytes_dn_view
 FROM ods_gen_traffic
-GROUP BY (start_time, app_type, app_id, user_id, link_id, isp, host, dst_ip, dst_area_id);
+GROUP BY (start_time, app_type, app_id,user_id, d_user_id, link_id,isp,d_isp, host,dst_ip,dst_area_id);
+
 CREATE TABLE IF NOT EXISTS dws_server_1d AS bigdata_fcas_v2.dws_server_1d_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_server_1d_local',rand());
+
+
+-----------server end------------------------
+
 CREATE TABLE IF NOT EXISTS bigdata_fcas_v2.dws_srcip_top_10m_local
 (
     `start_time` DateTime,
@@ -941,7 +890,6 @@ PRIMARY KEY (start_time, user_id, link_id, d_isp, src_ip)
 ORDER BY (start_time, user_id, link_id, d_isp, src_ip)
 TTL toDate(start_time) + toIntervalMonth(6)
 SETTINGS index_granularity = 8192;
-
 CREATE MATERIALIZED VIEW IF NOT EXISTS dws_srcip_top_1d_mv_no_params to bigdata_fcas_v2.dws_srcip_top_1d_no_params_local
 AS
 SELECT toStartOfDay(o_start_time) AS start_time,
@@ -976,7 +924,6 @@ PRIMARY KEY (start_time, app_type, app_id, user_id, d_user_id, link_id, isp, d_i
 ORDER BY (start_time, app_type, app_id, user_id, d_user_id, link_id, isp, d_isp)
 TTL toDate(start_time) + toIntervalDay(7)
 SETTINGS index_granularity = 8192;
-
 CREATE MATERIALIZED VIEW IF NOT EXISTS dws_user_10m_mv to bigdata_fcas_v2.dws_user_10m_local
 AS
 SELECT toStartOfTenMinutes(o_start_time) AS start_time,
@@ -1015,7 +962,6 @@ PRIMARY KEY (start_time, app_type, app_id, user_id, d_user_id, link_id, isp, d_i
 ORDER BY (start_time, app_type, app_id, user_id, d_user_id, link_id, isp, d_isp)
 TTL toDate(start_time) + toIntervalMonth(1)
 SETTINGS index_granularity = 8192;
-
 CREATE MATERIALIZED VIEW IF NOT EXISTS dws_user_1h_mv TO bigdata_fcas_v2.dws_user_1h_local
 AS
 SELECT toStartOfHour(o_start_time) AS start_time,
@@ -1070,27 +1016,3 @@ SELECT toStartOfDay(o_start_time) AS start_time,
 FROM ods_gen_traffic
 GROUP BY (start_time, app_type, app_id, user_id, d_user_id, link_id, isp, d_isp, dst_province);
 CREATE TABLE IF NOT EXISTS dws_user_1d AS bigdata_fcas_v2.dws_user_1d_local ENGINE = Distributed('fcas_cluster','bigdata_fcas_v2','dws_user_1d_local',rand());
-
--- BoyDB2022
--- CREATE DICTIONARY IF NOT EXISTS bigdata_fcas_v2.app_type_dict
--- (
---
---     `id` UInt8,
---
---     `name` String
--- )
--- PRIMARY KEY id
--- SOURCE(MYSQL(PORT 3306 USER 'root' PASSWORD '123456' HOST '127.0.0.1' DB 'fcas_service' TABLE 'app_type_view'))
--- LIFETIME(MIN 1 MAX 3)
--- LAYOUT(HASHED());
---
--- -- BoyDB2022
--- CREATE DICTIONARY IF NOT EXISTS bigdata_fcas_v2.app_id_dict
--- (
---     `id` UInt8,
---     `name` String
--- )
--- PRIMARY KEY id
--- SOURCE(MYSQL(PORT 3306 USER 'root' PASSWORD '123456' HOST '127.0.0.1' DB 'fcas_service' TABLE 'app_id_view'))
--- LIFETIME(MIN 1 MAX 3)
--- LAYOUT(HASHED());

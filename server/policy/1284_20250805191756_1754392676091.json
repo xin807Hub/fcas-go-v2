@@ -1,0 +1,1 @@
+{"msg_type":1284,"policy_id":2,"time_info":{"start_time":"2025-08-05 00:00:00","end_time":"2025-08-15 00:00:00","period":"all","period_info":[{"start_period":"0","end_period":"0"}]},"control_policy":{"threshold_up_ids":102400,"threshold_dn_ids":102400,"link_ids":[11]},"feature_list":{"app_info":[],"combined":false,"tuple":[{"sip":"211.144.67.0-211.144.67.127"}]},"bind_obj":"all"}

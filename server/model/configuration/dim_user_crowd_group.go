@@ -5,7 +5,7 @@ type DimUserCrowdGroup struct {
 	GroupName string `json:"group_name" gorm:"column:group_name"` // 用户群组名称
 	Remark    string `json:"remark" gorm:"column:remark"`         // 备注
 
-	Crowds []DimUserCrowdGroupCrowd `json:"crowds" gorm:"-"`
+	Crowds []DimUserCrowdGroupCrowd `json:"crowds" gorm:"json;type:json;column:crowds;->"`
 }
 
 func (m *DimUserCrowdGroup) TableName() string {

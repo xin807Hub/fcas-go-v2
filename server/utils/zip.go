@@ -52,9 +52,9 @@ func Unzip(zipFile string, destDir string) ([]string, error) {
 	return paths, nil
 }
 
-func Contains(arr []int, str int) bool {
-	for _, val := range arr {
-		if str == val {
+func Contains(all []int, testItem int) bool {
+	for _, val := range all {
+		if testItem == val {
 			return true
 		}
 	}

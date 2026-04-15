@@ -6,6 +6,7 @@ import (
 	"fcas_server/api/v1/object"
 	"fcas_server/api/v1/policy"
 	"fcas_server/api/v1/traffic"
+	"fcas_server/middleware"
 	"fcas_server/router/system"
 	"net/http"
 	"os"
@@ -70,11 +71,13 @@ func Routers() *gin.Engine {
 	//Router.Static("/assets", "./dist/assets")   // dist里面的静态资源
 	//Router.StaticFile("/", "./dist/index.html") // 前端网页入口页面
 
-	Router.StaticFS(global.CONFIG.Local.StorePath, justFilesFilesystem{http.Dir(global.CONFIG.Local.StorePath)}) // Router.Use(middleware.LoadTls())  // 如果需要使用https 请打开此中间件 然后前往 core/server.go 将启动模式 更变为 Router.RunTLS("端口","你的cre/pem文件","你的key文件")
+	Router.StaticFS(global.CONFIG.Local.StorePath, justFilesFilesystem{http.Dir(global.CONFIG.Local.StorePath)})
+	// Router.Use(middleware.LoadTls())
+	// 如果需要使用https 请打开此中间件 然后前往 core/server.go 将启动模式 更变为 Router.RunTLS("端口","你的cre/pem文件","你的key文件")
 	// 跨域，如需跨域可以打开下面的注释
 	// Router.Use(middleware.Cors()) // 直接放行全部跨域请求
 	// Router.Use(middleware.CorsByRules()) // 按照配置的规则放行跨域请求
-	//global.log.Info("use middleware cors")
+	// global.log.Info("use middleware cors")
 	docs.SwaggerInfo.BasePath = global.CONFIG.System.RouterPrefix
 	Router.GET(global.CONFIG.System.RouterPrefix+"/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	global.Log.Info("register swagger handler")
@@ -85,7 +88,7 @@ func Routers() *gin.Engine {
 	PrivateGroup := Router.Group(global.CONFIG.System.RouterPrefix)
 
 	// 注册Token验证中间件
-	//PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
 
 	// 健康监测
 	PublicGroup.GET("/health", func(c *gin.Context) {
@@ -130,6 +133,12 @@ func Routers() *gin.Engine {
 	policy.DimTrafficAlarmConfigApi{}.Router(PrivateGroup) // 优先转发策略配置
 
 	object.NewAppClassifyRouter(PrivateGroup) // 应用分类与自定义
+
+	if global.CONFIG.SyncApi {
+		if err := SyncApi(global.SystemDB, Router); err != nil {
+			panic("同步api接口失败: " + err.Error())
+		}
+	}
 
 	// 注册业务路由
 	return initRouter(Router, PrivateGroup, PublicGroup)

@@ -4,7 +4,7 @@ workdir=$(pwd)
 
 function install_web() {
     echo  "安装web......开始"
-    cp -f  $workdir/web/nginx.conf /etc/nginx/nginx.conf
+    cp -f  $workdir/web/nginx.conf /etc/nginx/
     rm -rf /home/fcas/web/*
     unzip -o -q $workdir/web/*.zip -d /home/fcas/web/
     systemctl restart nginx
@@ -13,11 +13,10 @@ function install_web() {
 
 function install_server() {
     echo "安装fcas_v2_server 开始"
-#    chmod +x yaml_tool
-
+    # chmod +x yaml_tool
     if [ -f /home/fcas/server/config.yaml ]; then
       # 如果文件存在
-#        ./yaml_tool --merge backend/config.yaml /home/fcas/server/config.yaml config.yaml
+      # ./yaml_tool --merge backend/config.yaml /home/fcas/server/config.yaml config.yaml
         \cp -f server/config.yaml /home/fcas/server/config.yaml
     else
         mkdir -p /home/fcas/server
@@ -34,19 +33,17 @@ function install_server() {
 
     \cp -f ./BUILD_VERSION /home/fcas
     current_time=$(date '+%Y-%m-%d %H:%M:%S')
-    echo "$current_time install successful!" >> /home/install_status
+    echo "$current_time install successful!" >> /home/install_fcas_server_status
 
     echo "安装fcas_v2_server 完成"
 }
 
 function update_mysql() {
   echo  "更新mysql 开始"
-  docker cp $workdir/mysql/fcas_service.sql mysql8:/root/
-  docker cp $workdir/mysql/fcas_system.sql mysql8:/root/
-  docker cp $workdir/mysql/biz_isp.sql mysql8:/root/
-  docker cp $workdir/mysql/biz_ip_address.sql mysql8:/root/
-  docker cp $workdir/mysql/load.sh mysql8:/root/
-  docker exec mysql8 /root/load.sh
+  cd $workdir/mysql/
+  sh $workdir/mysql/import_sql.sh -c mysql8 -p Mysql@2o20...
+  sh $workdir/mysql/import_csv.sh -c mysql8 -p Mysql@2o20... -d fcas_service
+  cd -
   echo  "更新mysql 完成"
 }
 

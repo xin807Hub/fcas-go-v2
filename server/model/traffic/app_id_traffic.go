@@ -37,13 +37,13 @@ type AppIdLevel1TableData struct {
 
 // AppIdLevel2RankTable 小类业务流量排名表格（目的ip和host）
 type AppIdLevel2RankTable struct {
-	Name      string  `json:"name" gorm:"name"`
-	DstAreaId uint32  `json:"dstAreaId,omitempty" gorm:"dst_area_id"`
-	Location  string  `json:"location,omitempty" gorm:"location"`
-	UpByte    float64 `json:"upByte" gorm:"up_byte"`
-	DnByte    float64 `json:"dnByte" gorm:"dn_byte"`
-	AvgUpBps  float64 `json:"avgUpBps" gorm:"avg_up_bps"`
-	AvgDnBps  float64 `json:"avgDnBps" gorm:"avg_dn_bps"`
+	Name string `json:"name" gorm:"name"`
+	//DstAreaId uint32  `json:"dstAreaId,omitempty" gorm:"dst_area_id"`
+	Location string  `json:"location" gorm:"location"`
+	UpByte   float64 `json:"upByte" gorm:"up_byte"`
+	DnByte   float64 `json:"dnByte" gorm:"dn_byte"`
+	AvgUpBps float64 `json:"avgUpBps" gorm:"avg_up_bps"`
+	AvgDnBps float64 `json:"avgDnBps" gorm:"avg_dn_bps"`
 }
 
 type AppIdLevel2Data struct {

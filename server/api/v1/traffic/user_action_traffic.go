@@ -2,6 +2,7 @@ package traffic
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	modelTraffic "fcas_server/model/traffic"
 	"fcas_server/service/traffic"
@@ -15,7 +16,7 @@ type UserActionTrafficApi struct {
 }
 
 func (a UserActionTrafficApi) Router(Router *gin.RouterGroup) {
-	router := Router.Group("traffic/userAction")
+	router := Router.Group("traffic/userAction").Use(middleware.OperationRecord())
 	router.POST("pageData", a.GetUserActionPageData) // 表格数据查询
 	router.POST("detail", a.GetUserActionDetail)     // 详情数据查询
 	router.POST("export", a.Export)                  // 导出数据
@@ -38,10 +39,16 @@ func (a UserActionTrafficApi) GetUserActionPageData(c *gin.Context) {
 		response.FailWithMessage(utils.TranslateErr(err), c)
 		return
 	}
-	pageInfo, err := a.service.GetUserActionTable(req)
+	if req.DataType == "" {
+		global.Log.Error("请选择一个数据类型", zap.Error(err))
+		response.FailWithMessage("请选择一个数据类型", c)
+		return
+	}
+	var pageInfo response.PageResult
+	pageInfo, err = a.service.GetUserActionTable(req)
 	if err != nil {
 		global.Log.Error("获取失败!", zap.Error(err))
-		response.FailWithMessage("获取失败", c)
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	response.OkWithDetailed(pageInfo, "获取成功", c)

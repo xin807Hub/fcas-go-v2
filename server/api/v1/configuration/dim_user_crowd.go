@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	"fcas_server/model/configuration/req"
 	"fcas_server/service/configuration"
@@ -15,7 +16,7 @@ type dimUserCrowdApi struct {
 
 func NewDimUserCrowdRouter(rg *gin.RouterGroup) {
 
-	router := rg.Group("configuration/dimusercrowd")
+	router := rg.Group("configuration/dimusercrowd").Use(middleware.OperationRecord())
 
 	api := dimUserCrowdApi{
 		svc: configuration.NewDimUserCrowdSvc(global.Log, global.ServiceDB),

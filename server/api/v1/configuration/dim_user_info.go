@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	"fcas_server/model/configuration/req"
 	"fcas_server/service/configuration"
@@ -18,7 +19,7 @@ type dimUserInfoApi struct {
 }
 
 func NewDimUserInfoRouter(rg *gin.RouterGroup) {
-	router := rg.Group("configuration/dimuserinfo")
+	router := rg.Group("configuration/dimuserinfo").Use(middleware.OperationRecord())
 
 	api := dimUserInfoApi{
 		svc: configuration.NewDimUserInfoSvc(global.Log, global.ServiceDB, global.AddrSet),

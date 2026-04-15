@@ -38,7 +38,7 @@ var SeverOldTableNameMap = map[int]string{
 	global.Interval1dParticle:  "bigdata_fcas.dws_server_hour",
 }
 
-func getAppIdDb(param traffic.AppIdReqParam, queryType string) (ckDb *gorm.DB, err error) {
+func getAppIdDb(param traffic.AppIdReqParam) (ckDb *gorm.DB, err error) {
 	particle, err := utils2.GetParticleByTimeRange(param.StartTime, param.EndTime)
 	if err != nil {
 		return nil, err
@@ -63,11 +63,6 @@ func getAppIdDb(param traffic.AppIdReqParam, queryType string) (ckDb *gorm.DB, e
 			selectSql = "app_id,host,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn,Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
 			groupSql = "app_id,host,start_time"
 		}
-	}
-
-	if queryType == "all" {
-		selectSql = "start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn,Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
-		groupSql = "start_time"
 	}
 
 	selectSql = strings.ReplaceAll(selectSql, "{{.interval}}", strconv.Itoa(particle))
@@ -143,10 +138,9 @@ func getAppIdDb(param traffic.AppIdReqParam, queryType string) (ckDb *gorm.DB, e
 // GetAppIdRankLevel1 1级小类排名入口
 func (service AppIdService) GetAppIdRankLevel1(param traffic.AppIdReqParam) (traffic.Level1Data, error) {
 	var level1Data = traffic.Level1Data{}
-	ckDb, err := getAppIdDb(param, "")
-	ckDb1, err := getAppIdDb(param, "all")
+	ckDb, err := getAppIdDb(param)
 
-	level1Data, err = GetGatherData(ckDb1, level1Data)
+	level1Data, err = GetGatherData(ckDb, level1Data, "app_id")
 	if err != nil {
 		global.Log.Error("获取app大类一级汇总数据错误", zap.Error(err))
 		return level1Data, err
@@ -166,7 +160,7 @@ func (service AppIdService) GetLevel1TableData(param traffic.AppIdReqParam) (res
 	var result response.PageResult
 	var level1Tables []traffic.AppIdLevel1TableData
 	var total int64
-	ckDb, err := getAppIdDb(param, "")
+	ckDb, err := getAppIdDb(param)
 
 	selectStr := "app_id," +
 		"dictGet('app_id_dict','name',app_id) AS name," +
@@ -212,7 +206,7 @@ func (service AppIdService) GetLevel2Or3TrendTable(param traffic.AppIdReqParam) 
 	if param.RankLevel == global.LevelThree && param.DstIpParam == "" && param.HostParam == "" {
 		return result, errors.New("请求3级排名数据时，[dstIpParam]或[hostParam]不得为空")
 	}
-	ckDb, err := getAppIdDb(param, "")
+	ckDb, err := getAppIdDb(param)
 	if err != nil {
 		return result, errors.New("根据查询条件获取db句柄出错")
 	}
@@ -223,7 +217,7 @@ func (service AppIdService) GetLevel2Or3TrendTable(param traffic.AppIdReqParam) 
 func (service AppIdService) GetAppIdRankLevel2(param traffic.AppIdReqParam) (traffic.AppIdLevel2Data, error) {
 	var result traffic.AppIdLevel2Data
 
-	ckDb, err := getAppIdDb(param, "")
+	ckDb, err := getAppIdDb(param)
 	if err != nil {
 		return result, err
 	}
@@ -240,7 +234,7 @@ func (service AppIdService) GetAppIdRankLevel2(param traffic.AppIdReqParam) (tra
 	}
 
 	param.RankType = traffic.RankTypeDstIP
-	ckDb, err = getAppIdDb(param, "")
+	ckDb, err = getAppIdDb(param)
 	if err != nil {
 		return result, err
 	}
@@ -252,7 +246,7 @@ func (service AppIdService) GetAppIdRankLevel2(param traffic.AppIdReqParam) (tra
 	result.DstIpRankBar = dstIpRankData
 
 	param.RankType = traffic.RankTypeHost
-	ckDb, err = getAppIdDb(param, "")
+	ckDb, err = getAppIdDb(param)
 	if err != nil {
 		return result, err
 	}
@@ -299,14 +293,15 @@ func (service AppIdService) GetLevel2RankTable(param traffic.AppIdReqParam) (res
 	if param.RankType == "" {
 		return result, errors.New("rankType不得为空")
 	}
-	ckDb, err := getAppIdDb(param, "")
+	ckDb, err := getAppIdDb(param)
 	if err != nil {
 		global.Log.Error(err.Error(), zap.Error(err))
 		return result, err
 	}
 	var level2RankTableData []traffic.AppIdLevel2RankTable
 	var total int64
-	var selectStr = "dst_ip AS name,dst_area_id," +
+	var selectStr = "dst_ip AS name," +
+		"if(dst_area_id=0,'未知', dictGet('ip_address_dict','location',dst_area_id)) as location," +
 		"sum(traffic_up) AS up_byte," +
 		"sum(traffic_dn) AS dn_byte," +
 		"(up_byte + dn_byte) AS total_byte," +
@@ -319,8 +314,8 @@ func (service AppIdService) GetLevel2RankTable(param traffic.AppIdReqParam) (res
 			"sum(traffic_up) AS up_byte," +
 			"sum(traffic_dn) AS dn_byte," +
 			"(up_byte + dn_byte) AS total_byte," +
-			"sum(traffic_up_bps) AS avg_up_bps, " +
-			"sum(traffic_dn_bps) AS avg_dn_bps"
+			"avg(traffic_up_bps) AS avg_up_bps, " +
+			"avg(traffic_dn_bps) AS avg_dn_bps"
 		groupBySql = "name"
 	}
 
@@ -338,18 +333,18 @@ func (service AppIdService) GetLevel2RankTable(param traffic.AppIdReqParam) (res
 		return result, err
 	}
 
-	if param.RankType == traffic.RankTypeDstIP && total > 0 {
-		for i, item := range level2RankTableData {
-			var ipAddrInfo traffic.BizIpAddress
-			err = global.ServiceDB.Model(&traffic.BizIpAddress{}).Where("id", item.DstAreaId).First(&ipAddrInfo).Error
-			if err != nil {
-				continue
-			}
-			location := strings.Join([]string{ipAddrInfo.Country, ipAddrInfo.Province, ipAddrInfo.City, ipAddrInfo.Isp}, ",")
-			location = strings.ReplaceAll(location, "0", "未知")
-			level2RankTableData[i].Location = location
-		}
-	}
+	//if param.RankType == traffic.RankTypeDstIP && total > 0 {
+	//	for i, item := range level2RankTableData {
+	//		var ipAddrInfo traffic.BizIpAddress
+	//		err = global.ServiceDB.Model(&traffic.BizIpAddress{}).Where("id", item.DstAreaId).First(&ipAddrInfo).Error
+	//		if err != nil {
+	//			continue
+	//		}
+	//		location := strings.Join([]string{ipAddrInfo.Country, ipAddrInfo.Province, ipAddrInfo.City, ipAddrInfo.Isp}, ",")
+	//		location = strings.ReplaceAll(location, "0", "未知")
+	//		level2RankTableData[i].Location = location
+	//	}
+	//}
 
 	result.List = level2RankTableData
 	result.TotalCount = total
@@ -364,7 +359,7 @@ func (service AppIdService) GetAppIdRankLevel3(param traffic.AppIdReqParam) ([]c
 	if param.HostParam == "" && param.DstIpParam == "" {
 		return nil, errors.New("hostParam 以及 dstIpParam 不得同时为空")
 	}
-	ckDb, err := getAppIdDb(param, "")
+	ckDb, err := getAppIdDb(param)
 	trendSeries, err := GetLevel2TrendData(ckDb)
 	if err != nil {
 		global.Log.Error("获取应用小类3级趋势图数据错误", zap.Error(err))
@@ -382,7 +377,7 @@ func (service AppIdService) ExportData(param traffic.AppIdReqParam) ([]byte, err
 	if err != nil {
 		return nil, err
 	}
-	ckDb, _ := getAppIdDb(param, "")
+	ckDb, _ := getAppIdDb(param)
 	totalByte, err := GetTotalByte(ckDb)
 	if err != nil {
 		return nil, err
@@ -392,7 +387,7 @@ func (service AppIdService) ExportData(param traffic.AppIdReqParam) ([]byte, err
 	// 将查询结果转换为 []map[string]interface{} 格式
 	dataList, ok := list.([]traffic.AppIdLevel1TableData)
 	if !ok {
-		global.Log.Error("转换失败")
+		global.Log.Error(err.Error())
 		return nil, err
 	}
 	dataMapList := make([]map[string]interface{}, len(dataList))

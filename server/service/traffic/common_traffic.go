@@ -6,20 +6,27 @@ import (
 	"fcas_server/model/common/request"
 	"fcas_server/model/common/response"
 	"fcas_server/model/traffic"
+	"fmt"
 	"gorm.io/gorm"
 )
 
-func GetGatherData(ckDb *gorm.DB, level1Data traffic.Level1Data) (traffic.Level1Data, error) {
+func GetGatherData(ckDb *gorm.DB, level1Data traffic.Level1Data, groupBy string) (traffic.Level1Data, error) {
 	var gatherData traffic.GatherData
-	selectSql :=
-		"   avg(traffic_up_bps) AS avg_up_bps, " +
-			" avg(traffic_dn_bps) AS avg_dn_bps, " +
-			" sum(traffic_up) AS up_byte, " +
-			" sum(traffic_dn) AS dn_byte, " +
-			" up_byte + dn_byte AS total_byte"
-	//selectSql = strings.ReplaceAll(selectSql, "{{.interval}}", strconv.Itoa(particle))
+	subSelectSql := fmt.Sprintf(`%s,
+										avg(traffic_up_bps) AS avg_up_bps,
+										avg(traffic_dn_bps) AS avg_dn_bps, 
+										sum(traffic_up) AS up_byte, 
+										sum(traffic_dn) AS dn_byte, 
+										up_byte + dn_byte AS total_byte`, groupBy)
+	subTx := global.V2ClickhouseDB.Table("(?)", ckDb).Select(subSelectSql).Group(groupBy)
 
-	err := global.V2ClickhouseDB.Table("(?)", ckDb).Select(selectSql).Find(&gatherData).Error
+	err := global.V2ClickhouseDB.Table("(?)", subTx).
+		Select(`sum(avg_up_bps) AS avg_up_bps,
+						sum(avg_dn_bps) AS avg_dn_bps, 
+						sum(up_byte) AS up_byte, 
+						sum(dn_byte) AS dn_byte, 
+						up_byte + dn_byte AS total_byte`).
+		Find(&gatherData).Error
 	if err != nil {
 		return level1Data, err
 	}

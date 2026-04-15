@@ -45,7 +45,7 @@ etl-nodes:
     remote-db: "bigdata_fcas_v2"
     remote-table: "ods_gen_traffic"
     username: "default"
-    password: "123456"
+    password: "BoyDB2022"
     cache-max: 200000
     cache-timer: 1 # 单位s
     trans-conf:

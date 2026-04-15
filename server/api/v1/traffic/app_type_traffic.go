@@ -2,6 +2,7 @@ package traffic
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	modelTraffic "fcas_server/model/traffic"
 	"fcas_server/service/traffic"
@@ -19,7 +20,7 @@ type AppTypeTrafficApi struct {
 }
 
 func (a AppTypeTrafficApi) Router(Router *gin.RouterGroup) {
-	router := Router.Group("traffic/appType")
+	router := Router.Group("traffic/appType").Use(middleware.OperationRecord())
 	router.POST("rankData", a.GetAppTypeData)           // 1级/2级排名数据查询
 	router.POST("rankTableData", a.GetAppTypeTableData) // 1级/2级排名数据查询
 	router.POST("export", a.Export)                     // 导出数据

@@ -5,8 +5,10 @@ import (
 	"fcas_server/model/configuration"
 	"fcas_server/model/configuration/req"
 	"fmt"
+	"github.com/doug-martin/goqu/v9"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type DimUserCrowdGroupSvc struct {
@@ -40,26 +42,78 @@ func (svc DimUserCrowdGroupSvc) GetById(id string) (result configuration.DimUser
 }
 
 func (svc DimUserCrowdGroupSvc) List(req req.ListRequest) (result []*configuration.DimUserCrowdGroup, total int64, err error) {
-	tx := svc.Mysql.Model(configuration.DimUserCrowdGroup{}).Debug()
+	//tx := svc.Mysql.Model(configuration.DimUserCrowdGroup{}).Debug()
+	//if req.Key != "" {
+	//	tx = tx.Where("group_name LIKE ?", fmt.Sprint("%", req.Key, "%"))
+	//}
+	//
+	//// 分页
+	//err = tx.Count(&total).Limit(req.Limit).Offset((req.Page - 1) * req.Limit).Find(&result).Error
+	//if err != nil {
+	//	svc.Log.Error("获取列表信息失败", zap.Error(err))
+	//	return result, total, err
+	//}
+	//
+	//// 填充组信息
+	//for _, group := range result {
+	//	crowds, err := getCrowdByGroupId(svc.Mysql, group.ID)
+	//	if err != nil {
+	//		svc.Log.Error("根据用户组群ID获取用户组信息失败", zap.Any("group_id", group.ID), zap.Error(err))
+	//		continue
+	//	}
+	//	group.Crowds = crowds
+	//}
+
+	tx := svc.Mysql.Debug()
+
+	sql := `
+			SELECT g.id AS id,
+				   g.group_name,
+				   COALESCE(
+						   (SELECT JSON_ARRAYAGG(
+										   JSON_OBJECT(
+												   'id', c.id,
+												   'crowdName', c.crowd_name
+											   )
+									   )
+							FROM dim_user_crowd_group_relation r
+									 JOIN dim_user_crowd c ON c.id = r.crowd_id
+							WHERE r.group_id = g.id),
+						   JSON_ARRAY())
+						AS crowds
+			FROM dim_user_crowd_group g
+			%s
+			ORDER BY g.id
+			`
+
+	whereBuilder := goqu.Select()
+
 	if req.Key != "" {
-		tx = tx.Where("group_name LIKE ?", fmt.Sprint("%", req.Key, "%"))
+		whereBuilder = whereBuilder.Where(goqu.L("group_name LIKE ?", "%"+req.Key+"%"))
 	}
+
+	whereSql, _, _ := whereBuilder.ToSQL()
+	whereSql = strings.TrimSpace(whereSql[len("SELECT *"):])
+	sql = fmt.Sprintf(sql, whereSql)
 
 	// 分页
-	err = tx.Count(&total).Limit(req.Limit).Offset((req.Page - 1) * req.Limit).Find(&result).Error
-	if err != nil {
+	countSql := fmt.Sprintf(`SELECT count(*) FROM (%s) t`, sql)
+
+	pagerSql := fmt.Sprintf(`%s LIMIT %d OFFSET %d`, sql, req.Limit, (req.Page-1)*req.Limit)
+
+	if err := tx.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Raw(countSql).Scan(&total).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Raw(pagerSql).Scan(&result).Error; err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
 		svc.Log.Error("获取列表信息失败", zap.Error(err))
 		return result, total, err
-	}
-
-	// 填充组信息
-	for _, group := range result {
-		crowds, err := getCrowdByGroupId(svc.Mysql, group.ID)
-		if err != nil {
-			svc.Log.Error("根据用户组群ID获取用户组信息失败", zap.Any("group_id", group.ID), zap.Error(err))
-			continue
-		}
-		group.Crowds = crowds
 	}
 
 	return result, total, nil

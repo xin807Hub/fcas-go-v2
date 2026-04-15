@@ -1,10 +1,10 @@
 package configuration
 
 import (
+	"fcas_server/model/configuration/req"
 	"fmt"
 	"log"
 	"testing"
-	"fcas_server/model/configuration/req"
 
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
@@ -18,9 +18,9 @@ func setupLog() *zap.Logger {
 }
 
 func setupMysql() *gorm.DB {
-	host := "192.168.5.246"
+	host := "192.168.4.180"
 	user := "root"
-	password := "123456"
+	password := "Mysql@2o20..."
 	dbName := "fcas_service"
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?charset=utf8mb3&parseTime=True&loc=Local",
 		user,

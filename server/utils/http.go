@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func HttpRequest(urlStr string, method string, headers map[string]string, params map[string]string, data any) (*http.Response, error) {
+func HttpRequest(urlStr string, method string, headers map[string]string, params map[string]string, postParams any) (*http.Response, error) {
 	// 创建URL
 	u, err := url.Parse(urlStr)
 	if err != nil {
@@ -26,8 +26,8 @@ func HttpRequest(urlStr string, method string, headers map[string]string, params
 
 	// 将数据编码为JSON
 	buf := new(bytes.Buffer)
-	if data != nil {
-		b, err := json.Marshal(data)
+	if postParams != nil {
+		b, err := json.Marshal(postParams)
 		if err != nil {
 			return nil, err
 		}
@@ -45,7 +45,7 @@ func HttpRequest(urlStr string, method string, headers map[string]string, params
 		req.Header.Set(k, v)
 	}
 
-	if data != nil {
+	if postParams != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
 
@@ -54,6 +54,7 @@ func HttpRequest(urlStr string, method string, headers map[string]string, params
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	// 返回响应，让调用者处理
 	return resp, nil

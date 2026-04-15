@@ -12,12 +12,12 @@ type DimControlPolicyActionService struct {
 }
 
 func (DimControlPolicyActionService) List() ([]policy.DimControlPolicyAction, error) {
-	var result []policy.DimControlPolicyAction
-	if err := global.ServiceDB.Model(&policy.DimControlPolicyAction{}).Find(&result).Error; err != nil {
-		global.Log.Error("策略配置PolicyAction查询失败", zap.Error(err))
+	var actions []policy.DimControlPolicyAction
+	if err := global.ServiceDB.Model(&policy.DimControlPolicyAction{}).Find(&actions).Error; err != nil {
+		global.Log.Error("查询策略Action 失败", zap.Error(err))
 		return nil, err
 	}
-	return result, nil
+	return actions, nil
 }
 
 func (DimControlPolicyActionService) SaveOrUpdate(action policy.DimControlPolicyAction) error {
@@ -32,7 +32,7 @@ func (DimControlPolicyActionService) SaveOrUpdate(action policy.DimControlPolicy
 	if len(result) > 0 {
 		action.Id = result[0].Id
 	}
-	if err := global.ServiceDB.Model(&policy.DimControlPolicyAction{}).Save(action).Error; err != nil {
+	if err := global.ServiceDB.Save(&action).Error; err != nil {
 		global.Log.Error("策略配置PolicyAction保存失败", zap.Error(err))
 		return err
 	}

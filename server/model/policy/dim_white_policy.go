@@ -31,8 +31,8 @@ type DimWhitePolicy struct {
 	UserCrowdGroupId int       `json:"user_crowd_group_id"`
 	UserCrowdId      int       `json:"user_crowd_id"`
 	UserId           int       `json:"user_id"`
-	UlTos            int       `json:"ul_tos"`
-	DlTos            int       `json:"dl_tos"`
+	UlTos            *int      `json:"ul_tos"`
+	DlTos            *int      `json:"dl_tos"`
 	AppTypeId        int       `json:"app_type_id"`
 	AppTypeName      string    `json:"app_type_name" gorm:"-"`
 	AppId            int       `json:"app_id"`

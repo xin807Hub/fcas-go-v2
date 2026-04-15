@@ -32,7 +32,7 @@ CREATE TABLE `biz_isp`  (
 -- ----------------------------
 -- Records of biz_isp
 -- ----------------------------
-INSERT INTO `biz_isp` VALUES (1, '其他', 2);
+INSERT INTO `biz_isp` VALUES (1, '其他', 0);
 INSERT INTO `biz_isp` VALUES (2, '2Degrees', 1);
 INSERT INTO `biz_isp` VALUES (3, '3BB', 1);
 INSERT INTO `biz_isp` VALUES (4, 'ACT', 1);

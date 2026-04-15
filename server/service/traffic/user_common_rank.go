@@ -5,13 +5,14 @@ import (
 	"fcas_server/model/traffic"
 	"fcas_server/utils"
 	"fmt"
+	"math"
+	"sort"
+	"strings"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/samber/lo"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"math"
-	"sort"
-	"strings"
 )
 
 var UserNewTableNameMap = map[int]string{
@@ -389,7 +390,7 @@ func (svc userCommonRankSvc) level1BaseSQL(params traffic.UserCommonRankParams, 
 				   sum(traffic_up)                       		AS traffic_up,
 				   sum(traffic_dn)                       		AS traffic_dn
 			FROM (
-					 SELECT user_id,
+					 SELECT d_user_id               AS user_id,
 							start_time,
 							sumMerge(bytes_up_view) as traffic_up,
 							sumMerge(bytes_dn_view) as traffic_dn
@@ -400,13 +401,13 @@ func (svc userCommonRankSvc) level1BaseSQL(params traffic.UserCommonRankParams, 
 					 UNION
 					 DISTINCT
 			
-					 SELECT d_user_id               AS user_id,
+					 SELECT user_id,
 							start_time,
 							sumMerge(bytes_up_view) as traffic_up,
 							sumMerge(bytes_dn_view) as traffic_dn
 					 FROM {table}
 					 %s
-					 GROUP BY d_user_id, start_time
+					 GROUP BY user_id, start_time
 					 )
 			GROUP BY user_id, start_time
 			`

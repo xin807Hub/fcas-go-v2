@@ -14,11 +14,11 @@ func GetExcelFileStream(fileName string, headers []string, dataList [][]interfac
 
 	// 创建excel文件
 	f := excelize.NewFile()
-	//defer func() {
-	//	if err := f.Close(); err != nil {
-	//		global.Log.Error(err.Error())
-	//	}
-	//}()
+	defer func() {
+		if err := f.Close(); err != nil {
+			global.Log.Error(err.Error())
+		}
+	}()
 
 	// 创建新的工作表
 	var sheetName = "Sheet1"
@@ -47,11 +47,11 @@ func GetExcelFileStream(fileName string, headers []string, dataList [][]interfac
 	}
 
 	// 将Excel文件写入缓冲区
-	if err := f.Write(&buf); err != nil {
+	if err = f.Write(&buf); err != nil {
 		return nil, err
 	}
 
-	return &buf, nil
+	return &buf, err
 }
 
 func ExportToExcel(fields []string, headers []string, data []map[string]interface{}) ([]byte, error) {

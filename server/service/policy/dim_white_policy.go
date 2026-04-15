@@ -96,7 +96,24 @@ func (d DimWhitePolicyService) SaveOrUpdateWhitePolicy(whitePolicy policy.DimWhi
 			return err
 		}
 	} else {
-		if err := global.ServiceDB.Model(&policy.DimWhitePolicy{}).Where("id = ?", whitePolicy.Id).Updates(&whitePolicy).Error; err != nil {
+		var param = map[string]interface{}{
+			"name":                whitePolicy.Name,
+			"user_type":           whitePolicy.UserType,
+			"user_crowd_group_id": whitePolicy.UserCrowdGroupId,
+			"user_crowd_id":       whitePolicy.UserCrowdId,
+			"user_id":             whitePolicy.UserId,
+			"ul_tos":              whitePolicy.UlTos,
+			"dl_tos":              whitePolicy.DlTos,
+			"app_type_id":         whitePolicy.AppTypeId,
+			"app_id":              whitePolicy.AppId,
+			"start_time":          whitePolicy.StartTime,
+			"end_time":            whitePolicy.EndTime,
+			"remark":              whitePolicy.Remark,
+		}
+
+		if err := global.ServiceDB.Model(&policy.DimWhitePolicy{}).
+			Where("id = ?", whitePolicy.Id).
+			Updates(param).Error; err != nil {
 			global.Log.Error("策略配置update失败", zap.Error(err))
 			return err
 		}
@@ -104,7 +121,7 @@ func (d DimWhitePolicyService) SaveOrUpdateWhitePolicy(whitePolicy policy.DimWhi
 	//保存策略后, 发送绑定策略
 	policyInfo := d.buildPolicyJson(whitePolicy, global.Bind)
 	global.Log.Info("策略绑定：" + policyInfo)
-	//utils.SendMessage(policyInfo, global.CONFIG.Policy.SendUrl, strconv.Itoa(policy.WhitePolicyMsgType), global.CONFIG.Policy.Dir)
+	utils.SendMessage(policyInfo, global.CONFIG.Policy.SendUrl, strconv.Itoa(policy.WhitePolicyMsgType), global.CONFIG.Policy.Dir)
 	return nil
 }
 
@@ -138,7 +155,7 @@ func (d DimWhitePolicyService) DeleteWhitePolicy(ids []int) error {
 }
 
 func (d DimWhitePolicyService) buildPolicyJson(whitePolicy policy.DimWhitePolicy, bindFlag string) string {
-	policy := struct {
+	white := struct {
 		MsgType       int         `json:"msg_type"`
 		PolicyId      int         `json:"policy_id"`
 		TimeInfo      interface{} `json:"time_info"`
@@ -149,20 +166,21 @@ func (d DimWhitePolicyService) buildPolicyJson(whitePolicy policy.DimWhitePolicy
 		MsgType:  policy.WhitePolicyMsgType,
 		PolicyId: whitePolicy.Id,
 	}
-	policy.TimeInfo = struct { // time_info
+	white.TimeInfo = struct { // time_info
 		StartTime string `json:"start_time"`
 		EndTime   string `json:"end_time"`
 	}{
 		StartTime: strings.Replace(strings.Replace(whitePolicy.StartTime, "T", " ", -1), "+08:00", "", -1),
 		EndTime:   strings.Replace(strings.Replace(whitePolicy.EndTime, "T", " ", -1), "+08:00", "", -1),
 	}
-	policy.ControlPolicy = struct { // control_policy
-		UlTos int `json:"ul_tos"`
-		DlTos int `json:"dl_tos"`
+	white.ControlPolicy = struct { // control_policy
+		UlTos *int `json:"ul_tos"`
+		DlTos *int `json:"dl_tos"`
 	}{
 		UlTos: whitePolicy.UlTos,
 		DlTos: whitePolicy.DlTos,
 	}
+
 	// 构造feature_list 构造应用大小类的json
 	appInfoList := append([]interface{}{}, 0)
 	if whitePolicy.AppTypeId != 0 {
@@ -191,9 +209,9 @@ func (d DimWhitePolicyService) buildPolicyJson(whitePolicy policy.DimWhitePolicy
 	featureList.AppInfo = appInfoList
 	featureList.Tuple = tupList
 
-	policy.FeatureList = featureList
-	policy.BindObj = bindFlag
-	jsonBt, _ := json.Marshal(policy)
+	white.FeatureList = featureList
+	white.BindObj = bindFlag
+	jsonBt, _ := json.Marshal(white)
 
 	return string(jsonBt)
 }

@@ -94,6 +94,13 @@ definitions:
       mount-point:
         type: string
     type: object
+  config.DpiConf:
+    properties:
+      msg-addr:
+        type: string
+      push-addr:
+        type: string
+    type: object
   config.Email:
     properties:
       from:
@@ -116,6 +123,19 @@ definitions:
         type: string
       to:
         description: 收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用
+        type: string
+    type: object
+  config.Ftp:
+    properties:
+      ip:
+        type: string
+      path:
+        type: string
+      port:
+        type: string
+      userName:
+        type: string
+      userPwd:
         type: string
     type: object
   config.JWT:
@@ -196,18 +216,12 @@ definitions:
     properties:
       dir:
         type: string
-      ip:
-        type: string
-      path:
-        type: string
-      port:
-        type: string
+      ftp:
+        $ref: '#/definitions/config.Ftp'
       sendUrl:
         type: string
-      userName:
-        type: string
-      userPwd:
-        type: string
+      shunt-port:
+        type: integer
     type: object
   config.Redis:
     properties:
@@ -246,6 +260,8 @@ definitions:
         items:
           $ref: '#/definitions/config.DiskList'
         type: array
+      dpi:
+        $ref: '#/definitions/config.DpiConf'
       email:
         $ref: '#/definitions/config.Email'
       export-limit:
@@ -270,8 +286,12 @@ definitions:
       select-isp:
         description: 大类、小类选出来需要分析的运营商
         type: string
+      sync-api:
+        type: boolean
       system:
         $ref: '#/definitions/config.System'
+      timer:
+        $ref: '#/definitions/config.Timer'
       zap:
         $ref: '#/definitions/config.Zap'
     type: object
@@ -292,6 +312,26 @@ definitions:
       use-multipoint:
         description: 多点登录拦截
         type: boolean
+    type: object
+  config.TaskTimerCnf:
+    properties:
+      enable:
+        type: boolean
+      spec:
+        type: string
+    type: object
+  config.Timer:
+    properties:
+      clear-db-task:
+        $ref: '#/definitions/config.TaskTimerCnf'
+      policy-action-id-task:
+        $ref: '#/definitions/config.TaskTimerCnf'
+      policy-log-task:
+        $ref: '#/definitions/config.TaskTimerCnf'
+      policy-task:
+        $ref: '#/definitions/config.TaskTimerCnf'
+      user-alarm-task:
+        $ref: '#/definitions/config.TaskTimerCnf'
     type: object
   config.Zap:
     properties:
@@ -391,6 +431,8 @@ definitions:
       remark:
         type: string
       start_time:
+        type: string
+      status:
         type: string
       ul_flow_rate:
         type: integer
@@ -1208,6 +1250,9 @@ definitions:
       baseColor:
         description: 基础颜色
         type: string
+      bypassPassword:
+        description: bypass切换密码
+        type: string
       createdAt:
         description: 创建时间
         type: string
@@ -1483,9 +1528,7 @@ definitions:
       startTime:
         type: string
     required:
-    - dataType
     - endTime
-    - srcIp
     - startTime
     type: object
   traffic.UserCommonRankParams:
@@ -2230,6 +2273,11 @@ paths:
       tags:
       - dimbypass
   /configuration/dimbypass/update:
+    post:
+      responses: {}
+      tags:
+      - dimbypass
+  /configuration/dimbypass/validateBypassPassword:
     post:
       responses: {}
       tags:

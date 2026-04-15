@@ -1260,6 +1260,14 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/configuration/dimbypass/validateBypassPassword": {
+            "post": {
+                "tags": [
+                    "dimbypass"
+                ],
+                "responses": {}
+            }
+        },
         "/configuration/dimdeviceinfo/delete": {
             "post": {
                 "tags": [
@@ -5367,6 +5375,17 @@ const docTemplate = `{
                 }
             }
         },
+        "config.DpiConf": {
+            "type": "object",
+            "properties": {
+                "msg-addr": {
+                    "type": "string"
+                },
+                "push-addr": {
+                    "type": "string"
+                }
+            }
+        },
         "config.Email": {
             "type": "object",
             "properties": {
@@ -5396,6 +5415,26 @@ const docTemplate = `{
                 },
                 "to": {
                     "description": "收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用",
+                    "type": "string"
+                }
+            }
+        },
+        "config.Ftp": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                },
+                "userPwd": {
                     "type": "string"
                 }
             }
@@ -5509,23 +5548,14 @@ const docTemplate = `{
                 "dir": {
                     "type": "string"
                 },
-                "ip": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "port": {
-                    "type": "string"
+                "ftp": {
+                    "$ref": "#/definitions/config.Ftp"
                 },
                 "sendUrl": {
                     "type": "string"
                 },
-                "userName": {
-                    "type": "string"
-                },
-                "userPwd": {
-                    "type": "string"
+                "shunt-port": {
+                    "type": "integer"
                 }
             }
         },
@@ -5584,6 +5614,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/config.DiskList"
                     }
                 },
+                "dpi": {
+                    "$ref": "#/definitions/config.DpiConf"
+                },
                 "email": {
                     "$ref": "#/definitions/config.Email"
                 },
@@ -5625,8 +5658,14 @@ const docTemplate = `{
                     "description": "大类、小类选出来需要分析的运营商",
                     "type": "string"
                 },
+                "sync-api": {
+                    "type": "boolean"
+                },
                 "system": {
                     "$ref": "#/definitions/config.System"
+                },
+                "timer": {
+                    "$ref": "#/definitions/config.Timer"
                 },
                 "zap": {
                     "$ref": "#/definitions/config.Zap"
@@ -5656,6 +5695,37 @@ const docTemplate = `{
                 "use-multipoint": {
                     "description": "多点登录拦截",
                     "type": "boolean"
+                }
+            }
+        },
+        "config.TaskTimerCnf": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "type": "boolean"
+                },
+                "spec": {
+                    "type": "string"
+                }
+            }
+        },
+        "config.Timer": {
+            "type": "object",
+            "properties": {
+                "clear-db-task": {
+                    "$ref": "#/definitions/config.TaskTimerCnf"
+                },
+                "policy-action-id-task": {
+                    "$ref": "#/definitions/config.TaskTimerCnf"
+                },
+                "policy-log-task": {
+                    "$ref": "#/definitions/config.TaskTimerCnf"
+                },
+                "policy-task": {
+                    "$ref": "#/definitions/config.TaskTimerCnf"
+                },
+                "user-alarm-task": {
+                    "$ref": "#/definitions/config.TaskTimerCnf"
                 }
             }
         },
@@ -5801,6 +5871,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "start_time": {
+                    "type": "string"
+                },
+                "status": {
                     "type": "string"
                 },
                 "ul_flow_rate": {
@@ -6988,6 +7061,10 @@ const docTemplate = `{
                     "description": "基础颜色",
                     "type": "string"
                 },
+                "bypassPassword": {
+                    "description": "bypass切换密码",
+                    "type": "string"
+                },
                 "createdAt": {
                     "description": "创建时间",
                     "type": "string"
@@ -7360,9 +7437,7 @@ const docTemplate = `{
         "traffic.UserActionReqParam": {
             "type": "object",
             "required": [
-                "dataType",
                 "endTime",
-                "srcIp",
                 "startTime"
             ],
             "properties": {
@@ -7468,6 +7543,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

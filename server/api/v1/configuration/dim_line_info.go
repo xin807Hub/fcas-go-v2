@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	"fcas_server/model/configuration/req"
 	"fcas_server/service/configuration"
@@ -15,7 +16,7 @@ type dimLineInfoApi struct {
 
 func NewDimLineInfoRouter(rg *gin.RouterGroup) {
 
-	router := rg.Group("configuration/dimlineinfo")
+	router := rg.Group("configuration/dimlineinfo").Use(middleware.OperationRecord())
 
 	api := dimLineInfoApi{
 		svc: configuration.NewDimLineInfoSvc(global.Log, global.ServiceDB),

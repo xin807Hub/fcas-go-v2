@@ -1,9 +1,9 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"fcas_server/middleware"
 	"fcas_server/plugin/email/api"
+	"github.com/gin-gonic/gin"
 )
 
 type EmailRouter struct{}

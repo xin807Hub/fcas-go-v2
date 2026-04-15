@@ -3,37 +3,43 @@ package utils
 import (
 	"fcas_server/global"
 	"fmt"
+	"github.com/pebbe/zmq4"
 	"os"
 	"path/filepath"
 	"time"
 )
 
 // SendMessage 发送ZeroMQ消息并备份策略
-func SendMessage(str, url, msgType, policyDir string) {
-	//// 创建ZMQ上下文
-	//context, _ := zmq4.NewContext()
-	//defer context.Term()
-	//
-	//// 创建PUB socket
-	//socket, _ := context.NewSocket(zmq4.PUB)
-	//defer socket.Close()
-	//
-	//// 绑定地址
-	//if err := socket.Bind(url); err != nil {
-	//	global.Log.Error(fmt.Sprintf("ZeroMQ bind failed: %v", err))
-	//}
-	//
-	//// 等待连接建立
-	//time.Sleep(1 * time.Second)
-	//
-	//// 发送消息
-	//message := []byte(fmt.Sprintf("%s%s", msgType, str))
-	//if _, err := socket.SendBytes(message, zmq4.DONTWAIT); err != nil {
-	//	global.Log.Error(fmt.Sprintf("ZeroMQ send failed: %v", err))
-	//}
+func SendMessage(jsonStr, url, msgType, policyDir string) {
+	// 创建ZMQ上下文
+	context, _ := zmq4.NewContext()
+	defer func(context *zmq4.Context) {
+		err := context.Term()
+		if err != nil {
+			global.Log.Error(err.Error())
+		}
+	}(context)
+
+	// 创建PUB socket
+	socket, _ := context.NewSocket(zmq4.PUB)
+	defer socket.Close()
+
+	// 绑定地址
+	if err := socket.Bind(url); err != nil {
+		global.Log.Error(fmt.Sprintf("ZeroMQ bind failed: %v", err))
+	}
+
+	// 等待连接建立
+	time.Sleep(1 * time.Second)
+
+	// 发送消息
+	message := []byte(fmt.Sprintf("%s%s", msgType, jsonStr))
+	if _, err := socket.SendBytes(message, zmq4.DONTWAIT); err != nil {
+		global.Log.Error(fmt.Sprintf("ZeroMQ send failed: %v", err))
+	}
 
 	// 备份策略文件
-	bakPolicyJson(str, msgType, policyDir)
+	bakPolicyJson(jsonStr, msgType, policyDir)
 }
 
 // bakPolicyJson 备份策略到文件

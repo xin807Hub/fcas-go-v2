@@ -30,7 +30,7 @@ func (r *DimDeviceInfo) TableName() string {
 func (r *DimDeviceInfo) SetSnmpFields() error {
 	client, err := utils.NewSNMPClient(r.DeviceIp, r.UdpPort, r.SnmpName)
 	if err != nil {
-		return fmt.Errorf("建立snmp连接失败，请检查snmpd服务是否正常（snmpwalk -v2c -c sinoSh localhost .1.3.6.1.2.1.1）: %w", err)
+		return fmt.Errorf("建立snmp连接失败，请检查snmpd服务是否正常（snmpwalk -v2c -c sinoSh %s .1.3.6.1.2.1.1）: %w", r.DeviceIp, err)
 	}
 	defer client.Conn.Close()
 
@@ -38,15 +38,22 @@ func (r *DimDeviceInfo) SetSnmpFields() error {
 
 	// 获取进程信息
 	if err = r.setProcessMap(client); err != nil {
-		return fmt.Errorf("获取进程信息失败，请检查snmp配置是否正确（snmpget -v2c -c sinoSh localhost 1.3.6.1.4.1.2021.3210.4.1.2.13.99.104.101.99.107.95.112.114.111.99.101.115.115.1）: %w", err)
+		return fmt.Errorf("获取进程信息失败，请检查snmp配置是否正确（snmpget -v2c -c sinoSh %s 1.3.6.1.4.1.2021.3210.4.1.2.13.99.104.101.99.107.95.112.114.111.99.101.115.115.1）: %w", r.DeviceIp, err)
 	}
 
 	// 获取磁盘使用情况
 	if err := r.setDistUseMap(client); err != nil {
-		return fmt.Errorf("获取磁盘使用情况失败，请检查snmp配置是否正确（snmpwalk -v2c -c sinoSh localhost 1.3.6.1.4.1.2021.4321.4.1.2.8.100.105.115.107.95.117.115.101）: %w", err)
+		return fmt.Errorf("获取磁盘使用情况失败，请检查snmp配置是否正确（snmpwalk -v2c -c sinoSh %s 1.3.6.1.4.1.2021.4321.4.1.2.8.100.105.115.107.95.117.115.101）: %w", r.DeviceIp, err)
 	}
 
 	return nil
+}
+
+var processNameMap = map[string]string{
+	"clickhouse-server": "大数据数据库",
+	"etl":               "大数据采集程序",
+	"updpi":             "流量采集程序",
+	"upload":            "数据上报程序",
 }
 
 func (r *DimDeviceInfo) setProcessMap(snmpClient *gosnmp.GoSNMP) error {
@@ -67,12 +74,17 @@ func (r *DimDeviceInfo) setProcessMap(snmpClient *gosnmp.GoSNMP) error {
 	result := make(map[string]int, len(fields))
 	for _, item := range fields {
 		parts := strings.Fields(item)
+		if len(parts) == 0 {
+			continue
+		}
+
+		process := processNameMap[parts[0]]
 		switch {
 		case len(parts) == 1:
-			result[parts[0]] = 0
+			result[process] = 0
 		case len(parts) >= 2:
 			v, _ := strconv.Atoi(parts[1])
-			result[parts[0]] = v
+			result[process] = v
 		}
 	}
 

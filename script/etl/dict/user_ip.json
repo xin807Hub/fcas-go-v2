@@ -5,7 +5,7 @@
   "sql_server_ip": "127.0.0.1",
   "sql_server_port": 3306,
   "sql_username": "root",
-  "sql_password": "123456",
+  "sql_password": "Mysql@2o20...",
   "sql_database": "fcas_service",
   "sql_table": "user_ip_view",
   "sql_watch_table": "dim_user_info",

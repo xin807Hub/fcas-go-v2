@@ -6,12 +6,13 @@ SVN_VER =
 GOROOT=/usr/lib/golang
 GOBIN=$(GOROOT)/bin
 
-BUILD_PATH=./build
+BUILD_PATH=./src
 
 DEBUG_NAME = fcas_server_d
 RELEASE_NAME = fcas_server
 
 PROJECT_NAME = ${DEBUG_NAME}
+FRONT_END_DIR = front_end
 
 BUILD_FLAGS = -gcflags 'all=-N -l'
 
@@ -42,6 +43,8 @@ build:
 	@$(GOBIN)/go build ${BUILD_FLAGS} ${LDFLAGS} -o ${PROJECT_NAME}
 	@if [ ! -d "${BUILD_PATH}" ]; then mkdir ${BUILD_PATH}; fi
 	@cp -f ${PROJECT_NAME} ${BUILD_PATH}
+	@if [ ! -d "${FRONT_END_DIR}" ]; then mkdir ${FRONT_END_DIR}; fi
+	@cp -rf ${FRONT_END_DIR}  ${BUILD_PATH}
 	@echo "compile end"
     
 

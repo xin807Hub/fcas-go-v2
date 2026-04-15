@@ -20,7 +20,7 @@ type DimBypass struct {
 	BypassIp   string `json:"bypassIp" gorm:"column:bypass_ip"`     // 分流器IP
 	BypassPort int    `json:"bypassPort" gorm:"column:bypass_port"` // 分流器交互端口
 	Remark     string `json:"remark" gorm:"column:remark"`          // 备注
-	Status     int    `json:"status" gorm:"-"`                      // 状态 0-停用 1-启用
+	Status     int    `json:"status" gorm:"-"`                      // 状态 0-停用（bypass） 1-启用(串行)
 }
 
 func (r *DimBypass) TableName() string {
@@ -33,6 +33,9 @@ func (r *DimBypass) GetStatus() error {
 		curl -X POST "http://192.168.1.1:8080/olpStatus-get" \
 		     -H "Content-Type: application/json" \
 		     -d '{"olpId": "12345"}'
+
+		resp:
+			{"code": 0, "msg": "failed", "olpId": -1, "status" :2}
 	*/
 	urlStr := fmt.Sprintf("http://%s:%d/olpStatus-get", r.BypassIp, r.BypassPort)
 	reqBody := map[string]any{"olpId": r.OlpId}
@@ -41,14 +44,17 @@ func (r *DimBypass) GetStatus() error {
 		return fmt.Errorf("failed to get status of bypass %s, error: %w", r.BypassIp, err)
 	}
 
-	var data struct {
-		Code int `json:"code"`
+	var responseBody struct {
+		Code   int `json:"code"`
+		Msg    int `json:"msg"`
+		OlpId  int `json:"olpId"`
+		Status int `json:"status"`
 	}
-	if err := json.Unmarshal(respBody, &data); err != nil {
+	if err := json.Unmarshal(respBody, &responseBody); err != nil {
 		return fmt.Errorf("failed to unmarshal response body of bypass %s, error: %w", r.BypassIp, err)
 	}
 
-	r.Status = data.Code
+	r.Status = responseBody.Status
 
 	return nil
 }

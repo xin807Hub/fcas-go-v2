@@ -2,6 +2,7 @@ package traffic
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	trafficModel "fcas_server/model/traffic"
 	"fcas_server/service/traffic"
@@ -15,7 +16,7 @@ type alarmLogApi struct {
 
 func NewAlarmLogRouter(rg *gin.RouterGroup) {
 
-	router := rg.Group("traffic/alarmLog")
+	router := rg.Group("traffic/alarmLog").Use(middleware.OperationRecord())
 
 	api := alarmLogApi{
 		svc: traffic.NewAlarmLogSvc(global.Log, global.ServiceDB),

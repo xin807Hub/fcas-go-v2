@@ -19,38 +19,43 @@ type DimControlPolicyReq struct {
 }
 
 type DimControlPolicy struct {
-	Id               int    `json:"id"`
-	Name             string `json:"name"`
-	UserType         int    `json:"user_type"`
-	UserCrowdGroupId int    `json:"user_crowd_group_id"`
-	UserCrowdId      int    `json:"user_crowd_id"`
-	UserId           int    `json:"user_id"`
-	UlFlowRate       int    `json:"ul_flow_rate"`
-	DlFlowRate       int    `json:"dl_flow_rate"`
-	StartTime        string `json:"start_time"`
-	EndTime          string `json:"end_time"`
-	Remark           string `json:"remark"`
-	FlowCtrlType     int    `json:"flow_ctrl_type"`
-	AppTypeId        int    `json:"app_type_id"`
-	AppId            int    `json:"app_id"`
-	DstIp            string `json:"dst_ip"`
-	DstPort          string `json:"dst_port"`
-	PeriodType       int    `json:"period_type"`
-	PolicyPeriod     string `json:"policy_period"`
-	CreateTime       string `json:"create_time"`
-	LinkIds          string `json:"link_ids"`
-	Status           string `json:"status"`
+	Id               int      `json:"id" gorm:"primarykey"`
+	Name             string   `json:"name"`
+	UserType         int      `json:"user_type"`
+	UserCrowdGroupId int      `json:"user_crowd_group_id"`
+	UserCrowdId      int      `json:"user_crowd_id"`
+	UserId           int      `json:"user_id"`
+	UlFlowRate       int      `json:"ul_flow_rate"`
+	DlFlowRate       int      `json:"dl_flow_rate"`
+	StartTime        string   `json:"start_time"`
+	EndTime          string   `json:"end_time"`
+	Remark           string   `json:"remark"`
+	FlowCtrlType     int      `json:"flow_ctrl_type"`
+	AppTypeId        int      `json:"app_type_id"`
+	AppId            int      `json:"app_id"`
+	IpData           []IpData `json:"ip_data" gorm:"json;type:json"`
+	PeriodType       *int     `json:"period_type"`
+	PolicyPeriod     string   `json:"policy_period"`
+	CreateTime       string   `json:"create_time"`
+	LinkIds          string   `json:"link_ids"`
+	Status           string   `json:"status"`
 }
 
 func (d *DimControlPolicy) TableName() string {
 	return "dim_control_policy"
 }
 
+type IpData struct {
+	StartIP string `json:"start_ip"`
+	EndIP   string `json:"end_ip"`
+	DstPort string `json:"dst_port"`
+}
+
 type DimControlPolicyResp struct {
 	DimControlPolicy
 	UserCrowdGroupName string `json:"user_crowd_group_name" gorm:"-"`
 	UserCrownName      string `json:"user_crown_name" gorm:"-"`
-	UserName           string `json:"user_name" gorm:"-"`
+	UserName           string `json:"user_name"`
 	AppTypeName        string `json:"app_type_name" gorm:"-"`
 	AppName            string `json:"app_name" gorm:"-"`
 

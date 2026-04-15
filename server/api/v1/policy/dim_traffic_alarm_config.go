@@ -2,6 +2,7 @@ package policy
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	"fcas_server/model/policy"
 	servicePolicy "fcas_server/service/policy"
@@ -16,7 +17,7 @@ type DimTrafficAlarmConfigApi struct {
 }
 
 func (a DimTrafficAlarmConfigApi) Router(Router *gin.RouterGroup) {
-	router := Router.Group("policy/alarmConfig")
+	router := Router.Group("policy/alarmConfig").Use(middleware.OperationRecord())
 	router.POST("page", a.PageAlarmConfig)
 	router.POST("info", a.GetAlarmConfig)
 	router.POST("saveOrUpdate", a.SaveOrUpdate)

@@ -2,8 +2,10 @@ package configuration
 
 import (
 	"errors"
+	"fcas_server/global"
 	"fcas_server/model/configuration"
 	"fcas_server/model/configuration/req"
+	"fcas_server/model/system"
 	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -122,6 +124,24 @@ func (svc DimBypassSvc) ValidateUnique(name string, id int) error {
 	}
 
 	return nil
+}
+
+func (svc DimBypassSvc) ValidateBypassPassword(currUserId uint, password string) (bool, error) {
+
+	var currUser system.SysUser
+	if err := global.SystemDB.Model(system.SysUser{}).Where("id = ?", currUserId).First(&currUser).Error; err != nil {
+		return false, fmt.Errorf("获取当前用户设置的Bypass切换密码失败: %w", err)
+	}
+
+	if password != currUser.BypassPassword {
+		//return map[string]any{
+		//	"succ": false,
+		//	"msg":  "Bypass切换密码错误，请重新输入",
+		//}, nil
+		return false, nil
+	}
+
+	return true, nil
 }
 
 func (svc DimBypassSvc) SetBypassStatus(dimBypass configuration.DimBypass) error {

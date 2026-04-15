@@ -42,6 +42,14 @@ func (service UserActionService) GetUserActionTable(param traffic.UserActionReqP
 	if param.Limit == 0 {
 		param.Limit = 50
 	}
+	//时间范围应该不大于一小时
+	hourRange, timeErr := utils2.GetHoursBetween(param.StartTime, param.EndTime)
+	if timeErr != nil {
+		return result, errors.New("开始、结束时间解析错误")
+	}
+	if hourRange > 1 {
+		return result, errors.New("查询时间范围应该不大于一小时")
+	}
 
 	var ckDb *gorm.DB
 	timeRangeType := utils2.GetDbTypeByTimeRange(param.StartTime, param.EndTime)

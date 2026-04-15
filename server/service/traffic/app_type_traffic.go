@@ -28,7 +28,7 @@ var AppTypeOldTableNameMap = map[int]string{
 	global.Interval1dParticle:  "bigdata_fcas.dws_app_type_hour",
 }
 
-func getAppTypeDb(param traffic.AppTypeReqParam, queryType string) (ckDb *gorm.DB, err error) {
+func getAppTypeDb(param traffic.AppTypeReqParam) (ckDb *gorm.DB, err error) {
 	particle, err := utils2.GetParticleByTimeRange(param.StartTime, param.EndTime)
 
 	tableNameNew := AppTypeNewTableNameMap[particle]
@@ -83,24 +83,17 @@ func getAppTypeDb(param traffic.AppTypeReqParam, queryType string) (ckDb *gorm.D
 	}
 
 	selectSql := "app_type,start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn, Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
-
-	groupSql := "app_type,start_time"
-
-	if queryType == "all" {
-		selectSql = "start_time,sumMerge(bytes_up_view) AS traffic_up,sumMerge(bytes_dn_view) AS traffic_dn, Round(if(isNaN(traffic_up), 0 , traffic_up) * 8 / {{.interval}}, 2) as traffic_up_bps, Round(if(isNaN(traffic_dn), 0 , traffic_dn) * 8 / {{.interval}}, 2) as traffic_dn_bps"
-		groupSql = "start_time"
-	}
 	selectSql = strings.ReplaceAll(selectSql, "{{.interval}}", strconv.Itoa(particle))
-	ckDb = ckDb.Select(selectSql).Group(groupSql)
+
+	ckDb = ckDb.Select(selectSql).Group("app_type,start_time")
 	return ckDb, err
 }
 
 func (service AppTypeService) GetAppTypeRankLevel1(param traffic.AppTypeReqParam) (traffic.Level1Data, error) {
 	var level1Data = traffic.Level1Data{}
-	ckDb, err := getAppTypeDb(param, "")
-	ckDb1, err := getAppTypeDb(param, "all")
+	ckDb, err := getAppTypeDb(param)
 
-	level1Data, err = GetGatherData(ckDb1, level1Data)
+	level1Data, err = GetGatherData(ckDb, level1Data, "app_type")
 	if err != nil {
 		global.Log.Error("获取app大类1级汇总数据错误", zap.Error(err))
 		return level1Data, err
@@ -118,7 +111,7 @@ func (service AppTypeService) GetAppTypeRankLevel1(param traffic.AppTypeReqParam
 func (service AppTypeService) GetLevel1TableData(param traffic.AppTypeReqParam) (response.PageResult, error) {
 	var result response.PageResult
 	var level1Tables []traffic.AppTypeLevel1TableData
-	ckDb, err := getAppTypeDb(param, "")
+	ckDb, err := getAppTypeDb(param)
 	if param.Limit == 0 {
 		param.Limit = 10
 	}
@@ -153,7 +146,7 @@ func (service AppTypeService) GetLevel1TableData(param traffic.AppTypeReqParam) 
 
 // GetAppTypeRankLevel2 2级排名入口
 func (service AppTypeService) GetAppTypeRankLevel2(param traffic.AppTypeReqParam) ([]chart.FlowTrendDot, error) {
-	ckDb, _ := getAppTypeDb(param, "")
+	ckDb, _ := getAppTypeDb(param)
 	trendSeries, err := GetLevel2TrendData(ckDb)
 	if err != nil {
 		global.Log.Error("获取运营商二级趋势图/表格数据错误", zap.Error(err))
@@ -169,7 +162,7 @@ func (service AppTypeService) GetLevel2TableData(param traffic.AppTypeReqParam) 
 		PageSize: param.Limit,
 		CurrPage: param.Page,
 	}
-	ckDb, err := getAppTypeDb(param, "")
+	ckDb, err := getAppTypeDb(param)
 	if err != nil {
 		return result, errors.New("根据查询条件获取db句柄出错")
 	}
@@ -185,7 +178,7 @@ func (service AppTypeService) ExportData(param traffic.AppTypeReqParam) ([]byte,
 	if err != nil {
 		return nil, err
 	}
-	ckDb, _ := getAppTypeDb(param, "")
+	ckDb, _ := getAppTypeDb(param)
 	totalByte, err := GetTotalByte(ckDb)
 	if err != nil {
 		return nil, err

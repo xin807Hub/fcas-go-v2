@@ -1,29 +1,33 @@
-/*
- Navicat Premium Data Transfer
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+--
+-- Host: 192.168.4.74    Database: fcas_system
+-- ------------------------------------------------------
+-- Server version	8.0.29
 
- Source Server         : 192.168.4.146
- Source Server Type    : MySQL
- Source Server Version : 80029
- Source Host           : 192.168.4.146:3306
- Source Schema         : fcas_system
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
- Target Server Type    : MySQL
- Target Server Version : 80029
- File Encoding         : 65001
+--
+-- Table structure for table `casbin_rule`
+--
 
- Date: 15/11/2024 17:00:28
-*/
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
-
+DROP DATABASE IF EXISTS fcas_system;
 CREATE DATABASE IF NOT EXISTS fcas_system;
 USE fcas_system;
--- ----------------------------
--- Table structure for casbin_rule
--- ----------------------------
+
 DROP TABLE IF EXISTS `casbin_rule`;
-CREATE TABLE `casbin_rule`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `casbin_rule` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `ptype` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `v0` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `v1` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -32,205 +36,27 @@ CREATE TABLE `casbin_rule`  (
   `v4` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `v5` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `idx_casbin_rule`(`ptype`, `v0`, `v1`, `v2`, `v3`, `v4`, `v5`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 710 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE KEY `idx_casbin_rule` (`ptype`,`v0`,`v1`,`v2`,`v3`,`v4`,`v5`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1662 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of casbin_rule
--- ----------------------------
-INSERT INTO `casbin_rule` VALUES (610, 'p', '888', '/api/createApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (611, 'p', '888', '/api/deleteApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (616, 'p', '888', '/api/deleteApisByIds', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (619, 'p', '888', '/api/enterSyncApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (614, 'p', '888', '/api/getAllApis', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (615, 'p', '888', '/api/getApiById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (618, 'p', '888', '/api/getApiGroups', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (613, 'p', '888', '/api/getApiList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (620, 'p', '888', '/api/ignoreApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (617, 'p', '888', '/api/syncApi', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (612, 'p', '888', '/api/updateApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (621, 'p', '888', '/authority/copyAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (622, 'p', '888', '/authority/createAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (623, 'p', '888', '/authority/deleteAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (625, 'p', '888', '/authority/getAuthorityList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (626, 'p', '888', '/authority/setDataAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (624, 'p', '888', '/authority/updateAuthority', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (691, 'p', '888', '/authorityBtn/canRemoveAuthorityBtn', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (690, 'p', '888', '/authorityBtn/getAuthorityBtn', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (689, 'p', '888', '/authorityBtn/setAuthorityBtn', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (662, 'p', '888', '/autoCode/createPackage', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (659, 'p', '888', '/autoCode/createPlug', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (656, 'p', '888', '/autoCode/createTemp', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (664, 'p', '888', '/autoCode/delPackage', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (668, 'p', '888', '/autoCode/delSysHistory', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (658, 'p', '888', '/autoCode/getColumn', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (654, 'p', '888', '/autoCode/getDB', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (665, 'p', '888', '/autoCode/getMeta', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (663, 'p', '888', '/autoCode/getPackage', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (667, 'p', '888', '/autoCode/getSysHistory', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (655, 'p', '888', '/autoCode/getTables', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (660, 'p', '888', '/autoCode/installPlugin', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (657, 'p', '888', '/autoCode/preview', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (661, 'p', '888', '/autoCode/pubPlug', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (666, 'p', '888', '/autoCode/rollback', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (628, 'p', '888', '/casbin/getPolicyPathByAuthorityId', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (627, 'p', '888', '/casbin/updateCasbin', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (701, 'p', '888', '/configuration/dimdeviceinfo/list', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (703, 'p', '888', '/configuration/dimlineinfo/list', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (651, 'p', '888', '/customer/customer', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (652, 'p', '888', '/customer/customer', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (650, 'p', '888', '/customer/customer', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (649, 'p', '888', '/customer/customer', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (653, 'p', '888', '/customer/customerList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (687, 'p', '888', '/email/emailTest', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (688, 'p', '888', '/email/sendEmail', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (639, 'p', '888', '/fileUploadAndDownload/breakpointContinue', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (640, 'p', '888', '/fileUploadAndDownload/breakpointContinueFinish', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (643, 'p', '888', '/fileUploadAndDownload/deleteFile', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (644, 'p', '888', '/fileUploadAndDownload/editFileName', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (638, 'p', '888', '/fileUploadAndDownload/findFile', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (645, 'p', '888', '/fileUploadAndDownload/getFileList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (641, 'p', '888', '/fileUploadAndDownload/removeChunk', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (642, 'p', '888', '/fileUploadAndDownload/upload', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (599, 'p', '888', '/jwt/jsonInBlacklist', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (629, 'p', '888', '/menu/addBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (637, 'p', '888', '/menu/addMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (631, 'p', '888', '/menu/deleteBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (633, 'p', '888', '/menu/getBaseMenuById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (635, 'p', '888', '/menu/getBaseMenuTree', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (630, 'p', '888', '/menu/getMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (636, 'p', '888', '/menu/getMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (634, 'p', '888', '/menu/getMenuList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (632, 'p', '888', '/menu/updateBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (708, 'p', '888', '/policy/alarmConfig/delete', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (707, 'p', '888', '/policy/alarmConfig/page', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (709, 'p', '888', '/policy/alarmConfig/saveOrUpdate', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (704, 'p', '888', '/policy/whitePolicy/page', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (705, 'p', '888', '/policy/whitePolicy/saveOrUpdate', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (685, 'p', '888', '/simpleUploader/checkFileMd5', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (686, 'p', '888', '/simpleUploader/mergeFileMd5', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (684, 'p', '888', '/simpleUploader/upload', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (674, 'p', '888', '/sysDictionary/createSysDictionary', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (675, 'p', '888', '/sysDictionary/deleteSysDictionary', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (677, 'p', '888', '/sysDictionary/findSysDictionary', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (678, 'p', '888', '/sysDictionary/getSysDictionaryList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (676, 'p', '888', '/sysDictionary/updateSysDictionary', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (670, 'p', '888', '/sysDictionaryDetail/createSysDictionaryDetail', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (671, 'p', '888', '/sysDictionaryDetail/deleteSysDictionaryDetail', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (672, 'p', '888', '/sysDictionaryDetail/findSysDictionaryDetail', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (673, 'p', '888', '/sysDictionaryDetail/getSysDictionaryDetailList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (669, 'p', '888', '/sysDictionaryDetail/updateSysDictionaryDetail', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (692, 'p', '888', '/sysExportTemplate/createSysExportTemplate', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (693, 'p', '888', '/sysExportTemplate/deleteSysExportTemplate', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (694, 'p', '888', '/sysExportTemplate/deleteSysExportTemplateByIds', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (698, 'p', '888', '/sysExportTemplate/exportExcel', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (699, 'p', '888', '/sysExportTemplate/exportTemplate', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (696, 'p', '888', '/sysExportTemplate/findSysExportTemplate', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (697, 'p', '888', '/sysExportTemplate/getSysExportTemplateList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (700, 'p', '888', '/sysExportTemplate/importExcel', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (695, 'p', '888', '/sysExportTemplate/updateSysExportTemplate', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (679, 'p', '888', '/sysOperationRecord/createSysOperationRecord', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (682, 'p', '888', '/sysOperationRecord/deleteSysOperationRecord', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (683, 'p', '888', '/sysOperationRecord/deleteSysOperationRecordByIds', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (680, 'p', '888', '/sysOperationRecord/findSysOperationRecord', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (681, 'p', '888', '/sysOperationRecord/getSysOperationRecordList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (646, 'p', '888', '/system/getServerInfo', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (647, 'p', '888', '/system/getSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (648, 'p', '888', '/system/setSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (706, 'p', '888', '/traffic/alarmLog/list', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (702, 'p', '888', '/traffic/dwsTotalTraffic/trend', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (601, 'p', '888', '/user/admin_register', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (607, 'p', '888', '/user/changePassword', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (600, 'p', '888', '/user/deleteUser', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (605, 'p', '888', '/user/getUserInfo', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (602, 'p', '888', '/user/getUserList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (609, 'p', '888', '/user/resetPassword', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (604, 'p', '888', '/user/setSelfInfo', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (606, 'p', '888', '/user/setUserAuthorities', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (608, 'p', '888', '/user/setUserAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (603, 'p', '888', '/user/setUserInfo', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (105, 'p', '8881', '/api/createApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (108, 'p', '8881', '/api/deleteApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (110, 'p', '8881', '/api/getAllApis', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (107, 'p', '8881', '/api/getApiById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (106, 'p', '8881', '/api/getApiList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (109, 'p', '8881', '/api/updateApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (111, 'p', '8881', '/authority/createAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (112, 'p', '8881', '/authority/deleteAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (113, 'p', '8881', '/authority/getAuthorityList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (114, 'p', '8881', '/authority/setDataAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (132, 'p', '8881', '/casbin/getPolicyPathByAuthorityId', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (131, 'p', '8881', '/casbin/updateCasbin', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (138, 'p', '8881', '/customer/customer', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (139, 'p', '8881', '/customer/customer', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (136, 'p', '8881', '/customer/customer', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (137, 'p', '8881', '/customer/customer', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (140, 'p', '8881', '/customer/customerList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (129, 'p', '8881', '/fileUploadAndDownload/deleteFile', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (130, 'p', '8881', '/fileUploadAndDownload/editFileName', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (128, 'p', '8881', '/fileUploadAndDownload/getFileList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (127, 'p', '8881', '/fileUploadAndDownload/upload', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (133, 'p', '8881', '/jwt/jsonInBlacklist', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (117, 'p', '8881', '/menu/addBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (119, 'p', '8881', '/menu/addMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (121, 'p', '8881', '/menu/deleteBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (123, 'p', '8881', '/menu/getBaseMenuById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (118, 'p', '8881', '/menu/getBaseMenuTree', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (115, 'p', '8881', '/menu/getMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (120, 'p', '8881', '/menu/getMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (116, 'p', '8881', '/menu/getMenuList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (122, 'p', '8881', '/menu/updateBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (134, 'p', '8881', '/system/getSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (135, 'p', '8881', '/system/setSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (104, 'p', '8881', '/user/admin_register', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (124, 'p', '8881', '/user/changePassword', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (141, 'p', '8881', '/user/getUserInfo', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (125, 'p', '8881', '/user/getUserList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (126, 'p', '8881', '/user/setUserAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (143, 'p', '9528', '/api/createApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (146, 'p', '9528', '/api/deleteApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (148, 'p', '9528', '/api/getAllApis', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (145, 'p', '9528', '/api/getApiById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (144, 'p', '9528', '/api/getApiList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (147, 'p', '9528', '/api/updateApi', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (149, 'p', '9528', '/authority/createAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (150, 'p', '9528', '/authority/deleteAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (151, 'p', '9528', '/authority/getAuthorityList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (152, 'p', '9528', '/authority/setDataAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (179, 'p', '9528', '/autoCode/createTemp', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (170, 'p', '9528', '/casbin/getPolicyPathByAuthorityId', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (169, 'p', '9528', '/casbin/updateCasbin', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (177, 'p', '9528', '/customer/customer', 'DELETE', '', '', '');
-INSERT INTO `casbin_rule` VALUES (175, 'p', '9528', '/customer/customer', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (176, 'p', '9528', '/customer/customer', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (174, 'p', '9528', '/customer/customer', 'PUT', '', '', '');
-INSERT INTO `casbin_rule` VALUES (178, 'p', '9528', '/customer/customerList', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (167, 'p', '9528', '/fileUploadAndDownload/deleteFile', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (168, 'p', '9528', '/fileUploadAndDownload/editFileName', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (166, 'p', '9528', '/fileUploadAndDownload/getFileList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (165, 'p', '9528', '/fileUploadAndDownload/upload', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (171, 'p', '9528', '/jwt/jsonInBlacklist', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (155, 'p', '9528', '/menu/addBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (157, 'p', '9528', '/menu/addMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (159, 'p', '9528', '/menu/deleteBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (161, 'p', '9528', '/menu/getBaseMenuById', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (156, 'p', '9528', '/menu/getBaseMenuTree', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (153, 'p', '9528', '/menu/getMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (158, 'p', '9528', '/menu/getMenuAuthority', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (154, 'p', '9528', '/menu/getMenuList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (160, 'p', '9528', '/menu/updateBaseMenu', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (172, 'p', '9528', '/system/getSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (173, 'p', '9528', '/system/setSystemConfig', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (142, 'p', '9528', '/user/admin_register', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (162, 'p', '9528', '/user/changePassword', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (180, 'p', '9528', '/user/getUserInfo', 'GET', '', '', '');
-INSERT INTO `casbin_rule` VALUES (163, 'p', '9528', '/user/getUserList', 'POST', '', '', '');
-INSERT INTO `casbin_rule` VALUES (164, 'p', '9528', '/user/setUserAuthority', 'POST', '', '', '');
+--
+-- Dumping data for table `casbin_rule`
+--
 
--- ----------------------------
--- Table structure for jwt_blacklists
--- ----------------------------
+LOCK TABLES `casbin_rule` WRITE;
+/*!40000 ALTER TABLE `casbin_rule` DISABLE KEYS */;
+INSERT INTO `casbin_rule` (`id`, `ptype`, `v0`, `v1`, `v2`, `v3`, `v4`, `v5`) VALUES (1448,'p','888','/api/createApi','POST','','',''),(1449,'p','888','/api/deleteApi','POST','','',''),(1503,'p','888','/api/deleteApisByIds','DELETE','','',''),(1447,'p','888','/api/enterSyncApi','POST','','',''),(1382,'p','888','/api/freshCasbin','GET','','',''),(1445,'p','888','/api/getAllApis','POST','','',''),(1443,'p','888','/api/getApiById','POST','','',''),(1380,'p','888','/api/getApiGroups','GET','','',''),(1444,'p','888','/api/getApiList','POST','','',''),(1446,'p','888','/api/ignoreApi','POST','','',''),(1381,'p','888','/api/syncApi','GET','','',''),(1450,'p','888','/api/updateApi','POST','','',''),(1452,'p','888','/authority/copyAuthority','POST','','',''),(1451,'p','888','/authority/createAuthority','POST','','',''),(1453,'p','888','/authority/deleteAuthority','POST','','',''),(1455,'p','888','/authority/getAuthorityList','POST','','',''),(1454,'p','888','/authority/setDataAuthority','POST','','',''),(1509,'p','888','/authority/updateAuthority','PUT','','',''),(1458,'p','888','/authorityBtn/canRemoveAuthorityBtn','POST','','',''),(1456,'p','888','/authorityBtn/getAuthorityBtn','POST','','',''),(1457,'p','888','/authorityBtn/setAuthorityBtn','POST','','',''),(1494,'p','888','/base/captcha','POST','','',''),(1493,'p','888','/base/login','POST','','',''),(1442,'p','888','/casbin/getPolicyPathByAuthorityId','POST','','',''),(1441,'p','888','/casbin/updateCasbin','POST','','',''),(1433,'p','888','/configuration/dimbypass/delete','POST','','',''),(1370,'p','888','/configuration/dimbypass/info/:id','GET','','',''),(1371,'p','888','/configuration/dimbypass/list','GET','','',''),(1430,'p','888','/configuration/dimbypass/save','POST','','',''),(1431,'p','888','/configuration/dimbypass/setStatus','POST','','',''),(1432,'p','888','/configuration/dimbypass/update','POST','','',''),(1434,'p','888','/configuration/dimbypass/validateBypassPassword','POST','','',''),(1437,'p','888','/configuration/dimdeviceinfo/delete','POST','','',''),(1366,'p','888','/configuration/dimdeviceinfo/info/:id','GET','','',''),(1367,'p','888','/configuration/dimdeviceinfo/list','GET','','',''),(1435,'p','888','/configuration/dimdeviceinfo/save','POST','','',''),(1436,'p','888','/configuration/dimdeviceinfo/update','POST','','',''),(1372,'p','888','/configuration/dimDict/infoList/:type','GET','','',''),(1440,'p','888','/configuration/dimlineinfo/delete','POST','','',''),(1368,'p','888','/configuration/dimlineinfo/info/:id','GET','','',''),(1369,'p','888','/configuration/dimlineinfo/list','GET','','',''),(1438,'p','888','/configuration/dimlineinfo/save','POST','','',''),(1439,'p','888','/configuration/dimlineinfo/update','POST','','',''),(1423,'p','888','/configuration/dimusercrowd/delete','POST','','',''),(1361,'p','888','/configuration/dimusercrowd/info/:id','GET','','',''),(1362,'p','888','/configuration/dimusercrowd/list','GET','','',''),(1421,'p','888','/configuration/dimusercrowd/save','POST','','',''),(1422,'p','888','/configuration/dimusercrowd/update','POST','','',''),(1426,'p','888','/configuration/dimusercrowdgroup/delete','POST','','',''),(1360,'p','888','/configuration/dimusercrowdgroup/getGroupTree/:level','GET','','',''),(1358,'p','888','/configuration/dimusercrowdgroup/info/:id','GET','','',''),(1359,'p','888','/configuration/dimusercrowdgroup/list','GET','','',''),(1424,'p','888','/configuration/dimusercrowdgroup/save','POST','','',''),(1425,'p','888','/configuration/dimusercrowdgroup/update','POST','','',''),(1429,'p','888','/configuration/dimuserinfo/delete','POST','','',''),(1365,'p','888','/configuration/dimuserinfo/export','GET','','',''),(1363,'p','888','/configuration/dimuserinfo/info/:id','GET','','',''),(1364,'p','888','/configuration/dimuserinfo/list','GET','','',''),(1427,'p','888','/configuration/dimuserinfo/save','POST','','',''),(1428,'p','888','/configuration/dimuserinfo/update','POST','','',''),(1385,'p','888','/health','GET','','',''),(1496,'p','888','/init/checkdb','POST','','',''),(1495,'p','888','/init/initdb','POST','','',''),(1497,'p','888','/jwt/jsonInBlacklist','POST','','',''),(1476,'p','888','/menu/addBaseMenu','POST','','',''),(1477,'p','888','/menu/addMenuAuthority','POST','','',''),(1478,'p','888','/menu/deleteBaseMenu','POST','','',''),(1475,'p','888','/menu/getBaseMenuById','POST','','',''),(1474,'p','888','/menu/getBaseMenuTree','POST','','',''),(1471,'p','888','/menu/getMenu','POST','','',''),(1473,'p','888','/menu/getMenuAuthority','POST','','',''),(1472,'p','888','/menu/getMenuList','POST','','',''),(1479,'p','888','/menu/updateBaseMenu','POST','','',''),(1498,'p','888','/object/appClassify/import','POST','','',''),(1386,'p','888','/object/appClassify/list','GET','','',''),(1470,'p','888','/policy/alarmConfig/delete','POST','','',''),(1468,'p','888','/policy/alarmConfig/info','POST','','',''),(1467,'p','888','/policy/alarmConfig/page','POST','','',''),(1469,'p','888','/policy/alarmConfig/saveOrUpdate','POST','','',''),(1466,'p','888','/policy/controlPolicy/delete','POST','','',''),(1464,'p','888','/policy/controlPolicy/info','POST','','',''),(1463,'p','888','/policy/controlPolicy/page','POST','','',''),(1465,'p','888','/policy/controlPolicy/saveOrUpdate','POST','','',''),(1462,'p','888','/policy/whitePolicy/delete','POST','','',''),(1460,'p','888','/policy/whitePolicy/info','POST','','',''),(1459,'p','888','/policy/whitePolicy/page','POST','','',''),(1461,'p','888','/policy/whitePolicy/saveOrUpdate','POST','','',''),(1379,'p','888','/swagger/*any','GET','','',''),(1484,'p','888','/sysDictionary/createSysDictionary','POST','','',''),(1501,'p','888','/sysDictionary/deleteSysDictionary','DELETE','','',''),(1373,'p','888','/sysDictionary/findSysDictionary','GET','','',''),(1374,'p','888','/sysDictionary/getSysDictionaryList','GET','','',''),(1507,'p','888','/sysDictionary/updateSysDictionary','PUT','','',''),(1485,'p','888','/sysDictionaryDetail/createSysDictionaryDetail','POST','','',''),(1502,'p','888','/sysDictionaryDetail/deleteSysDictionaryDetail','DELETE','','',''),(1375,'p','888','/sysDictionaryDetail/findSysDictionaryDetail','GET','','',''),(1376,'p','888','/sysDictionaryDetail/getSysDictionaryDetailList','GET','','',''),(1508,'p','888','/sysDictionaryDetail/updateSysDictionaryDetail','PUT','','',''),(1486,'p','888','/sysOperationRecord/createSysOperationRecord','POST','','',''),(1499,'p','888','/sysOperationRecord/deleteSysOperationRecord','DELETE','','',''),(1500,'p','888','/sysOperationRecord/deleteSysOperationRecordByIds','DELETE','','',''),(1377,'p','888','/sysOperationRecord/findSysOperationRecord','GET','','',''),(1378,'p','888','/sysOperationRecord/getSysOperationRecordList','GET','','',''),(1481,'p','888','/system/getServerInfo','POST','','',''),(1480,'p','888','/system/getSystemConfig','POST','','',''),(1483,'p','888','/system/reloadSystem','POST','','',''),(1482,'p','888','/system/setSystemConfig','POST','','',''),(1416,'p','888','/traffic/alarmLog/list','POST','','',''),(1412,'p','888','/traffic/appId/export','POST','','',''),(1409,'p','888','/traffic/appId/rankData','POST','','',''),(1410,'p','888','/traffic/appId/rankTableData','POST','','',''),(1411,'p','888','/traffic/appId/trendTableData','POST','','',''),(1415,'p','888','/traffic/appType/export','POST','','',''),(1413,'p','888','/traffic/appType/rankData','POST','','',''),(1414,'p','888','/traffic/appType/rankTableData','POST','','',''),(1420,'p','888','/traffic/dwsTotalTraffic/home','POST','','',''),(1419,'p','888','/traffic/isp/export','POST','','',''),(1417,'p','888','/traffic/isp/rankData','POST','','',''),(1418,'p','888','/traffic/isp/rankTableData','POST','','',''),(1407,'p','888','/traffic/userAction/detail','POST','','',''),(1408,'p','888','/traffic/userAction/export','POST','','',''),(1406,'p','888','/traffic/userAction/pageData','POST','','',''),(1399,'p','888','/traffic/userCrowdGroupRank/export','POST','','',''),(1394,'p','888','/traffic/userCrowdGroupRank/level1Pie','POST','','',''),(1395,'p','888','/traffic/userCrowdGroupRank/level1Table','POST','','',''),(1397,'p','888','/traffic/userCrowdGroupRank/level2Table','POST','','',''),(1396,'p','888','/traffic/userCrowdGroupRank/level2Trend','POST','','',''),(1398,'p','888','/traffic/userCrowdGroupRank/level3Table','POST','','',''),(1393,'p','888','/traffic/userCrowdRank/export','POST','','',''),(1388,'p','888','/traffic/userCrowdRank/level1Pie','POST','','',''),(1389,'p','888','/traffic/userCrowdRank/level1Table','POST','','',''),(1391,'p','888','/traffic/userCrowdRank/level2Table','POST','','',''),(1390,'p','888','/traffic/userCrowdRank/level2Trend','POST','','',''),(1392,'p','888','/traffic/userCrowdRank/level3Table','POST','','',''),(1405,'p','888','/traffic/userRank/export','POST','','',''),(1400,'p','888','/traffic/userRank/level1Pie','POST','','',''),(1401,'p','888','/traffic/userRank/level1Table','POST','','',''),(1403,'p','888','/traffic/userRank/level2Table','POST','','',''),(1402,'p','888','/traffic/userRank/level2Trend','POST','','',''),(1404,'p','888','/traffic/userRank/level3Table','POST','','',''),(1383,'p','888','/uploads/file/*filepath','GET','','',''),(1387,'p','888','/uploads/file/*filepath','HEAD','','',''),(1489,'p','888','/user/admin_register','POST','','',''),(1490,'p','888','/user/changePassword','POST','','',''),(1504,'p','888','/user/deleteUser','DELETE','','',''),(1384,'p','888','/user/getUserInfo','GET','','',''),(1492,'p','888','/user/getUserList','POST','','',''),(1491,'p','888','/user/resetPassword','POST','','',''),(1506,'p','888','/user/setSelfInfo','PUT','','',''),(1488,'p','888','/user/setUserAuthorities','POST','','',''),(1487,'p','888','/user/setUserAuthority','POST','','',''),(1505,'p','888','/user/setUserInfo','PUT','','',''),(1600,'p','999','/api/createApi','POST','','',''),(1601,'p','999','/api/deleteApi','POST','','',''),(1655,'p','999','/api/deleteApisByIds','DELETE','','',''),(1599,'p','999','/api/enterSyncApi','POST','','',''),(1534,'p','999','/api/freshCasbin','GET','','',''),(1597,'p','999','/api/getAllApis','POST','','',''),(1595,'p','999','/api/getApiById','POST','','',''),(1532,'p','999','/api/getApiGroups','GET','','',''),(1596,'p','999','/api/getApiList','POST','','',''),(1598,'p','999','/api/ignoreApi','POST','','',''),(1533,'p','999','/api/syncApi','GET','','',''),(1602,'p','999','/api/updateApi','POST','','',''),(1604,'p','999','/authority/copyAuthority','POST','','',''),(1603,'p','999','/authority/createAuthority','POST','','',''),(1605,'p','999','/authority/deleteAuthority','POST','','',''),(1607,'p','999','/authority/getAuthorityList','POST','','',''),(1606,'p','999','/authority/setDataAuthority','POST','','',''),(1661,'p','999','/authority/updateAuthority','PUT','','',''),(1610,'p','999','/authorityBtn/canRemoveAuthorityBtn','POST','','',''),(1608,'p','999','/authorityBtn/getAuthorityBtn','POST','','',''),(1609,'p','999','/authorityBtn/setAuthorityBtn','POST','','',''),(1646,'p','999','/base/captcha','POST','','',''),(1645,'p','999','/base/login','POST','','',''),(1594,'p','999','/casbin/getPolicyPathByAuthorityId','POST','','',''),(1593,'p','999','/casbin/updateCasbin','POST','','',''),(1585,'p','999','/configuration/dimbypass/delete','POST','','',''),(1522,'p','999','/configuration/dimbypass/info/:id','GET','','',''),(1523,'p','999','/configuration/dimbypass/list','GET','','',''),(1582,'p','999','/configuration/dimbypass/save','POST','','',''),(1583,'p','999','/configuration/dimbypass/setStatus','POST','','',''),(1584,'p','999','/configuration/dimbypass/update','POST','','',''),(1586,'p','999','/configuration/dimbypass/validateBypassPassword','POST','','',''),(1589,'p','999','/configuration/dimdeviceinfo/delete','POST','','',''),(1518,'p','999','/configuration/dimdeviceinfo/info/:id','GET','','',''),(1519,'p','999','/configuration/dimdeviceinfo/list','GET','','',''),(1587,'p','999','/configuration/dimdeviceinfo/save','POST','','',''),(1588,'p','999','/configuration/dimdeviceinfo/update','POST','','',''),(1524,'p','999','/configuration/dimDict/infoList/:type','GET','','',''),(1592,'p','999','/configuration/dimlineinfo/delete','POST','','',''),(1520,'p','999','/configuration/dimlineinfo/info/:id','GET','','',''),(1521,'p','999','/configuration/dimlineinfo/list','GET','','',''),(1590,'p','999','/configuration/dimlineinfo/save','POST','','',''),(1591,'p','999','/configuration/dimlineinfo/update','POST','','',''),(1575,'p','999','/configuration/dimusercrowd/delete','POST','','',''),(1513,'p','999','/configuration/dimusercrowd/info/:id','GET','','',''),(1514,'p','999','/configuration/dimusercrowd/list','GET','','',''),(1573,'p','999','/configuration/dimusercrowd/save','POST','','',''),(1574,'p','999','/configuration/dimusercrowd/update','POST','','',''),(1578,'p','999','/configuration/dimusercrowdgroup/delete','POST','','',''),(1512,'p','999','/configuration/dimusercrowdgroup/getGroupTree/:level','GET','','',''),(1510,'p','999','/configuration/dimusercrowdgroup/info/:id','GET','','',''),(1511,'p','999','/configuration/dimusercrowdgroup/list','GET','','',''),(1576,'p','999','/configuration/dimusercrowdgroup/save','POST','','',''),(1577,'p','999','/configuration/dimusercrowdgroup/update','POST','','',''),(1581,'p','999','/configuration/dimuserinfo/delete','POST','','',''),(1517,'p','999','/configuration/dimuserinfo/export','GET','','',''),(1515,'p','999','/configuration/dimuserinfo/info/:id','GET','','',''),(1516,'p','999','/configuration/dimuserinfo/list','GET','','',''),(1579,'p','999','/configuration/dimuserinfo/save','POST','','',''),(1580,'p','999','/configuration/dimuserinfo/update','POST','','',''),(1537,'p','999','/health','GET','','',''),(1648,'p','999','/init/checkdb','POST','','',''),(1647,'p','999','/init/initdb','POST','','',''),(1649,'p','999','/jwt/jsonInBlacklist','POST','','',''),(1628,'p','999','/menu/addBaseMenu','POST','','',''),(1629,'p','999','/menu/addMenuAuthority','POST','','',''),(1630,'p','999','/menu/deleteBaseMenu','POST','','',''),(1627,'p','999','/menu/getBaseMenuById','POST','','',''),(1626,'p','999','/menu/getBaseMenuTree','POST','','',''),(1623,'p','999','/menu/getMenu','POST','','',''),(1625,'p','999','/menu/getMenuAuthority','POST','','',''),(1624,'p','999','/menu/getMenuList','POST','','',''),(1631,'p','999','/menu/updateBaseMenu','POST','','',''),(1650,'p','999','/object/appClassify/import','POST','','',''),(1538,'p','999','/object/appClassify/list','GET','','',''),(1622,'p','999','/policy/alarmConfig/delete','POST','','',''),(1620,'p','999','/policy/alarmConfig/info','POST','','',''),(1619,'p','999','/policy/alarmConfig/page','POST','','',''),(1621,'p','999','/policy/alarmConfig/saveOrUpdate','POST','','',''),(1618,'p','999','/policy/controlPolicy/delete','POST','','',''),(1616,'p','999','/policy/controlPolicy/info','POST','','',''),(1615,'p','999','/policy/controlPolicy/page','POST','','',''),(1617,'p','999','/policy/controlPolicy/saveOrUpdate','POST','','',''),(1614,'p','999','/policy/whitePolicy/delete','POST','','',''),(1612,'p','999','/policy/whitePolicy/info','POST','','',''),(1611,'p','999','/policy/whitePolicy/page','POST','','',''),(1613,'p','999','/policy/whitePolicy/saveOrUpdate','POST','','',''),(1531,'p','999','/swagger/*any','GET','','',''),(1636,'p','999','/sysDictionary/createSysDictionary','POST','','',''),(1653,'p','999','/sysDictionary/deleteSysDictionary','DELETE','','',''),(1525,'p','999','/sysDictionary/findSysDictionary','GET','','',''),(1526,'p','999','/sysDictionary/getSysDictionaryList','GET','','',''),(1659,'p','999','/sysDictionary/updateSysDictionary','PUT','','',''),(1637,'p','999','/sysDictionaryDetail/createSysDictionaryDetail','POST','','',''),(1654,'p','999','/sysDictionaryDetail/deleteSysDictionaryDetail','DELETE','','',''),(1527,'p','999','/sysDictionaryDetail/findSysDictionaryDetail','GET','','',''),(1528,'p','999','/sysDictionaryDetail/getSysDictionaryDetailList','GET','','',''),(1660,'p','999','/sysDictionaryDetail/updateSysDictionaryDetail','PUT','','',''),(1638,'p','999','/sysOperationRecord/createSysOperationRecord','POST','','',''),(1651,'p','999','/sysOperationRecord/deleteSysOperationRecord','DELETE','','',''),(1652,'p','999','/sysOperationRecord/deleteSysOperationRecordByIds','DELETE','','',''),(1529,'p','999','/sysOperationRecord/findSysOperationRecord','GET','','',''),(1530,'p','999','/sysOperationRecord/getSysOperationRecordList','GET','','',''),(1633,'p','999','/system/getServerInfo','POST','','',''),(1632,'p','999','/system/getSystemConfig','POST','','',''),(1635,'p','999','/system/reloadSystem','POST','','',''),(1634,'p','999','/system/setSystemConfig','POST','','',''),(1568,'p','999','/traffic/alarmLog/list','POST','','',''),(1564,'p','999','/traffic/appId/export','POST','','',''),(1561,'p','999','/traffic/appId/rankData','POST','','',''),(1562,'p','999','/traffic/appId/rankTableData','POST','','',''),(1563,'p','999','/traffic/appId/trendTableData','POST','','',''),(1567,'p','999','/traffic/appType/export','POST','','',''),(1565,'p','999','/traffic/appType/rankData','POST','','',''),(1566,'p','999','/traffic/appType/rankTableData','POST','','',''),(1572,'p','999','/traffic/dwsTotalTraffic/home','POST','','',''),(1571,'p','999','/traffic/isp/export','POST','','',''),(1569,'p','999','/traffic/isp/rankData','POST','','',''),(1570,'p','999','/traffic/isp/rankTableData','POST','','',''),(1559,'p','999','/traffic/userAction/detail','POST','','',''),(1560,'p','999','/traffic/userAction/export','POST','','',''),(1558,'p','999','/traffic/userAction/pageData','POST','','',''),(1551,'p','999','/traffic/userCrowdGroupRank/export','POST','','',''),(1546,'p','999','/traffic/userCrowdGroupRank/level1Pie','POST','','',''),(1547,'p','999','/traffic/userCrowdGroupRank/level1Table','POST','','',''),(1549,'p','999','/traffic/userCrowdGroupRank/level2Table','POST','','',''),(1548,'p','999','/traffic/userCrowdGroupRank/level2Trend','POST','','',''),(1550,'p','999','/traffic/userCrowdGroupRank/level3Table','POST','','',''),(1545,'p','999','/traffic/userCrowdRank/export','POST','','',''),(1540,'p','999','/traffic/userCrowdRank/level1Pie','POST','','',''),(1541,'p','999','/traffic/userCrowdRank/level1Table','POST','','',''),(1543,'p','999','/traffic/userCrowdRank/level2Table','POST','','',''),(1542,'p','999','/traffic/userCrowdRank/level2Trend','POST','','',''),(1544,'p','999','/traffic/userCrowdRank/level3Table','POST','','',''),(1557,'p','999','/traffic/userRank/export','POST','','',''),(1552,'p','999','/traffic/userRank/level1Pie','POST','','',''),(1553,'p','999','/traffic/userRank/level1Table','POST','','',''),(1555,'p','999','/traffic/userRank/level2Table','POST','','',''),(1554,'p','999','/traffic/userRank/level2Trend','POST','','',''),(1556,'p','999','/traffic/userRank/level3Table','POST','','',''),(1535,'p','999','/uploads/file/*filepath','GET','','',''),(1539,'p','999','/uploads/file/*filepath','HEAD','','',''),(1641,'p','999','/user/admin_register','POST','','',''),(1642,'p','999','/user/changePassword','POST','','',''),(1656,'p','999','/user/deleteUser','DELETE','','',''),(1536,'p','999','/user/getUserInfo','GET','','',''),(1644,'p','999','/user/getUserList','POST','','',''),(1643,'p','999','/user/resetPassword','POST','','',''),(1658,'p','999','/user/setSelfInfo','PUT','','',''),(1640,'p','999','/user/setUserAuthorities','POST','','',''),(1639,'p','999','/user/setUserAuthority','POST','','',''),(1657,'p','999','/user/setUserInfo','PUT','','','');
+/*!40000 ALTER TABLE `casbin_rule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `jwt_blacklists`
+--
+
 DROP TABLE IF EXISTS `jwt_blacklists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `jwt_blacklists` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
@@ -239,14 +65,28 @@ CREATE TABLE `jwt_blacklists` (
   `jwt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT 'jwt',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_jwt_blacklists_deleted_at` (`deleted_at`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Table structure for sys_apis
--- ----------------------------
+--
+-- Dumping data for table `jwt_blacklists`
+--
+
+LOCK TABLES `jwt_blacklists` WRITE;
+/*!40000 ALTER TABLE `jwt_blacklists` DISABLE KEYS */;
+INSERT INTO `jwt_blacklists` (`id`, `created_at`, `updated_at`, `deleted_at`, `jwt`) VALUES (1,'2025-05-17 17:13:35.156','2025-05-17 17:13:35.156',NULL,'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVVUlEIjoiNDBmNzliZjQtOWRmNC00ZDYxLWI1MjEtMzEzMTFlNDczMDIzIiwiSUQiOjEsIlVzZXJuYW1lIjoiYWRtaW4iLCJOaWNrTmFtZSI6Iui2hee6p-euoeeQhuWRmCIsIkF1dGhvcml0eUlkIjo4ODgsIkJ1ZmZlclRpbWUiOjg2NDAwLCJpc3MiOiJxbVBsdXMiLCJhdWQiOlsiR1ZBIl0sImV4cCI6MTc0ODA2NzE5MiwibmJmIjoxNzQ3NDYyMzkyfQ.vDSL5lN-lebQh037i6U6dZ1mrmUHw8u2ToUEjNfWvmo');
+/*!40000 ALTER TABLE `jwt_blacklists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_apis`
+--
+
 DROP TABLE IF EXISTS `sys_apis`;
-CREATE TABLE `sys_apis`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_apis` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
@@ -255,293 +95,177 @@ CREATE TABLE `sys_apis`  (
   `api_group` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'api组',
   `method` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'POST' COMMENT '方法',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_apis_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 112 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_apis_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=457 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_apis
--- ----------------------------
-INSERT INTO `sys_apis` VALUES (1, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/jwt/jsonInBlacklist', 'jwt加入黑名单(退出，必选)', 'jwt', 'POST');
-INSERT INTO `sys_apis` VALUES (2, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/deleteUser', '删除用户', '系统用户', 'DELETE');
-INSERT INTO `sys_apis` VALUES (3, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/admin_register', '用户注册', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (4, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/getUserList', '获取用户列表', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (5, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/setUserInfo', '设置用户信息', '系统用户', 'PUT');
-INSERT INTO `sys_apis` VALUES (6, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/setSelfInfo', '设置自身信息(必选)', '系统用户', 'PUT');
-INSERT INTO `sys_apis` VALUES (7, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/getUserInfo', '获取自身信息(必选)', '系统用户', 'GET');
-INSERT INTO `sys_apis` VALUES (8, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/setUserAuthorities', '设置权限组', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (9, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/changePassword', '修改密码（建议选择)', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (10, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/setUserAuthority', '修改用户角色(必选)', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (11, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/user/resetPassword', '重置用户密码', '系统用户', 'POST');
-INSERT INTO `sys_apis` VALUES (12, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/createApi', '创建api', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (13, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/deleteApi', '删除Api', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (14, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/updateApi', '更新Api', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (15, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/getApiList', '获取api列表', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (16, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/getAllApis', '获取所有api', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (17, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/getApiById', '获取api详细信息', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (18, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/deleteApisByIds', '批量删除api', 'api', 'DELETE');
-INSERT INTO `sys_apis` VALUES (19, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/syncApi', '获取待同步API', 'api', 'GET');
-INSERT INTO `sys_apis` VALUES (20, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/getApiGroups', '获取路由组', 'api', 'GET');
-INSERT INTO `sys_apis` VALUES (21, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/enterSyncApi', '确认同步API', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (22, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/api/ignoreApi', '忽略API', 'api', 'POST');
-INSERT INTO `sys_apis` VALUES (23, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/copyAuthority', '拷贝角色', '角色', 'POST');
-INSERT INTO `sys_apis` VALUES (24, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/createAuthority', '创建角色', '角色', 'POST');
-INSERT INTO `sys_apis` VALUES (25, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/deleteAuthority', '删除角色', '角色', 'POST');
-INSERT INTO `sys_apis` VALUES (26, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/updateAuthority', '更新角色信息', '角色', 'PUT');
-INSERT INTO `sys_apis` VALUES (27, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/getAuthorityList', '获取角色列表', '角色', 'POST');
-INSERT INTO `sys_apis` VALUES (28, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authority/setDataAuthority', '设置角色资源权限', '角色', 'POST');
-INSERT INTO `sys_apis` VALUES (29, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/casbin/updateCasbin', '更改角色api权限', 'casbin', 'POST');
-INSERT INTO `sys_apis` VALUES (30, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/casbin/getPolicyPathByAuthorityId', '获取权限列表', 'casbin', 'POST');
-INSERT INTO `sys_apis` VALUES (31, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/addBaseMenu', '新增菜单', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (32, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/getMenu', '获取菜单树(必选)', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (33, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/deleteBaseMenu', '删除菜单', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (34, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/updateBaseMenu', '更新菜单', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (35, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/getBaseMenuById', '根据id获取菜单', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (36, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/getMenuList', '分页获取基础menu列表', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (37, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/getBaseMenuTree', '获取用户动态路由', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (38, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/getMenuAuthority', '获取指定角色menu', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (39, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/menu/addMenuAuthority', '增加menu和角色关联关系', '菜单', 'POST');
-INSERT INTO `sys_apis` VALUES (40, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/findFile', '寻找目标文件（秒传）', '分片上传', 'GET');
-INSERT INTO `sys_apis` VALUES (41, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/breakpointContinue', '断点续传', '分片上传', 'POST');
-INSERT INTO `sys_apis` VALUES (42, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/breakpointContinueFinish', '断点续传完成', '分片上传', 'POST');
-INSERT INTO `sys_apis` VALUES (43, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/removeChunk', '上传完成移除文件', '分片上传', 'POST');
-INSERT INTO `sys_apis` VALUES (44, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/upload', '文件上传示例', '文件上传与下载', 'POST');
-INSERT INTO `sys_apis` VALUES (45, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/deleteFile', '删除文件', '文件上传与下载', 'POST');
-INSERT INTO `sys_apis` VALUES (46, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/editFileName', '文件名或者备注编辑', '文件上传与下载', 'POST');
-INSERT INTO `sys_apis` VALUES (47, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/fileUploadAndDownload/getFileList', '获取上传文件列表', '文件上传与下载', 'POST');
-INSERT INTO `sys_apis` VALUES (48, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/system/getServerInfo', '获取服务器信息', '系统服务', 'POST');
-INSERT INTO `sys_apis` VALUES (49, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/system/getSystemConfig', '获取配置文件内容', '系统服务', 'POST');
-INSERT INTO `sys_apis` VALUES (50, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/system/setSystemConfig', '设置配置文件内容', '系统服务', 'POST');
-INSERT INTO `sys_apis` VALUES (51, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/customer/customer', '更新客户', '客户', 'PUT');
-INSERT INTO `sys_apis` VALUES (52, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/customer/customer', '创建客户', '客户', 'POST');
-INSERT INTO `sys_apis` VALUES (53, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/customer/customer', '删除客户', '客户', 'DELETE');
-INSERT INTO `sys_apis` VALUES (54, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/customer/customer', '获取单一客户', '客户', 'GET');
-INSERT INTO `sys_apis` VALUES (55, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/customer/customerList', '获取客户列表', '客户', 'GET');
-INSERT INTO `sys_apis` VALUES (56, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getDB', '获取所有数据库', '代码生成器', 'GET');
-INSERT INTO `sys_apis` VALUES (57, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getTables', '获取数据库表', '代码生成器', 'GET');
-INSERT INTO `sys_apis` VALUES (58, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/createTemp', '自动化代码', '代码生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (59, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/preview', '预览自动化代码', '代码生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (60, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getColumn', '获取所选table的所有字段', '代码生成器', 'GET');
-INSERT INTO `sys_apis` VALUES (61, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/createPlug', '自动创建插件包', '代码生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (62, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/installPlugin', '安装插件', '代码生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (63, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/pubPlug', '打包插件', '代码生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (64, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/createPackage', '生成包(package)', '包（pkg）生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (65, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getPackage', '获取所有包(package)', '包（pkg）生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (66, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/delPackage', '删除包(package)', '包（pkg）生成器', 'POST');
-INSERT INTO `sys_apis` VALUES (67, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getMeta', '获取meta信息', '代码生成器历史', 'POST');
-INSERT INTO `sys_apis` VALUES (68, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/rollback', '回滚自动生成代码', '代码生成器历史', 'POST');
-INSERT INTO `sys_apis` VALUES (69, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/getSysHistory', '查询回滚记录', '代码生成器历史', 'POST');
-INSERT INTO `sys_apis` VALUES (70, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/autoCode/delSysHistory', '删除回滚记录', '代码生成器历史', 'POST');
-INSERT INTO `sys_apis` VALUES (71, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionaryDetail/updateSysDictionaryDetail', '更新字典内容', '系统字典详情', 'PUT');
-INSERT INTO `sys_apis` VALUES (72, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionaryDetail/createSysDictionaryDetail', '新增字典内容', '系统字典详情', 'POST');
-INSERT INTO `sys_apis` VALUES (73, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionaryDetail/deleteSysDictionaryDetail', '删除字典内容', '系统字典详情', 'DELETE');
-INSERT INTO `sys_apis` VALUES (74, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionaryDetail/findSysDictionaryDetail', '根据ID获取字典内容', '系统字典详情', 'GET');
-INSERT INTO `sys_apis` VALUES (75, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionaryDetail/getSysDictionaryDetailList', '获取字典内容列表', '系统字典详情', 'GET');
-INSERT INTO `sys_apis` VALUES (76, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionary/createSysDictionary', '新增字典', '系统字典', 'POST');
-INSERT INTO `sys_apis` VALUES (77, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionary/deleteSysDictionary', '删除字典', '系统字典', 'DELETE');
-INSERT INTO `sys_apis` VALUES (78, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionary/updateSysDictionary', '更新字典', '系统字典', 'PUT');
-INSERT INTO `sys_apis` VALUES (79, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionary/findSysDictionary', '根据ID获取字典', '系统字典', 'GET');
-INSERT INTO `sys_apis` VALUES (80, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysDictionary/getSysDictionaryList', '获取字典列表', '系统字典', 'GET');
-INSERT INTO `sys_apis` VALUES (81, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysOperationRecord/createSysOperationRecord', '新增操作记录', '操作记录', 'POST');
-INSERT INTO `sys_apis` VALUES (82, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysOperationRecord/findSysOperationRecord', '根据ID获取操作记录', '操作记录', 'GET');
-INSERT INTO `sys_apis` VALUES (83, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysOperationRecord/getSysOperationRecordList', '获取操作记录列表', '操作记录', 'GET');
-INSERT INTO `sys_apis` VALUES (84, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysOperationRecord/deleteSysOperationRecord', '删除操作记录', '操作记录', 'DELETE');
-INSERT INTO `sys_apis` VALUES (85, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysOperationRecord/deleteSysOperationRecordByIds', '批量删除操作历史', '操作记录', 'DELETE');
-INSERT INTO `sys_apis` VALUES (86, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/simpleUploader/upload', '插件版分片上传', '断点续传(插件版)', 'POST');
-INSERT INTO `sys_apis` VALUES (87, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/simpleUploader/checkFileMd5', '文件完整度验证', '断点续传(插件版)', 'GET');
-INSERT INTO `sys_apis` VALUES (88, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/simpleUploader/mergeFileMd5', '上传完成合并文件', '断点续传(插件版)', 'GET');
-INSERT INTO `sys_apis` VALUES (89, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/email/emailTest', '发送测试邮件', 'email', 'POST');
-INSERT INTO `sys_apis` VALUES (90, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/email/sendEmail', '发送邮件', 'email', 'POST');
-INSERT INTO `sys_apis` VALUES (91, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authorityBtn/setAuthorityBtn', '设置按钮权限', '按钮权限', 'POST');
-INSERT INTO `sys_apis` VALUES (92, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authorityBtn/getAuthorityBtn', '获取已有按钮权限', '按钮权限', 'POST');
-INSERT INTO `sys_apis` VALUES (93, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/authorityBtn/canRemoveAuthorityBtn', '删除按钮', '按钮权限', 'POST');
-INSERT INTO `sys_apis` VALUES (94, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/createSysExportTemplate', '新增导出模板', '表格模板', 'POST');
-INSERT INTO `sys_apis` VALUES (95, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/deleteSysExportTemplate', '删除导出模板', '表格模板', 'DELETE');
-INSERT INTO `sys_apis` VALUES (96, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/deleteSysExportTemplateByIds', '批量删除导出模板', '表格模板', 'DELETE');
-INSERT INTO `sys_apis` VALUES (97, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/updateSysExportTemplate', '更新导出模板', '表格模板', 'PUT');
-INSERT INTO `sys_apis` VALUES (98, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/findSysExportTemplate', '根据ID获取导出模板', '表格模板', 'GET');
-INSERT INTO `sys_apis` VALUES (99, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/getSysExportTemplateList', '获取导出模板列表', '表格模板', 'GET');
-INSERT INTO `sys_apis` VALUES (100, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/exportExcel', '导出Excel', '表格模板', 'GET');
-INSERT INTO `sys_apis` VALUES (101, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/exportTemplate', '下载模板', '表格模板', 'GET');
-INSERT INTO `sys_apis` VALUES (102, '2024-10-15 13:05:01.289', '2024-10-15 13:05:01.289', NULL, '/sysExportTemplate/importExcel', '导入Excel', '表格模板', 'POST');
-INSERT INTO `sys_apis` VALUES (103, '2024-10-15 20:39:44.103', '2024-10-15 20:39:44.103', NULL, '/configuration/dimdeviceinfo/list', '获取设备列表信息', ' 设备管理', 'GET');
-INSERT INTO `sys_apis` VALUES (104, '2024-10-29 17:58:17.380', '2024-10-29 17:58:33.892', NULL, '/traffic/dwsTotalTraffic/trend', '流量趋势图', '首页', 'POST');
-INSERT INTO `sys_apis` VALUES (105, '2024-10-30 09:45:38.700', '2024-10-30 09:45:38.700', NULL, '/configuration/dimlineinfo/list', '获取链路列表', '链路配置', 'GET');
-INSERT INTO `sys_apis` VALUES (106, '2024-10-30 09:45:38.700', '2024-10-30 09:45:38.700', NULL, '/policy/whitePolicy/page', '获取优先策略', '优先策略', 'POST');
-INSERT INTO `sys_apis` VALUES (107, '2024-10-30 09:45:38.700', '2024-10-30 09:45:38.700', NULL, '/policy/whitePolicy/saveOrUpdate', '增加优先策略', '优先策略', 'POST');
-INSERT INTO `sys_apis` VALUES (108, '2024-11-14 14:22:34.000', '2024-11-14 14:22:37.000', NULL, '/traffic/alarmLog/list', '获取流量告警日志', '流量告警', 'GET');
-INSERT INTO `sys_apis` VALUES (109, '2024-11-14 14:31:11.000', '2024-11-14 14:31:14.000', NULL, '/policy/alarmConfig/page', '业务流量告警分页查询', '流量告警', 'POST');
-INSERT INTO `sys_apis` VALUES (110, '2024-11-14 14:31:36.000', '2024-11-14 14:31:40.000', NULL, '/policy/alarmConfig/delete', '删除业务流量告警', '流量告警', 'GET');
-INSERT INTO `sys_apis` VALUES (111, '2024-11-14 14:33:11.000', '2024-11-14 14:33:14.000', NULL, '/policy/alarmConfig/saveOrUpdate', '新增或修改业务流量告警', '流量告警', 'POST');
+--
+-- Dumping data for table `sys_apis`
+--
 
--- ----------------------------
--- Table structure for sys_authorities
--- ----------------------------
+LOCK TABLES `sys_apis` WRITE;
+/*!40000 ALTER TABLE `sys_apis` DISABLE KEYS */;
+INSERT INTO `sys_apis` (`id`, `created_at`, `updated_at`, `deleted_at`, `path`, `description`, `api_group`, `method`) VALUES (1,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/info/:id','dimusercrowdgroup/info/:id','configuration','GET'),(2,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/list','dimusercrowdgroup/list','configuration','GET'),(3,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/getGroupTree/:level','dimusercrowdgroup/getGroupTree/:level','configuration','GET'),(4,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowd/info/:id','dimusercrowd/info/:id','configuration','GET'),(5,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowd/list','dimusercrowd/list','configuration','GET'),(6,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/info/:id','dimuserinfo/info/:id','configuration','GET'),(7,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/list','dimuserinfo/list','configuration','GET'),(8,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/export','dimuserinfo/export','configuration','GET'),(9,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimdeviceinfo/info/:id','dimdeviceinfo/info/:id','configuration','GET'),(10,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimdeviceinfo/list','dimdeviceinfo/list','configuration','GET'),(11,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimlineinfo/info/:id','dimlineinfo/info/:id','configuration','GET'),(12,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimlineinfo/list','dimlineinfo/list','configuration','GET'),(13,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/info/:id','dimbypass/info/:id','configuration','GET'),(14,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/list','dimbypass/list','configuration','GET'),(15,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimDict/infoList/:type','dimDict/infoList/:type','configuration','GET'),(16,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionary/findSysDictionary','findSysDictionary','sysDictionary','GET'),(17,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionary/getSysDictionaryList','getSysDictionaryList','sysDictionary','GET'),(18,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionaryDetail/findSysDictionaryDetail','findSysDictionaryDetail','sysDictionaryDetail','GET'),(19,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionaryDetail/getSysDictionaryDetailList','getSysDictionaryDetailList','sysDictionaryDetail','GET'),(20,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysOperationRecord/findSysOperationRecord','findSysOperationRecord','sysOperationRecord','GET'),(21,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysOperationRecord/getSysOperationRecordList','getSysOperationRecordList','sysOperationRecord','GET'),(22,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/swagger/*any','*any','swagger','GET'),(23,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/getApiGroups','getApiGroups','api','GET'),(24,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/syncApi','syncApi','api','GET'),(25,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/freshCasbin','freshCasbin','api','GET'),(26,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/uploads/file/*filepath','file/*filepath','uploads','GET'),(27,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/getUserInfo','getUserInfo','user','GET'),(28,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/health','','health','GET'),(29,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/object/appClassify/list','appClassify/list','object','GET'),(30,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/uploads/file/*filepath','file/*filepath','uploads','HEAD'),(31,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/level1Pie','userCrowdRank/level1Pie','traffic','POST'),(32,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/level1Table','userCrowdRank/level1Table','traffic','POST'),(33,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/level2Trend','userCrowdRank/level2Trend','traffic','POST'),(34,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/level2Table','userCrowdRank/level2Table','traffic','POST'),(35,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/level3Table','userCrowdRank/level3Table','traffic','POST'),(36,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdRank/export','userCrowdRank/export','traffic','POST'),(37,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/level1Pie','userCrowdGroupRank/level1Pie','traffic','POST'),(38,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/level1Table','userCrowdGroupRank/level1Table','traffic','POST'),(39,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/level2Trend','userCrowdGroupRank/level2Trend','traffic','POST'),(40,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/level2Table','userCrowdGroupRank/level2Table','traffic','POST'),(41,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/level3Table','userCrowdGroupRank/level3Table','traffic','POST'),(42,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userCrowdGroupRank/export','userCrowdGroupRank/export','traffic','POST'),(43,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/level1Pie','userRank/level1Pie','traffic','POST'),(44,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/level1Table','userRank/level1Table','traffic','POST'),(45,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/level2Trend','userRank/level2Trend','traffic','POST'),(46,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/level2Table','userRank/level2Table','traffic','POST'),(47,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/level3Table','userRank/level3Table','traffic','POST'),(48,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userRank/export','userRank/export','traffic','POST'),(49,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userAction/pageData','userAction/pageData','traffic','POST'),(50,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userAction/detail','userAction/detail','traffic','POST'),(51,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/userAction/export','userAction/export','traffic','POST'),(52,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appId/rankData','appId/rankData','traffic','POST'),(53,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appId/rankTableData','appId/rankTableData','traffic','POST'),(54,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appId/trendTableData','appId/trendTableData','traffic','POST'),(55,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appId/export','appId/export','traffic','POST'),(56,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appType/rankData','appType/rankData','traffic','POST'),(57,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appType/rankTableData','appType/rankTableData','traffic','POST'),(58,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/appType/export','appType/export','traffic','POST'),(59,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/alarmLog/list','alarmLog/list','traffic','POST'),(60,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/isp/rankData','isp/rankData','traffic','POST'),(61,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/isp/rankTableData','isp/rankTableData','traffic','POST'),(62,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/isp/export','isp/export','traffic','POST'),(63,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/traffic/dwsTotalTraffic/home','dwsTotalTraffic/home','traffic','POST'),(64,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowd/save','dimusercrowd/save','configuration','POST'),(65,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowd/update','dimusercrowd/update','configuration','POST'),(66,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowd/delete','dimusercrowd/delete','configuration','POST'),(67,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/save','dimusercrowdgroup/save','configuration','POST'),(68,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/update','dimusercrowdgroup/update','configuration','POST'),(69,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimusercrowdgroup/delete','dimusercrowdgroup/delete','configuration','POST'),(70,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/save','dimuserinfo/save','configuration','POST'),(71,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/update','dimuserinfo/update','configuration','POST'),(72,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimuserinfo/delete','dimuserinfo/delete','configuration','POST'),(73,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/save','dimbypass/save','configuration','POST'),(74,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/setStatus','dimbypass/setStatus','configuration','POST'),(75,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/update','dimbypass/update','configuration','POST'),(76,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/delete','dimbypass/delete','configuration','POST'),(77,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimbypass/validateBypassPassword','dimbypass/validateBypassPassword','configuration','POST'),(78,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimdeviceinfo/save','dimdeviceinfo/save','configuration','POST'),(79,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimdeviceinfo/update','dimdeviceinfo/update','configuration','POST'),(80,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimdeviceinfo/delete','dimdeviceinfo/delete','configuration','POST'),(81,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimlineinfo/save','dimlineinfo/save','configuration','POST'),(82,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimlineinfo/update','dimlineinfo/update','configuration','POST'),(83,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/configuration/dimlineinfo/delete','dimlineinfo/delete','configuration','POST'),(84,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/casbin/updateCasbin','updateCasbin','casbin','POST'),(85,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/casbin/getPolicyPathByAuthorityId','getPolicyPathByAuthorityId','casbin','POST'),(86,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/getApiById','getApiById','api','POST'),(87,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/getApiList','getApiList','api','POST'),(88,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/getAllApis','getAllApis','api','POST'),(89,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/ignoreApi','ignoreApi','api','POST'),(90,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/enterSyncApi','enterSyncApi','api','POST'),(91,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/createApi','createApi','api','POST'),(92,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/deleteApi','deleteApi','api','POST'),(93,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/updateApi','updateApi','api','POST'),(94,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/createAuthority','createAuthority','authority','POST'),(95,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/copyAuthority','copyAuthority','authority','POST'),(96,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/deleteAuthority','deleteAuthority','authority','POST'),(97,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/setDataAuthority','setDataAuthority','authority','POST'),(98,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/getAuthorityList','getAuthorityList','authority','POST'),(99,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authorityBtn/getAuthorityBtn','getAuthorityBtn','authorityBtn','POST'),(100,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authorityBtn/setAuthorityBtn','setAuthorityBtn','authorityBtn','POST'),(101,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authorityBtn/canRemoveAuthorityBtn','canRemoveAuthorityBtn','authorityBtn','POST'),(102,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/whitePolicy/page','whitePolicy/page','policy','POST'),(103,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/whitePolicy/info','whitePolicy/info','policy','POST'),(104,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/whitePolicy/saveOrUpdate','whitePolicy/saveOrUpdate','policy','POST'),(105,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/whitePolicy/delete','whitePolicy/delete','policy','POST'),(106,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/controlPolicy/page','controlPolicy/page','policy','POST'),(107,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/controlPolicy/info','controlPolicy/info','policy','POST'),(108,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/controlPolicy/saveOrUpdate','controlPolicy/saveOrUpdate','policy','POST'),(109,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/controlPolicy/delete','controlPolicy/delete','policy','POST'),(110,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/alarmConfig/page','alarmConfig/page','policy','POST'),(111,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/alarmConfig/info','alarmConfig/info','policy','POST'),(112,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/alarmConfig/saveOrUpdate','alarmConfig/saveOrUpdate','policy','POST'),(113,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/policy/alarmConfig/delete','alarmConfig/delete','policy','POST'),(114,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/getMenu','getMenu','menu','POST'),(115,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/getMenuList','getMenuList','menu','POST'),(116,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/getMenuAuthority','getMenuAuthority','menu','POST'),(117,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/getBaseMenuTree','getBaseMenuTree','menu','POST'),(118,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/getBaseMenuById','getBaseMenuById','menu','POST'),(119,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/addBaseMenu','addBaseMenu','menu','POST'),(120,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/addMenuAuthority','addMenuAuthority','menu','POST'),(121,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/deleteBaseMenu','deleteBaseMenu','menu','POST'),(122,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/menu/updateBaseMenu','updateBaseMenu','menu','POST'),(123,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/system/getSystemConfig','getSystemConfig','system','POST'),(124,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/system/getServerInfo','getServerInfo','system','POST'),(125,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/system/setSystemConfig','setSystemConfig','system','POST'),(126,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/system/reloadSystem','reloadSystem','system','POST'),(127,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionary/createSysDictionary','createSysDictionary','sysDictionary','POST'),(128,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionaryDetail/createSysDictionaryDetail','createSysDictionaryDetail','sysDictionaryDetail','POST'),(129,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysOperationRecord/createSysOperationRecord','createSysOperationRecord','sysOperationRecord','POST'),(130,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/setUserAuthority','setUserAuthority','user','POST'),(131,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/setUserAuthorities','setUserAuthorities','user','POST'),(132,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/admin_register','admin_register','user','POST'),(133,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/changePassword','changePassword','user','POST'),(134,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/resetPassword','resetPassword','user','POST'),(135,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/getUserList','getUserList','user','POST'),(136,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/base/login','login','base','POST'),(137,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/base/captcha','captcha','base','POST'),(138,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/init/initdb','initdb','init','POST'),(139,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/init/checkdb','checkdb','init','POST'),(140,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/jwt/jsonInBlacklist','jsonInBlacklist','jwt','POST'),(141,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/object/appClassify/import','appClassify/import','object','POST'),(142,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysOperationRecord/deleteSysOperationRecord','deleteSysOperationRecord','sysOperationRecord','DELETE'),(143,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysOperationRecord/deleteSysOperationRecordByIds','deleteSysOperationRecordByIds','sysOperationRecord','DELETE'),(144,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionary/deleteSysDictionary','deleteSysDictionary','sysDictionary','DELETE'),(145,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionaryDetail/deleteSysDictionaryDetail','deleteSysDictionaryDetail','sysDictionaryDetail','DELETE'),(146,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/api/deleteApisByIds','deleteApisByIds','api','DELETE'),(147,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/deleteUser','deleteUser','user','DELETE'),(148,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/setUserInfo','setUserInfo','user','PUT'),(149,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/user/setSelfInfo','setSelfInfo','user','PUT'),(150,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionary/updateSysDictionary','updateSysDictionary','sysDictionary','PUT'),(151,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/sysDictionaryDetail/updateSysDictionaryDetail','updateSysDictionaryDetail','sysDictionaryDetail','PUT'),(152,'2025-05-17 16:43:14.290','2025-05-17 16:43:14.290','2025-05-17 16:50:53.528','/authority/updateAuthority','updateAuthority','authority','PUT'),(153,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/info/:id','dimusercrowdgroup/info/:id','configuration','GET'),(154,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/list','dimusercrowdgroup/list','configuration','GET'),(155,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/getGroupTree/:level','dimusercrowdgroup/getGroupTree/:level','configuration','GET'),(156,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowd/info/:id','dimusercrowd/info/:id','configuration','GET'),(157,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowd/list','dimusercrowd/list','configuration','GET'),(158,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/info/:id','dimuserinfo/info/:id','configuration','GET'),(159,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/list','dimuserinfo/list','configuration','GET'),(160,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/export','dimuserinfo/export','configuration','GET'),(161,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimdeviceinfo/info/:id','dimdeviceinfo/info/:id','configuration','GET'),(162,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimdeviceinfo/list','dimdeviceinfo/list','configuration','GET'),(163,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimlineinfo/info/:id','dimlineinfo/info/:id','configuration','GET'),(164,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimlineinfo/list','dimlineinfo/list','configuration','GET'),(165,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/info/:id','dimbypass/info/:id','configuration','GET'),(166,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/list','dimbypass/list','configuration','GET'),(167,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimDict/infoList/:type','dimDict/infoList/:type','configuration','GET'),(168,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionary/findSysDictionary','findSysDictionary','sysDictionary','GET'),(169,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionary/getSysDictionaryList','getSysDictionaryList','sysDictionary','GET'),(170,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionaryDetail/findSysDictionaryDetail','findSysDictionaryDetail','sysDictionaryDetail','GET'),(171,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionaryDetail/getSysDictionaryDetailList','getSysDictionaryDetailList','sysDictionaryDetail','GET'),(172,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysOperationRecord/findSysOperationRecord','findSysOperationRecord','sysOperationRecord','GET'),(173,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysOperationRecord/getSysOperationRecordList','getSysOperationRecordList','sysOperationRecord','GET'),(174,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/swagger/*any','*any','swagger','GET'),(175,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/getApiGroups','getApiGroups','api','GET'),(176,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/syncApi','syncApi','api','GET'),(177,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/freshCasbin','freshCasbin','api','GET'),(178,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/uploads/file/*filepath','file/*filepath','uploads','GET'),(179,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/getUserInfo','getUserInfo','user','GET'),(180,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/health','','health','GET'),(181,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/object/appClassify/list','appClassify/list','object','GET'),(182,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/uploads/file/*filepath','file/*filepath','uploads','HEAD'),(183,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/level1Pie','userCrowdRank/level1Pie','traffic','POST'),(184,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/level1Table','userCrowdRank/level1Table','traffic','POST'),(185,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/level2Trend','userCrowdRank/level2Trend','traffic','POST'),(186,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/level2Table','userCrowdRank/level2Table','traffic','POST'),(187,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/level3Table','userCrowdRank/level3Table','traffic','POST'),(188,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdRank/export','userCrowdRank/export','traffic','POST'),(189,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/level1Pie','userCrowdGroupRank/level1Pie','traffic','POST'),(190,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/level1Table','userCrowdGroupRank/level1Table','traffic','POST'),(191,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/level2Trend','userCrowdGroupRank/level2Trend','traffic','POST'),(192,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/level2Table','userCrowdGroupRank/level2Table','traffic','POST'),(193,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/level3Table','userCrowdGroupRank/level3Table','traffic','POST'),(194,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userCrowdGroupRank/export','userCrowdGroupRank/export','traffic','POST'),(195,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/level1Pie','userRank/level1Pie','traffic','POST'),(196,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/level1Table','userRank/level1Table','traffic','POST'),(197,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/level2Trend','userRank/level2Trend','traffic','POST'),(198,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/level2Table','userRank/level2Table','traffic','POST'),(199,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/level3Table','userRank/level3Table','traffic','POST'),(200,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userRank/export','userRank/export','traffic','POST'),(201,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userAction/pageData','userAction/pageData','traffic','POST'),(202,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userAction/detail','userAction/detail','traffic','POST'),(203,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/userAction/export','userAction/export','traffic','POST'),(204,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appId/rankData','appId/rankData','traffic','POST'),(205,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appId/rankTableData','appId/rankTableData','traffic','POST'),(206,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appId/trendTableData','appId/trendTableData','traffic','POST'),(207,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appId/export','appId/export','traffic','POST'),(208,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appType/rankData','appType/rankData','traffic','POST'),(209,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appType/rankTableData','appType/rankTableData','traffic','POST'),(210,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/appType/export','appType/export','traffic','POST'),(211,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/alarmLog/list','alarmLog/list','traffic','POST'),(212,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/isp/rankData','isp/rankData','traffic','POST'),(213,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/isp/rankTableData','isp/rankTableData','traffic','POST'),(214,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/isp/export','isp/export','traffic','POST'),(215,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/traffic/dwsTotalTraffic/home','dwsTotalTraffic/home','traffic','POST'),(216,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowd/save','dimusercrowd/save','configuration','POST'),(217,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowd/update','dimusercrowd/update','configuration','POST'),(218,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowd/delete','dimusercrowd/delete','configuration','POST'),(219,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/save','dimusercrowdgroup/save','configuration','POST'),(220,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/update','dimusercrowdgroup/update','configuration','POST'),(221,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimusercrowdgroup/delete','dimusercrowdgroup/delete','configuration','POST'),(222,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/save','dimuserinfo/save','configuration','POST'),(223,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/update','dimuserinfo/update','configuration','POST'),(224,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimuserinfo/delete','dimuserinfo/delete','configuration','POST'),(225,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/save','dimbypass/save','configuration','POST'),(226,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/setStatus','dimbypass/setStatus','configuration','POST'),(227,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/update','dimbypass/update','configuration','POST'),(228,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/delete','dimbypass/delete','configuration','POST'),(229,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimbypass/validateBypassPassword','dimbypass/validateBypassPassword','configuration','POST'),(230,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimdeviceinfo/save','dimdeviceinfo/save','configuration','POST'),(231,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimdeviceinfo/update','dimdeviceinfo/update','configuration','POST'),(232,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimdeviceinfo/delete','dimdeviceinfo/delete','configuration','POST'),(233,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimlineinfo/save','dimlineinfo/save','configuration','POST'),(234,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimlineinfo/update','dimlineinfo/update','configuration','POST'),(235,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/configuration/dimlineinfo/delete','dimlineinfo/delete','configuration','POST'),(236,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/casbin/updateCasbin','updateCasbin','casbin','POST'),(237,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/casbin/getPolicyPathByAuthorityId','getPolicyPathByAuthorityId','casbin','POST'),(238,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/getApiById','getApiById','api','POST'),(239,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/getApiList','getApiList','api','POST'),(240,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/getAllApis','getAllApis','api','POST'),(241,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/ignoreApi','ignoreApi','api','POST'),(242,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/enterSyncApi','enterSyncApi','api','POST'),(243,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/createApi','createApi','api','POST'),(244,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/deleteApi','deleteApi','api','POST'),(245,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/updateApi','updateApi','api','POST'),(246,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/createAuthority','createAuthority','authority','POST'),(247,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/copyAuthority','copyAuthority','authority','POST'),(248,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/deleteAuthority','deleteAuthority','authority','POST'),(249,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/setDataAuthority','setDataAuthority','authority','POST'),(250,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/getAuthorityList','getAuthorityList','authority','POST'),(251,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authorityBtn/getAuthorityBtn','getAuthorityBtn','authorityBtn','POST'),(252,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authorityBtn/setAuthorityBtn','setAuthorityBtn','authorityBtn','POST'),(253,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authorityBtn/canRemoveAuthorityBtn','canRemoveAuthorityBtn','authorityBtn','POST'),(254,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/whitePolicy/page','whitePolicy/page','policy','POST'),(255,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/whitePolicy/info','whitePolicy/info','policy','POST'),(256,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/whitePolicy/saveOrUpdate','whitePolicy/saveOrUpdate','policy','POST'),(257,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/whitePolicy/delete','whitePolicy/delete','policy','POST'),(258,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/controlPolicy/page','controlPolicy/page','policy','POST'),(259,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/controlPolicy/info','controlPolicy/info','policy','POST'),(260,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/controlPolicy/saveOrUpdate','controlPolicy/saveOrUpdate','policy','POST'),(261,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/controlPolicy/delete','controlPolicy/delete','policy','POST'),(262,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/alarmConfig/page','alarmConfig/page','policy','POST'),(263,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/alarmConfig/info','alarmConfig/info','policy','POST'),(264,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/alarmConfig/saveOrUpdate','alarmConfig/saveOrUpdate','policy','POST'),(265,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/policy/alarmConfig/delete','alarmConfig/delete','policy','POST'),(266,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/getMenu','getMenu','menu','POST'),(267,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/getMenuList','getMenuList','menu','POST'),(268,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/getMenuAuthority','getMenuAuthority','menu','POST'),(269,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/getBaseMenuTree','getBaseMenuTree','menu','POST'),(270,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/getBaseMenuById','getBaseMenuById','menu','POST'),(271,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/addBaseMenu','addBaseMenu','menu','POST'),(272,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/addMenuAuthority','addMenuAuthority','menu','POST'),(273,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/deleteBaseMenu','deleteBaseMenu','menu','POST'),(274,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/menu/updateBaseMenu','updateBaseMenu','menu','POST'),(275,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/system/getSystemConfig','getSystemConfig','system','POST'),(276,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/system/getServerInfo','getServerInfo','system','POST'),(277,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/system/setSystemConfig','setSystemConfig','system','POST'),(278,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/system/reloadSystem','reloadSystem','system','POST'),(279,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionary/createSysDictionary','createSysDictionary','sysDictionary','POST'),(280,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionaryDetail/createSysDictionaryDetail','createSysDictionaryDetail','sysDictionaryDetail','POST'),(281,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysOperationRecord/createSysOperationRecord','createSysOperationRecord','sysOperationRecord','POST'),(282,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/setUserAuthority','setUserAuthority','user','POST'),(283,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/setUserAuthorities','setUserAuthorities','user','POST'),(284,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/admin_register','admin_register','user','POST'),(285,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/changePassword','changePassword','user','POST'),(286,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/resetPassword','resetPassword','user','POST'),(287,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/getUserList','getUserList','user','POST'),(288,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/base/login','login','base','POST'),(289,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/base/captcha','captcha','base','POST'),(290,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/init/initdb','initdb','init','POST'),(291,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/init/checkdb','checkdb','init','POST'),(292,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/jwt/jsonInBlacklist','jsonInBlacklist','jwt','POST'),(293,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/object/appClassify/import','appClassify/import','object','POST'),(294,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysOperationRecord/deleteSysOperationRecord','deleteSysOperationRecord','sysOperationRecord','DELETE'),(295,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysOperationRecord/deleteSysOperationRecordByIds','deleteSysOperationRecordByIds','sysOperationRecord','DELETE'),(296,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionary/deleteSysDictionary','deleteSysDictionary','sysDictionary','DELETE'),(297,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionaryDetail/deleteSysDictionaryDetail','deleteSysDictionaryDetail','sysDictionaryDetail','DELETE'),(298,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/api/deleteApisByIds','deleteApisByIds','api','DELETE'),(299,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/deleteUser','deleteUser','user','DELETE'),(300,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/setUserInfo','setUserInfo','user','PUT'),(301,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/user/setSelfInfo','setSelfInfo','user','PUT'),(302,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionary/updateSysDictionary','updateSysDictionary','sysDictionary','PUT'),(303,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/sysDictionaryDetail/updateSysDictionaryDetail','updateSysDictionaryDetail','sysDictionaryDetail','PUT'),(304,'2025-05-17 16:50:53.539','2025-05-17 16:50:53.539','2025-05-17 17:19:27.700','/authority/updateAuthority','updateAuthority','authority','PUT'),(305,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/info/:id','dimusercrowdgroup/info/:id','configuration','GET'),(306,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/list','dimusercrowdgroup/list','configuration','GET'),(307,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/getGroupTree/:level','dimusercrowdgroup/getGroupTree/:level','configuration','GET'),(308,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowd/info/:id','dimusercrowd/info/:id','configuration','GET'),(309,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowd/list','dimusercrowd/list','configuration','GET'),(310,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/info/:id','dimuserinfo/info/:id','configuration','GET'),(311,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/list','dimuserinfo/list','configuration','GET'),(312,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/export','dimuserinfo/export','configuration','GET'),(313,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimdeviceinfo/info/:id','dimdeviceinfo/info/:id','configuration','GET'),(314,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimdeviceinfo/list','dimdeviceinfo/list','configuration','GET'),(315,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimlineinfo/info/:id','dimlineinfo/info/:id','configuration','GET'),(316,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimlineinfo/list','dimlineinfo/list','configuration','GET'),(317,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/info/:id','dimbypass/info/:id','configuration','GET'),(318,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/list','dimbypass/list','configuration','GET'),(319,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimDict/infoList/:type','dimDict/infoList/:type','configuration','GET'),(320,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionary/findSysDictionary','findSysDictionary','sysDictionary','GET'),(321,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionary/getSysDictionaryList','getSysDictionaryList','sysDictionary','GET'),(322,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionaryDetail/findSysDictionaryDetail','findSysDictionaryDetail','sysDictionaryDetail','GET'),(323,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionaryDetail/getSysDictionaryDetailList','getSysDictionaryDetailList','sysDictionaryDetail','GET'),(324,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysOperationRecord/findSysOperationRecord','findSysOperationRecord','sysOperationRecord','GET'),(325,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysOperationRecord/getSysOperationRecordList','getSysOperationRecordList','sysOperationRecord','GET'),(326,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/swagger/*any','*any','swagger','GET'),(327,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/getApiGroups','getApiGroups','api','GET'),(328,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/syncApi','syncApi','api','GET'),(329,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/freshCasbin','freshCasbin','api','GET'),(330,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/uploads/file/*filepath','file/*filepath','uploads','GET'),(331,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/getUserInfo','getUserInfo','user','GET'),(332,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/health','','health','GET'),(333,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/object/appClassify/list','appClassify/list','object','GET'),(334,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/uploads/file/*filepath','file/*filepath','uploads','HEAD'),(335,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/level1Pie','userCrowdRank/level1Pie','traffic','POST'),(336,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/level1Table','userCrowdRank/level1Table','traffic','POST'),(337,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/level2Trend','userCrowdRank/level2Trend','traffic','POST'),(338,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/level2Table','userCrowdRank/level2Table','traffic','POST'),(339,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/level3Table','userCrowdRank/level3Table','traffic','POST'),(340,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdRank/export','userCrowdRank/export','traffic','POST'),(341,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/level1Pie','userCrowdGroupRank/level1Pie','traffic','POST'),(342,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/level1Table','userCrowdGroupRank/level1Table','traffic','POST'),(343,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/level2Trend','userCrowdGroupRank/level2Trend','traffic','POST'),(344,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/level2Table','userCrowdGroupRank/level2Table','traffic','POST'),(345,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/level3Table','userCrowdGroupRank/level3Table','traffic','POST'),(346,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userCrowdGroupRank/export','userCrowdGroupRank/export','traffic','POST'),(347,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/level1Pie','userRank/level1Pie','traffic','POST'),(348,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/level1Table','userRank/level1Table','traffic','POST'),(349,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/level2Trend','userRank/level2Trend','traffic','POST'),(350,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/level2Table','userRank/level2Table','traffic','POST'),(351,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/level3Table','userRank/level3Table','traffic','POST'),(352,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userRank/export','userRank/export','traffic','POST'),(353,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userAction/pageData','userAction/pageData','traffic','POST'),(354,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userAction/detail','userAction/detail','traffic','POST'),(355,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/userAction/export','userAction/export','traffic','POST'),(356,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appId/rankData','appId/rankData','traffic','POST'),(357,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appId/rankTableData','appId/rankTableData','traffic','POST'),(358,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appId/trendTableData','appId/trendTableData','traffic','POST'),(359,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appId/export','appId/export','traffic','POST'),(360,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appType/rankData','appType/rankData','traffic','POST'),(361,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appType/rankTableData','appType/rankTableData','traffic','POST'),(362,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/appType/export','appType/export','traffic','POST'),(363,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/alarmLog/list','alarmLog/list','traffic','POST'),(364,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/isp/rankData','isp/rankData','traffic','POST'),(365,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/isp/rankTableData','isp/rankTableData','traffic','POST'),(366,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/isp/export','isp/export','traffic','POST'),(367,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/traffic/dwsTotalTraffic/home','dwsTotalTraffic/home','traffic','POST'),(368,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowd/save','dimusercrowd/save','configuration','POST'),(369,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowd/update','dimusercrowd/update','configuration','POST'),(370,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowd/delete','dimusercrowd/delete','configuration','POST'),(371,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/save','dimusercrowdgroup/save','configuration','POST'),(372,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/update','dimusercrowdgroup/update','configuration','POST'),(373,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimusercrowdgroup/delete','dimusercrowdgroup/delete','configuration','POST'),(374,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/save','dimuserinfo/save','configuration','POST'),(375,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/update','dimuserinfo/update','configuration','POST'),(376,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimuserinfo/delete','dimuserinfo/delete','configuration','POST'),(377,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/save','dimbypass/save','configuration','POST'),(378,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/setStatus','dimbypass/setStatus','configuration','POST'),(379,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/update','dimbypass/update','configuration','POST'),(380,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/delete','dimbypass/delete','configuration','POST'),(381,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimbypass/validateBypassPassword','dimbypass/validateBypassPassword','configuration','POST'),(382,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimdeviceinfo/save','dimdeviceinfo/save','configuration','POST'),(383,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimdeviceinfo/update','dimdeviceinfo/update','configuration','POST'),(384,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimdeviceinfo/delete','dimdeviceinfo/delete','configuration','POST'),(385,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimlineinfo/save','dimlineinfo/save','configuration','POST'),(386,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimlineinfo/update','dimlineinfo/update','configuration','POST'),(387,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/configuration/dimlineinfo/delete','dimlineinfo/delete','configuration','POST'),(388,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/casbin/updateCasbin','updateCasbin','casbin','POST'),(389,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/casbin/getPolicyPathByAuthorityId','getPolicyPathByAuthorityId','casbin','POST'),(390,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/getApiById','getApiById','api','POST'),(391,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/getApiList','getApiList','api','POST'),(392,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/getAllApis','getAllApis','api','POST'),(393,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/ignoreApi','ignoreApi','api','POST'),(394,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/enterSyncApi','enterSyncApi','api','POST'),(395,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/createApi','createApi','api','POST'),(396,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/deleteApi','deleteApi','api','POST'),(397,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/updateApi','updateApi','api','POST'),(398,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/createAuthority','createAuthority','authority','POST'),(399,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/copyAuthority','copyAuthority','authority','POST'),(400,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/deleteAuthority','deleteAuthority','authority','POST'),(401,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/setDataAuthority','setDataAuthority','authority','POST'),(402,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/getAuthorityList','getAuthorityList','authority','POST'),(403,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authorityBtn/getAuthorityBtn','getAuthorityBtn','authorityBtn','POST'),(404,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authorityBtn/setAuthorityBtn','setAuthorityBtn','authorityBtn','POST'),(405,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authorityBtn/canRemoveAuthorityBtn','canRemoveAuthorityBtn','authorityBtn','POST'),(406,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/whitePolicy/page','whitePolicy/page','policy','POST'),(407,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/whitePolicy/info','whitePolicy/info','policy','POST'),(408,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/whitePolicy/saveOrUpdate','whitePolicy/saveOrUpdate','policy','POST'),(409,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/whitePolicy/delete','whitePolicy/delete','policy','POST'),(410,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/controlPolicy/page','controlPolicy/page','policy','POST'),(411,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/controlPolicy/info','controlPolicy/info','policy','POST'),(412,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/controlPolicy/saveOrUpdate','controlPolicy/saveOrUpdate','policy','POST'),(413,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/controlPolicy/delete','controlPolicy/delete','policy','POST'),(414,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/alarmConfig/page','alarmConfig/page','policy','POST'),(415,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/alarmConfig/info','alarmConfig/info','policy','POST'),(416,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/alarmConfig/saveOrUpdate','alarmConfig/saveOrUpdate','policy','POST'),(417,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/policy/alarmConfig/delete','alarmConfig/delete','policy','POST'),(418,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/getMenu','getMenu','menu','POST'),(419,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/getMenuList','getMenuList','menu','POST'),(420,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/getMenuAuthority','getMenuAuthority','menu','POST'),(421,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/getBaseMenuTree','getBaseMenuTree','menu','POST'),(422,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/getBaseMenuById','getBaseMenuById','menu','POST'),(423,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/addBaseMenu','addBaseMenu','menu','POST'),(424,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/addMenuAuthority','addMenuAuthority','menu','POST'),(425,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/deleteBaseMenu','deleteBaseMenu','menu','POST'),(426,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/menu/updateBaseMenu','updateBaseMenu','menu','POST'),(427,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/system/getSystemConfig','getSystemConfig','system','POST'),(428,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/system/getServerInfo','getServerInfo','system','POST'),(429,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/system/setSystemConfig','setSystemConfig','system','POST'),(430,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/system/reloadSystem','reloadSystem','system','POST'),(431,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionary/createSysDictionary','createSysDictionary','sysDictionary','POST'),(432,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionaryDetail/createSysDictionaryDetail','createSysDictionaryDetail','sysDictionaryDetail','POST'),(433,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysOperationRecord/createSysOperationRecord','createSysOperationRecord','sysOperationRecord','POST'),(434,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/setUserAuthority','setUserAuthority','user','POST'),(435,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/setUserAuthorities','setUserAuthorities','user','POST'),(436,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/admin_register','admin_register','user','POST'),(437,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/changePassword','changePassword','user','POST'),(438,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/resetPassword','resetPassword','user','POST'),(439,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/getUserList','getUserList','user','POST'),(440,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/base/login','login','base','POST'),(441,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/base/captcha','captcha','base','POST'),(442,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/init/initdb','initdb','init','POST'),(443,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/init/checkdb','checkdb','init','POST'),(444,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/jwt/jsonInBlacklist','jsonInBlacklist','jwt','POST'),(445,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/object/appClassify/import','appClassify/import','object','POST'),(446,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysOperationRecord/deleteSysOperationRecord','deleteSysOperationRecord','sysOperationRecord','DELETE'),(447,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysOperationRecord/deleteSysOperationRecordByIds','deleteSysOperationRecordByIds','sysOperationRecord','DELETE'),(448,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionary/deleteSysDictionary','deleteSysDictionary','sysDictionary','DELETE'),(449,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionaryDetail/deleteSysDictionaryDetail','deleteSysDictionaryDetail','sysDictionaryDetail','DELETE'),(450,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/api/deleteApisByIds','deleteApisByIds','api','DELETE'),(451,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/deleteUser','deleteUser','user','DELETE'),(452,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/setUserInfo','setUserInfo','user','PUT'),(453,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/user/setSelfInfo','setSelfInfo','user','PUT'),(454,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionary/updateSysDictionary','updateSysDictionary','sysDictionary','PUT'),(455,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/sysDictionaryDetail/updateSysDictionaryDetail','updateSysDictionaryDetail','sysDictionaryDetail','PUT'),(456,'2025-05-17 17:19:27.713','2025-05-17 17:19:27.713',NULL,'/authority/updateAuthority','updateAuthority','authority','PUT');
+/*!40000 ALTER TABLE `sys_apis` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_authorities`
+--
+
 DROP TABLE IF EXISTS `sys_authorities`;
-CREATE TABLE `sys_authorities`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_authorities` (
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
   `authority_id` bigint unsigned NOT NULL COMMENT '角色ID',
   `authority_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '角色名',
-  `parent_id` bigint unsigned COMMENT '父角色ID',
+  `parent_id` bigint unsigned DEFAULT NULL COMMENT '父角色ID',
   `default_router` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'dashboard' COMMENT '默认菜单',
   PRIMARY KEY (`authority_id`) USING BTREE,
-  UNIQUE INDEX `uni_sys_authorities_authority_id`(`authority_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9529 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE KEY `uni_sys_authorities_authority_id` (`authority_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_authorities
--- ----------------------------
-INSERT INTO `sys_authorities` VALUES ('2024-10-15 13:05:01.317', '2024-11-14 09:44:15.114', NULL, 888, '普通用户', 0, 'dashboard');
-INSERT INTO `sys_authorities` VALUES ('2024-10-15 13:05:01.317', '2024-10-15 13:05:01.559', NULL, 8881, '普通用户子角色', 888, 'dashboard');
-INSERT INTO `sys_authorities` VALUES ('2024-10-15 13:05:01.317', '2024-11-14 09:44:20.655', NULL, 9528, '测试角色', 0, 'dashboard');
+--
+-- Dumping data for table `sys_authorities`
+--
 
--- ----------------------------
--- Table structure for sys_authority_btns
--- ----------------------------
+LOCK TABLES `sys_authorities` WRITE;
+/*!40000 ALTER TABLE `sys_authorities` DISABLE KEYS */;
+INSERT INTO `sys_authorities` (`created_at`, `updated_at`, `deleted_at`, `authority_id`, `authority_name`, `parent_id`, `default_router`) VALUES ('2024-10-15 13:05:01.317','2025-05-17 16:59:09.379',NULL,888,'管理员',0,'dashboard'),('2025-05-17 15:09:16.945','2025-05-17 16:01:45.656',NULL,999,'普通用户',0,'dashboard');
+/*!40000 ALTER TABLE `sys_authorities` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_authority_btns`
+--
+
 DROP TABLE IF EXISTS `sys_authority_btns`;
-CREATE TABLE `sys_authority_btns`  (
-  `authority_id` bigint unsigned COMMENT '角色ID',
-  `sys_menu_id` bigint unsigned COMMENT '菜单ID',
-  `sys_base_menu_btn_id` bigint unsigned COMMENT '菜单按钮ID'
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_authority_btns` (
+  `authority_id` bigint unsigned DEFAULT NULL COMMENT '角色ID',
+  `sys_menu_id` bigint unsigned DEFAULT NULL COMMENT '菜单ID',
+  `sys_base_menu_btn_id` bigint unsigned DEFAULT NULL COMMENT '菜单按钮ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Table structure for sys_authority_menus
--- ----------------------------
+--
+-- Dumping data for table `sys_authority_btns`
+--
+
+LOCK TABLES `sys_authority_btns` WRITE;
+/*!40000 ALTER TABLE `sys_authority_btns` DISABLE KEYS */;
+INSERT INTO `sys_authority_btns` (`authority_id`, `sys_menu_id`, `sys_base_menu_btn_id`) VALUES (888,7,1),(888,40,2);
+/*!40000 ALTER TABLE `sys_authority_btns` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_authority_menus`
+--
+
 DROP TABLE IF EXISTS `sys_authority_menus`;
-CREATE TABLE `sys_authority_menus`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_authority_menus` (
   `sys_base_menu_id` bigint unsigned NOT NULL,
   `sys_authority_authority_id` bigint unsigned NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`sys_base_menu_id`, `sys_authority_authority_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`sys_base_menu_id`,`sys_authority_authority_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_authority_menus
--- ----------------------------
-INSERT INTO `sys_authority_menus` VALUES (1, 888);
-INSERT INTO `sys_authority_menus` VALUES (1, 8881);
-INSERT INTO `sys_authority_menus` VALUES (1, 9528);
-INSERT INTO `sys_authority_menus` VALUES (3, 888);
-INSERT INTO `sys_authority_menus` VALUES (3, 9528);
-INSERT INTO `sys_authority_menus` VALUES (4, 888);
-INSERT INTO `sys_authority_menus` VALUES (4, 8881);
-INSERT INTO `sys_authority_menus` VALUES (4, 9528);
-INSERT INTO `sys_authority_menus` VALUES (5, 888);
-INSERT INTO `sys_authority_menus` VALUES (5, 8881);
-INSERT INTO `sys_authority_menus` VALUES (5, 9528);
-INSERT INTO `sys_authority_menus` VALUES (6, 888);
-INSERT INTO `sys_authority_menus` VALUES (6, 8881);
-INSERT INTO `sys_authority_menus` VALUES (6, 9528);
-INSERT INTO `sys_authority_menus` VALUES (7, 888);
-INSERT INTO `sys_authority_menus` VALUES (7, 8881);
-INSERT INTO `sys_authority_menus` VALUES (7, 9528);
-INSERT INTO `sys_authority_menus` VALUES (8, 888);
-INSERT INTO `sys_authority_menus` VALUES (8, 8881);
-INSERT INTO `sys_authority_menus` VALUES (9, 888);
-INSERT INTO `sys_authority_menus` VALUES (9, 8881);
-INSERT INTO `sys_authority_menus` VALUES (9, 9528);
-INSERT INTO `sys_authority_menus` VALUES (10, 888);
-INSERT INTO `sys_authority_menus` VALUES (10, 8881);
-INSERT INTO `sys_authority_menus` VALUES (10, 9528);
-INSERT INTO `sys_authority_menus` VALUES (11, 8881);
-INSERT INTO `sys_authority_menus` VALUES (15, 8881);
-INSERT INTO `sys_authority_menus` VALUES (31, 888);
-INSERT INTO `sys_authority_menus` VALUES (31, 9528);
-INSERT INTO `sys_authority_menus` VALUES (32, 888);
-INSERT INTO `sys_authority_menus` VALUES (32, 9528);
-INSERT INTO `sys_authority_menus` VALUES (33, 888);
-INSERT INTO `sys_authority_menus` VALUES (33, 9528);
-INSERT INTO `sys_authority_menus` VALUES (34, 888);
-INSERT INTO `sys_authority_menus` VALUES (34, 9528);
-INSERT INTO `sys_authority_menus` VALUES (35, 888);
-INSERT INTO `sys_authority_menus` VALUES (35, 9528);
-INSERT INTO `sys_authority_menus` VALUES (36, 888);
-INSERT INTO `sys_authority_menus` VALUES (36, 9528);
-INSERT INTO `sys_authority_menus` VALUES (37, 888);
-INSERT INTO `sys_authority_menus` VALUES (37, 9528);
-INSERT INTO `sys_authority_menus` VALUES (38, 888);
-INSERT INTO `sys_authority_menus` VALUES (38, 9528);
-INSERT INTO `sys_authority_menus` VALUES (39, 888);
-INSERT INTO `sys_authority_menus` VALUES (39, 9528);
-INSERT INTO `sys_authority_menus` VALUES (40, 888);
-INSERT INTO `sys_authority_menus` VALUES (40, 9528);
-INSERT INTO `sys_authority_menus` VALUES (41, 888);
-INSERT INTO `sys_authority_menus` VALUES (41, 9528);
-INSERT INTO `sys_authority_menus` VALUES (42, 888);
-INSERT INTO `sys_authority_menus` VALUES (42, 9528);
-INSERT INTO `sys_authority_menus` VALUES (43, 888);
-INSERT INTO `sys_authority_menus` VALUES (43, 9528);
-INSERT INTO `sys_authority_menus` VALUES (44, 888);
-INSERT INTO `sys_authority_menus` VALUES (44, 9528);
-INSERT INTO `sys_authority_menus` VALUES (45, 888);
-INSERT INTO `sys_authority_menus` VALUES (45, 9528);
-INSERT INTO `sys_authority_menus` VALUES (46, 888);
-INSERT INTO `sys_authority_menus` VALUES (46, 9528);
-INSERT INTO `sys_authority_menus` VALUES (47, 888);
-INSERT INTO `sys_authority_menus` VALUES (47, 9528);
-INSERT INTO `sys_authority_menus` VALUES (48, 888);
-INSERT INTO `sys_authority_menus` VALUES (48, 9528);
-INSERT INTO `sys_authority_menus` VALUES (49, 888);
-INSERT INTO `sys_authority_menus` VALUES (49, 9528);
-INSERT INTO `sys_authority_menus` VALUES (50, 888);
-INSERT INTO `sys_authority_menus` VALUES (50, 9528);
-INSERT INTO `sys_authority_menus` VALUES (51, 888);
-INSERT INTO `sys_authority_menus` VALUES (51, 9528);
-INSERT INTO `sys_authority_menus` VALUES (52, 888);
-INSERT INTO `sys_authority_menus` VALUES (52, 9528);
-INSERT INTO `sys_authority_menus` VALUES (53, 888);
-INSERT INTO `sys_authority_menus` VALUES (53, 9528);
+--
+-- Dumping data for table `sys_authority_menus`
+--
 
--- ----------------------------
--- Table structure for sys_base_menu_btns
--- ----------------------------
+LOCK TABLES `sys_authority_menus` WRITE;
+/*!40000 ALTER TABLE `sys_authority_menus` DISABLE KEYS */;
+INSERT INTO `sys_authority_menus` (`sys_base_menu_id`, `sys_authority_authority_id`) VALUES (1,888),(1,999),(3,888),(4,888),(5,888),(6,888),(7,888),(8,888),(9,888),(10,888),(11,8881),(31,888),(31,999),(32,888),(32,999),(33,888),(33,999),(34,888),(34,999),(35,888),(35,999),(36,888),(36,999),(37,888),(37,999),(38,888),(38,999),(39,888),(39,999),(40,888),(40,999),(41,888),(41,999),(42,888),(42,999),(43,888),(43,999),(44,888),(44,999),(45,888),(45,999),(46,888),(46,999),(47,888),(47,999),(48,888),(48,999),(49,888),(49,999),(50,888),(50,999),(51,888),(51,999),(52,888),(53,888),(53,999);
+/*!40000 ALTER TABLE `sys_authority_menus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_base_menu_btns`
+--
+
 DROP TABLE IF EXISTS `sys_base_menu_btns`;
-CREATE TABLE `sys_base_menu_btns`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_base_menu_btns` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
   `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '按钮关键key',
   `desc` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `sys_base_menu_id` bigint unsigned COMMENT '菜单ID',
+  `sys_base_menu_id` bigint unsigned DEFAULT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_base_menu_btns_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_base_menu_btns_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Table structure for sys_base_menu_parameters
--- ----------------------------
+--
+-- Dumping data for table `sys_base_menu_btns`
+--
+
+LOCK TABLES `sys_base_menu_btns` WRITE;
+/*!40000 ALTER TABLE `sys_base_menu_btns` DISABLE KEYS */;
+INSERT INTO `sys_base_menu_btns` (`id`, `created_at`, `updated_at`, `deleted_at`, `name`, `desc`, `sys_base_menu_id`) VALUES (1,'2025-05-17 14:53:15.123','2025-05-17 14:53:15.123',NULL,'authChange','改变角色按钮',7),(2,'2025-05-17 16:55:52.030','2025-05-17 16:55:52.030',NULL,'bypassStatus','bypass状态',40);
+/*!40000 ALTER TABLE `sys_base_menu_btns` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_base_menu_parameters`
+--
+
 DROP TABLE IF EXISTS `sys_base_menu_parameters`;
-CREATE TABLE `sys_base_menu_parameters`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_base_menu_parameters` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `sys_base_menu_id` bigint unsigned,
+  `sys_base_menu_id` bigint unsigned DEFAULT NULL,
   `type` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '地址栏携带参数为params还是query',
   `key` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '地址栏携带参数的key',
   `value` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '地址栏携带参数的值',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_base_menu_parameters_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_base_menu_parameters_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Table structure for sys_base_menus
--- ----------------------------
+--
+-- Dumping data for table `sys_base_menu_parameters`
+--
+
+LOCK TABLES `sys_base_menu_parameters` WRITE;
+/*!40000 ALTER TABLE `sys_base_menu_parameters` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_base_menu_parameters` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_base_menus`
+--
+
 DROP TABLE IF EXISTS `sys_base_menus`;
-CREATE TABLE `sys_base_menus`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_base_menus` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
-  `menu_level` bigint unsigned,
-  `parent_id` bigint unsigned COMMENT '父菜单ID',
+  `menu_level` bigint unsigned DEFAULT NULL,
+  `parent_id` bigint unsigned DEFAULT NULL COMMENT '父菜单ID',
   `path` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '路由path',
   `name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '路由name',
   `hidden` tinyint(1) DEFAULT NULL COMMENT '是否在列表隐藏',
   `component` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '对应前端文件路径',
-  `sort` bigint(0) DEFAULT NULL COMMENT '排序标记',
+  `sort` bigint DEFAULT NULL COMMENT '排序标记',
   `active_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '附加属性',
   `keep_alive` tinyint(1) DEFAULT NULL COMMENT '附加属性',
   `default_menu` tinyint(1) DEFAULT NULL COMMENT '附加属性',
@@ -549,79 +273,52 @@ CREATE TABLE `sys_base_menus`  (
   `icon` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '附加属性',
   `close_tab` tinyint(1) DEFAULT NULL COMMENT '附加属性',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_base_menus_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 54 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_base_menus_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_base_menus
--- ----------------------------
-INSERT INTO `sys_base_menus` VALUES (1, '2024-10-15 13:05:01.384', '2024-10-29 15:49:07.535', NULL, 0, 0, 'dashboard', 'dashboard', 0, 'view/dashboard/index.vue', 1, '', 0, 0, '首页', 'home-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (2, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:34.182', 0, 0, 'about', 'about', 0, 'view/about/index.vue', 9, '', 0, 0, '关于我们', 'info-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (3, '2024-10-15 13:05:01.384', '2024-10-29 15:50:57.963', NULL, 0, 0, 'admin', 'superAdmin', 0, 'view/superAdmin/index.vue', 5, '', 0, 0, '系统管理', 'setting', 0);
-INSERT INTO `sys_base_menus` VALUES (4, '2024-10-15 13:05:01.384', '2024-10-29 15:34:01.556', NULL, 0, 3, 'authority', 'authority', 0, 'view/superAdmin/authority/authority.vue', 2, '', 0, 0, '角色管理', 'avatar', 0);
-INSERT INTO `sys_base_menus` VALUES (5, '2024-10-15 13:05:01.384', '2024-10-29 15:34:29.345', NULL, 0, 3, 'menu', 'menu', 0, 'view/superAdmin/menu/menu.vue', 3, '', 1, 0, '菜单管理', 'tickets', 0);
-INSERT INTO `sys_base_menus` VALUES (6, '2024-10-15 13:05:01.384', '2024-10-29 15:41:23.812', NULL, 0, 3, 'api', 'api', 0, 'view/superAdmin/api/api.vue', 6, '', 1, 0, 'api管理', 'aim', 0);
-INSERT INTO `sys_base_menus` VALUES (7, '2024-10-15 13:05:01.384', '2024-10-29 15:34:20.847', NULL, 0, 3, 'user', 'user', 0, 'view/superAdmin/user/user.vue', 1, '', 0, 0, '管理员列表', 'user-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (8, '2024-10-15 13:05:01.384', '2024-10-29 15:34:36.452', NULL, 0, 3, 'dictionary', 'dictionary', 1, 'view/superAdmin/dictionary/sysDictionary.vue', 5, '', 0, 0, '字典管理', 'notebook', 0);
-INSERT INTO `sys_base_menus` VALUES (9, '2024-10-15 13:05:01.384', '2024-10-29 15:39:04.018', NULL, 0, 3, 'operation', 'operation', 0, 'view/superAdmin/operation/sysOperationRecord.vue', 7, '', 0, 0, '系统日志', 'document-copy', 0);
-INSERT INTO `sys_base_menus` VALUES (10, '2024-10-15 13:05:01.384', '2024-10-29 15:06:13.808', NULL, 0, 0, 'person', 'person', 1, 'view/person/person.vue', 100, '', 0, 0, '个人信息', 'message', 0);
-INSERT INTO `sys_base_menus` VALUES (13, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:39:12.273', 0, 11, 'breakpoint', 'breakpoint', 0, 'view/example/breakpoint/breakpoint.vue', 6, '', 0, 0, '断点续传', 'upload-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (15, '2024-10-15 13:05:01.384', '2024-10-29 15:06:56.284', NULL, 0, 0, 'systemTools', 'systemTools', 1, 'view/systemTools/index.vue', 50, '', 0, 0, '系统工具', 'tools', 0);
-INSERT INTO `sys_base_menus` VALUES (16, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:10.867', 0, 15, 'autoCode', 'autoCode', 0, 'view/systemTools/autoCode/index.vue', 1, '', 1, 0, '代码生成器', 'cpu', 0);
-INSERT INTO `sys_base_menus` VALUES (17, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:13.072', 0, 15, 'formCreate', 'formCreate', 0, 'view/systemTools/formCreate/index.vue', 2, '', 1, 0, '表单生成器', 'magic-stick', 0);
-INSERT INTO `sys_base_menus` VALUES (18, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', NULL, 0, 15, 'system', 'system', 0, 'view/systemTools/system/system.vue', 3, '', 0, 0, '系统配置', 'operation', 0);
-INSERT INTO `sys_base_menus` VALUES (19, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:08.393', 0, 15, 'autoCodeAdmin', 'autoCodeAdmin', 0, 'view/systemTools/autoCodeAdmin/index.vue', 1, '', 0, 0, '自动化代码管理', 'magic-stick', 0);
-INSERT INTO `sys_base_menus` VALUES (20, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:05.281', 0, 15, 'autoCodeEdit/:id', 'autoCodeEdit', 1, 'view/systemTools/autoCode/index.vue', 0, '', 0, 0, '自动化代码-${id}', 'magic-stick', 0);
-INSERT INTO `sys_base_menus` VALUES (21, '2024-10-15 13:05:01.384', '2024-10-15 13:05:01.384', '2024-10-15 13:42:03.087', 0, 15, 'autoPkg', 'autoPkg', 0, 'view/systemTools/autoPkg/autoPkg.vue', 0, '', 0, 0, '自动化package', 'folder', 0);
-INSERT INTO `sys_base_menus` VALUES (22, '2024-10-15 13:05:01.384', '2024-10-29 15:07:02.586', NULL, 0, 0, 'state', 'state', 0, 'view/system/state.vue', 51, '', 0, 0, '服务器状态', 'cloudy', 0);
-INSERT INTO `sys_base_menus` VALUES (31, '2024-10-29 15:03:42.609', '2024-10-29 15:50:37.870', NULL, 0, 0, 'deviceUser', 'deviceUser', 0, 'view/deviceUser', 2, '', 0, 0, '设备和用户管理', 'monitor', 0);
-INSERT INTO `sys_base_menus` VALUES (32, '2024-10-29 15:05:08.302', '2024-10-31 15:43:22.511', NULL, 0, 0, 'flowMonitor', 'flowMonitor', 0, 'view/flowMonitor', 3, '', 0, 0, '流量监测分析', 'histogram', 0);
-INSERT INTO `sys_base_menus` VALUES (33, '2024-10-29 15:05:44.697', '2024-10-29 15:05:44.697', NULL, 0, 0, 'policyManage', 'policyManage', 0, 'view/policyManage', 4, '', 0, 0, '策略管控', 'management', 0);
-INSERT INTO `sys_base_menus` VALUES (34, '2024-10-29 15:07:47.617', '2024-10-29 15:09:43.358', NULL, 0, 0, 'customConfig', 'customConfig', 0, 'view/customConfig', 6, '', 0, 0, '对象自定义', 'help-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (35, '2024-10-29 15:12:14.667', '2024-10-29 15:12:14.667', NULL, 0, 31, 'deviceManage', 'deviceManage', 0, 'view/deviceUser/deviceManage.vue', 1, '', 0, 0, '设备管理', 'setting', 0);
-INSERT INTO `sys_base_menus` VALUES (36, '2024-10-29 15:13:20.363', '2024-10-29 15:13:20.363', NULL, 0, 31, 'linkManage', 'linkManage', 0, 'view/deviceUser/linkManage.vue', 2, '', 0, 0, '链路管理', 'link', 0);
-INSERT INTO `sys_base_menus` VALUES (37, '2024-10-29 15:13:50.605', '2024-10-29 15:13:50.605', NULL, 0, 31, 'userManage', 'userManage', 0, 'view/deviceUser/userManage.vue', 3, '', 0, 0, '用户管理', 'user', 0);
-INSERT INTO `sys_base_menus` VALUES (38, '2024-10-29 15:15:58.276', '2024-10-30 18:10:36.345', NULL, 0, 31, 'crowdManage', 'crowdManage', 0, 'view/deviceUser/crowdManage.vue', 4, '', 0, 0, '用户群管理', 'user-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (39, '2024-10-29 15:17:13.052', '2024-10-30 18:10:47.973', NULL, 0, 31, 'crowdGroupManage', 'crowdGroupManage', 0, 'view/deviceUser/crowdGroupManage.vue', 5, '', 0, 0, '用户群组管理', 'avatar', 0);
-INSERT INTO `sys_base_menus` VALUES (40, '2024-10-29 15:17:47.624', '2024-10-29 15:17:47.624', NULL, 0, 31, 'bypassManage', 'bypassManage', 0, 'view/deviceUser/bypassManage.vue', 6, '', 0, 0, 'Bypass管理', 'setting', 0);
-INSERT INTO `sys_base_menus` VALUES (41, '2024-10-29 15:20:10.699', '2024-11-14 09:43:09.178', NULL, 0, 32, 'ispRank', 'ispRank', 0, 'view/flowMonitor/ispRank.vue', 1, '', 0, 0, '运营商流量排名分析', 'data-analysis', 0);
-INSERT INTO `sys_base_menus` VALUES (42, '2024-10-29 15:21:24.068', '2024-11-11 10:02:14.193', NULL, 0, 32, 'appType', 'appType', 0, 'view/flowMonitor/appType.vue', 2, '', 0, 0, '大类业务流量排名分析', 'data-line', 0);
-INSERT INTO `sys_base_menus` VALUES (43, '2024-10-29 15:21:58.696', '2024-11-11 10:02:26.046', NULL, 0, 32, 'appId', 'appId', 0, 'view/flowMonitor/appId.vue', 3, '', 0, 0, '小类业务流量排名分析', 'data-line', 0);
-INSERT INTO `sys_base_menus` VALUES (44, '2024-10-29 15:23:00.140', '2024-10-29 15:25:10.793', NULL, 0, 32, 'userRank', 'userRank', 0, 'view/flowMonitor/userRank.vue', 4, '', 0, 0, '用户排名分析', 'user', 0);
-INSERT INTO `sys_base_menus` VALUES (45, '2024-10-29 15:23:44.216', '2024-11-11 10:19:41.928', NULL, 0, 32, 'userCrowd', 'userCrowd', 0, 'view/flowMonitor/userCrowd.vue', 5, '', 0, 0, '用户群排名分析', 'user-filled', 0);
-INSERT INTO `sys_base_menus` VALUES (46, '2024-10-29 15:24:23.007', '2024-11-11 10:19:50.069', NULL, 0, 32, 'userCrowdGroup', 'userCrowdGroup', 0, 'view/flowMonitor/userCrowdGroup.vue', 6, '', 0, 0, '用户群组排名分析', 'avatar', 0);
-INSERT INTO `sys_base_menus` VALUES (47, '2024-10-29 15:26:27.206', '2024-11-12 15:34:06.108', NULL, 0, 32, 'userAction', 'userAction', 0, 'view/flowMonitor/userAction.vue', 7, '', 0, 0, '用户行为分析', 'menu', 0);
-INSERT INTO `sys_base_menus` VALUES (48, '2024-10-29 15:27:07.215', '2024-10-29 15:27:07.215', NULL, 0, 32, 'alarmLog', 'alarmLog', 0, 'view/flowMonitor/alarmLog.vue', 8, '', 0, 0, '流量告警日志', 'list', 0);
-INSERT INTO `sys_base_menus` VALUES (49, '2024-10-29 15:29:44.437', '2024-10-29 16:02:29.015', NULL, 0, 33, 'forward', 'forward', 0, 'view/policyManage/forward.vue', 1, '', 0, 0, '优先转发策略配置', 'position', 0);
-INSERT INTO `sys_base_menus` VALUES (50, '2024-10-29 15:30:58.337', '2024-10-29 15:30:58.337', NULL, 0, 33, 'control', 'control', 0, 'view/policyManage/control.vue', 2, '', 0, 0, '策略管控配置', 'connection', 0);
-INSERT INTO `sys_base_menus` VALUES (51, '2024-10-29 15:31:59.377', '2024-10-29 15:31:59.377', NULL, 0, 33, 'flowAlarm', 'flowAlarm', 0, 'view/policyManage/flowAlarm.vue', 3, '', 0, 0, '业务流量告警设置', 'setting', 0);
-INSERT INTO `sys_base_menus` VALUES (52, '2024-10-29 15:36:22.063', '2024-10-29 15:36:22.063', NULL, 0, 3, 'task', 'task', 0, 'view/superAdmin/task/task.vue', 4, '', 0, 0, '定时任务', 'timer', 0);
-INSERT INTO `sys_base_menus` VALUES (53, '2024-10-29 15:37:50.842', '2024-10-29 15:37:50.842', NULL, 0, 34, 'app', 'app', 0, 'view/customConfig/app.vue', 1, '', 0, 0, '应用分类与自定义', 'setting', 0);
+--
+-- Dumping data for table `sys_base_menus`
+--
 
--- ----------------------------
--- Table structure for sys_data_authority_id
--- ----------------------------
+LOCK TABLES `sys_base_menus` WRITE;
+/*!40000 ALTER TABLE `sys_base_menus` DISABLE KEYS */;
+INSERT INTO `sys_base_menus` (`id`, `created_at`, `updated_at`, `deleted_at`, `menu_level`, `parent_id`, `path`, `name`, `hidden`, `component`, `sort`, `active_name`, `keep_alive`, `default_menu`, `title`, `icon`, `close_tab`) VALUES (1,'2024-10-15 13:05:01.384','2024-10-29 15:49:07.535',NULL,0,0,'dashboard','dashboard',0,'view/dashboard/index.vue',1,'',0,0,'首页','home-filled',0),(2,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:34.182',0,0,'about','about',0,'view/about/index.vue',9,'',0,0,'关于我们','info-filled',0),(3,'2024-10-15 13:05:01.384','2025-04-22 14:29:21.111',NULL,0,0,'admin','superAdmin',0,'view/superAdmin/index.vue',99,'',0,0,'系统管理','setting',0),(4,'2024-10-15 13:05:01.384','2024-10-29 15:34:01.556',NULL,0,3,'authority','authority',0,'view/superAdmin/authority/authority.vue',2,'',0,0,'角色管理','avatar',0),(5,'2024-10-15 13:05:01.384','2024-10-29 15:34:29.345',NULL,0,3,'menu','menu',0,'view/superAdmin/menu/menu.vue',3,'',1,0,'菜单管理','tickets',0),(6,'2024-10-15 13:05:01.384','2024-10-29 15:41:23.812',NULL,0,3,'api','api',0,'view/superAdmin/api/api.vue',6,'',1,0,'api管理','aim',0),(7,'2024-10-15 13:05:01.384','2025-05-17 15:57:28.645',NULL,0,3,'user','user',0,'view/superAdmin/user/user.vue',1,'',0,0,'用户列表','user-filled',0),(8,'2024-10-15 13:05:01.384','2024-10-29 15:34:36.452',NULL,0,3,'dictionary','dictionary',1,'view/superAdmin/dictionary/sysDictionary.vue',5,'',0,0,'字典管理','notebook',0),(9,'2024-10-15 13:05:01.384','2024-10-29 15:39:04.018',NULL,0,3,'operation','operation',0,'view/superAdmin/operation/sysOperationRecord.vue',7,'',0,0,'系统日志','document-copy',0),(10,'2024-10-15 13:05:01.384','2024-10-29 15:06:13.808',NULL,0,0,'person','person',1,'view/person/person.vue',100,'',0,0,'个人信息','message',0),(13,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:39:12.273',0,11,'breakpoint','breakpoint',0,'view/example/breakpoint/breakpoint.vue',6,'',0,0,'断点续传','upload-filled',0),(15,'2024-10-15 13:05:01.384','2024-10-29 15:06:56.284',NULL,0,0,'systemTools','systemTools',1,'view/systemTools/index.vue',50,'',0,0,'系统工具','tools',0),(16,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:10.867',0,15,'autoCode','autoCode',0,'view/systemTools/autoCode/index.vue',1,'',1,0,'代码生成器','cpu',0),(17,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:13.072',0,15,'formCreate','formCreate',0,'view/systemTools/formCreate/index.vue',2,'',1,0,'表单生成器','magic-stick',0),(18,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384',NULL,0,15,'system','system',0,'view/systemTools/system/system.vue',3,'',0,0,'系统配置','operation',0),(19,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:08.393',0,15,'autoCodeAdmin','autoCodeAdmin',0,'view/systemTools/autoCodeAdmin/index.vue',1,'',0,0,'自动化代码管理','magic-stick',0),(20,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:05.281',0,15,'autoCodeEdit/:id','autoCodeEdit',1,'view/systemTools/autoCode/index.vue',0,'',0,0,'自动化代码-${id}','magic-stick',0),(21,'2024-10-15 13:05:01.384','2024-10-15 13:05:01.384','2024-10-15 13:42:03.087',0,15,'autoPkg','autoPkg',0,'view/systemTools/autoPkg/autoPkg.vue',0,'',0,0,'自动化package','folder',0),(22,'2024-10-15 13:05:01.384','2024-10-29 15:07:02.586','2025-05-17 16:53:27.301',0,0,'state','state',0,'view/system/state.vue',51,'',0,0,'服务器状态','cloudy',0),(31,'2024-10-29 15:03:42.609','2024-10-29 15:50:37.870',NULL,0,0,'deviceUser','deviceUser',0,'view/deviceUser',2,'',0,0,'设备和用户管理','monitor',0),(32,'2024-10-29 15:05:08.302','2024-10-31 15:43:22.511',NULL,0,0,'flowMonitor','flowMonitor',0,'view/flowMonitor',3,'',0,0,'流量监测分析','histogram',0),(33,'2024-10-29 15:05:44.697','2024-10-29 15:05:44.697',NULL,0,0,'policyManage','policyManage',0,'view/policyManage',4,'',0,0,'策略管控','management',0),(34,'2024-10-29 15:07:47.617','2024-10-29 15:09:43.358',NULL,0,0,'customConfig','customConfig',0,'view/customConfig',6,'',0,0,'对象自定义','help-filled',0),(35,'2024-10-29 15:12:14.667','2024-10-29 15:12:14.667',NULL,0,31,'deviceManage','deviceManage',0,'view/deviceUser/deviceManage.vue',1,'',0,0,'设备管理','setting',0),(36,'2024-10-29 15:13:20.363','2024-10-29 15:13:20.363',NULL,0,31,'linkManage','linkManage',0,'view/deviceUser/linkManage.vue',2,'',0,0,'链路管理','link',0),(37,'2024-10-29 15:13:50.605','2024-10-29 15:13:50.605',NULL,0,31,'userManage','userManage',0,'view/deviceUser/userManage.vue',3,'',0,0,'用户管理','user',0),(38,'2024-10-29 15:15:58.276','2024-10-30 18:10:36.345',NULL,0,31,'crowdManage','crowdManage',0,'view/deviceUser/crowdManage.vue',4,'',0,0,'用户群管理','user-filled',0),(39,'2024-10-29 15:17:13.052','2024-10-30 18:10:47.973',NULL,0,31,'crowdGroupManage','crowdGroupManage',0,'view/deviceUser/crowdGroupManage.vue',5,'',0,0,'用户群组管理','avatar',0),(40,'2024-10-29 15:17:47.624','2025-05-17 16:55:52.031',NULL,0,31,'bypassManage','bypassManage',0,'view/deviceUser/bypassManage.vue',6,'',0,0,'Bypass管理','setting',0),(41,'2024-10-29 15:20:10.699','2024-11-14 09:43:09.178',NULL,0,32,'ispRank','ispRank',0,'view/flowMonitor/ispRank.vue',1,'',0,0,'运营商流量排名分析','data-analysis',0),(42,'2024-10-29 15:21:24.068','2024-11-11 10:02:14.193',NULL,0,32,'appType','appType',0,'view/flowMonitor/appType.vue',2,'',0,0,'大类业务流量排名分析','data-line',0),(43,'2024-10-29 15:21:58.696','2024-11-11 10:02:26.046',NULL,0,32,'appId','appId',0,'view/flowMonitor/appId.vue',3,'',0,0,'小类业务流量排名分析','data-line',0),(44,'2024-10-29 15:23:00.140','2024-10-29 15:25:10.793',NULL,0,32,'userRank','userRank',0,'view/flowMonitor/userRank.vue',4,'',0,0,'用户排名分析','user',0),(45,'2024-10-29 15:23:44.216','2024-11-11 10:19:41.928',NULL,0,32,'userCrowd','userCrowd',0,'view/flowMonitor/userCrowd.vue',5,'',0,0,'用户群排名分析','user-filled',0),(46,'2024-10-29 15:24:23.007','2024-11-11 10:19:50.069',NULL,0,32,'userCrowdGroup','userCrowdGroup',0,'view/flowMonitor/userCrowdGroup.vue',6,'',0,0,'用户群组排名分析','avatar',0),(47,'2024-10-29 15:26:27.206','2024-11-12 15:34:06.108',NULL,0,32,'userAction','userAction',0,'view/flowMonitor/userAction.vue',7,'',0,0,'用户行为分析','menu',0),(48,'2024-10-29 15:27:07.215','2024-10-29 15:27:07.215',NULL,0,32,'alarmLog','alarmLog',0,'view/flowMonitor/alarmLog.vue',8,'',0,0,'流量告警日志','list',0),(49,'2024-10-29 15:29:44.437','2024-10-29 16:02:29.015',NULL,0,33,'forward','forward',0,'view/policyManage/forward.vue',1,'',0,0,'优先转发策略配置','position',0),(50,'2024-10-29 15:30:58.337','2024-10-29 15:30:58.337',NULL,0,33,'control','control',0,'view/policyManage/control.vue',2,'',0,0,'策略管控配置','connection',0),(51,'2024-10-29 15:31:59.377','2024-10-29 15:31:59.377',NULL,0,33,'flowAlarm','flowAlarm',0,'view/policyManage/flowAlarm.vue',3,'',0,0,'业务流量告警设置','setting',0),(52,'2024-10-29 15:36:22.063','2024-10-29 15:36:22.063',NULL,0,3,'task','task',0,'view/superAdmin/task/task.vue',4,'',0,0,'定时任务','timer',0),(53,'2024-10-29 15:37:50.842','2024-10-29 15:37:50.842',NULL,0,34,'app','app',0,'view/customConfig/app.vue',1,'',0,0,'应用分类与自定义','setting',0);
+/*!40000 ALTER TABLE `sys_base_menus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_data_authority_id`
+--
+
 DROP TABLE IF EXISTS `sys_data_authority_id`;
-CREATE TABLE `sys_data_authority_id`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_data_authority_id` (
   `sys_authority_authority_id` bigint unsigned NOT NULL COMMENT '角色ID',
   `data_authority_id_authority_id` bigint unsigned NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`sys_authority_authority_id`, `data_authority_id_authority_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`sys_authority_authority_id`,`data_authority_id_authority_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_data_authority_id
--- ----------------------------
-INSERT INTO `sys_data_authority_id` VALUES (888, 888);
-INSERT INTO `sys_data_authority_id` VALUES (888, 8881);
-INSERT INTO `sys_data_authority_id` VALUES (888, 9528);
-INSERT INTO `sys_data_authority_id` VALUES (9528, 8881);
-INSERT INTO `sys_data_authority_id` VALUES (9528, 9528);
+--
+-- Dumping data for table `sys_data_authority_id`
+--
 
--- ----------------------------
--- Table structure for sys_dictionaries
--- ----------------------------
+LOCK TABLES `sys_data_authority_id` WRITE;
+/*!40000 ALTER TABLE `sys_data_authority_id` DISABLE KEYS */;
+INSERT INTO `sys_data_authority_id` (`sys_authority_authority_id`, `data_authority_id_authority_id`) VALUES (888,888),(888,8881),(888,9528),(9528,8881);
+/*!40000 ALTER TABLE `sys_data_authority_id` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_dictionaries`
+--
+
 DROP TABLE IF EXISTS `sys_dictionaries`;
-CREATE TABLE `sys_dictionaries`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_dictionaries` (
   `id` bigint unsigned NOT NULL,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
@@ -631,24 +328,28 @@ CREATE TABLE `sys_dictionaries`  (
   `status` tinyint(1) DEFAULT NULL COMMENT '状态',
   `desc` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_dictionaries_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_dictionaries_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_dictionaries
--- ----------------------------
-INSERT INTO `sys_dictionaries` VALUES (1, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.338', NULL, '性别', 'gender', 1, '性别字典');
-INSERT INTO `sys_dictionaries` VALUES (2, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.344', NULL, '数据库int类型', 'int', 1, 'int类型对应的数据库类型');
-INSERT INTO `sys_dictionaries` VALUES (3, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.351', NULL, '数据库时间日期类型', 'time.Time', 1, '数据库时间日期类型');
-INSERT INTO `sys_dictionaries` VALUES (4, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.357', NULL, '数据库浮点型', 'float64', 1, '数据库浮点型');
-INSERT INTO `sys_dictionaries` VALUES (5, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.364', NULL, '数据库字符串', 'string', 1, '数据库字符串');
-INSERT INTO `sys_dictionaries` VALUES (6, '2024-10-15 13:05:01.333', '2024-10-15 13:05:01.373', NULL, '数据库bool类型', 'bool', 1, '数据库bool类型');
+--
+-- Dumping data for table `sys_dictionaries`
+--
 
--- ----------------------------
--- Table structure for sys_dictionary_details
--- ----------------------------
+LOCK TABLES `sys_dictionaries` WRITE;
+/*!40000 ALTER TABLE `sys_dictionaries` DISABLE KEYS */;
+INSERT INTO `sys_dictionaries` (`id`, `created_at`, `updated_at`, `deleted_at`, `name`, `type`, `status`, `desc`) VALUES (1,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.338',NULL,'性别','gender',1,'性别字典'),(2,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.344',NULL,'数据库int类型','int',1,'int类型对应的数据库类型'),(3,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.351',NULL,'数据库时间日期类型','time.Time',1,'数据库时间日期类型'),(4,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.357',NULL,'数据库浮点型','float64',1,'数据库浮点型'),(5,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.364',NULL,'数据库字符串','string',1,'数据库字符串'),(6,'2024-10-15 13:05:01.333','2024-10-15 13:05:01.373',NULL,'数据库bool类型','bool',1,'数据库bool类型');
+/*!40000 ALTER TABLE `sys_dictionaries` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_dictionary_details`
+--
+
 DROP TABLE IF EXISTS `sys_dictionary_details`;
-CREATE TABLE `sys_dictionary_details`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_dictionary_details` (
   `id` bigint unsigned NOT NULL,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
@@ -657,54 +358,31 @@ CREATE TABLE `sys_dictionary_details`  (
   `value` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '字典值',
   `extend` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '扩展值',
   `status` tinyint(1) DEFAULT NULL COMMENT '启用状态',
-  `sort` bigint(0) DEFAULT NULL COMMENT '排序标记',
-  `sys_dictionary_id` bigint unsigned COMMENT '关联标记',
+  `sort` bigint DEFAULT NULL COMMENT '排序标记',
+  `sys_dictionary_id` bigint unsigned DEFAULT NULL COMMENT '关联标记',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_dictionary_details_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_dictionary_details_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_dictionary_details
--- ----------------------------
-INSERT INTO `sys_dictionary_details` VALUES (1, '2024-10-15 13:05:01.340', '2024-10-15 13:05:01.340', NULL, '男', '1', '', 1, 1, 1);
-INSERT INTO `sys_dictionary_details` VALUES (2, '2024-10-15 13:05:01.340', '2024-10-15 13:05:01.340', NULL, '女', '2', '', 1, 2, 1);
-INSERT INTO `sys_dictionary_details` VALUES (3, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'smallint', '1', 'mysql', 1, 1, 2);
-INSERT INTO `sys_dictionary_details` VALUES (4, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'mediumint', '2', 'mysql', 1, 2, 2);
-INSERT INTO `sys_dictionary_details` VALUES (5, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'int', '3', 'mysql', 1, 3, 2);
-INSERT INTO `sys_dictionary_details` VALUES (6, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'bigint', '4', 'mysql', 1, 4, 2);
-INSERT INTO `sys_dictionary_details` VALUES (7, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'int2', '5', 'pgsql', 1, 5, 2);
-INSERT INTO `sys_dictionary_details` VALUES (8, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'int4', '6', 'pgsql', 1, 6, 2);
-INSERT INTO `sys_dictionary_details` VALUES (9, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'int6', '7', 'pgsql', 1, 7, 2);
-INSERT INTO `sys_dictionary_details` VALUES (10, '2024-10-15 13:05:01.345', '2024-10-15 13:05:01.345', NULL, 'int8', '8', 'pgsql', 1, 8, 2);
-INSERT INTO `sys_dictionary_details` VALUES (11, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'date', '', '', 1, 0, 3);
-INSERT INTO `sys_dictionary_details` VALUES (12, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'time', '1', 'mysql', 1, 1, 3);
-INSERT INTO `sys_dictionary_details` VALUES (13, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'year', '2', 'mysql', 1, 2, 3);
-INSERT INTO `sys_dictionary_details` VALUES (14, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'datetime', '3', 'mysql', 1, 3, 3);
-INSERT INTO `sys_dictionary_details` VALUES (15, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'timestamp', '5', 'mysql', 1, 5, 3);
-INSERT INTO `sys_dictionary_details` VALUES (16, '2024-10-15 13:05:01.352', '2024-10-15 13:05:01.352', NULL, 'timestamptz', '6', 'pgsql', 1, 5, 3);
-INSERT INTO `sys_dictionary_details` VALUES (17, '2024-10-15 13:05:01.357', '2024-10-15 13:05:01.357', NULL, 'float', '', '', 1, 0, 4);
-INSERT INTO `sys_dictionary_details` VALUES (18, '2024-10-15 13:05:01.357', '2024-10-15 13:05:01.357', NULL, 'double', '1', 'mysql', 1, 1, 4);
-INSERT INTO `sys_dictionary_details` VALUES (19, '2024-10-15 13:05:01.357', '2024-10-15 13:05:01.357', NULL, 'decimal', '2', 'mysql', 1, 2, 4);
-INSERT INTO `sys_dictionary_details` VALUES (20, '2024-10-15 13:05:01.357', '2024-10-15 13:05:01.357', NULL, 'numeric', '3', 'pgsql', 1, 3, 4);
-INSERT INTO `sys_dictionary_details` VALUES (21, '2024-10-15 13:05:01.357', '2024-10-15 13:05:01.357', NULL, 'smallserial', '4', 'pgsql', 1, 4, 4);
-INSERT INTO `sys_dictionary_details` VALUES (22, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'char', '', '', 1, 0, 5);
-INSERT INTO `sys_dictionary_details` VALUES (23, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'varchar', '1', 'mysql', 1, 1, 5);
-INSERT INTO `sys_dictionary_details` VALUES (24, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'tinyblob', '2', 'mysql', 1, 2, 5);
-INSERT INTO `sys_dictionary_details` VALUES (25, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'tinytext', '3', 'mysql', 1, 3, 5);
-INSERT INTO `sys_dictionary_details` VALUES (26, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'text', '4', 'mysql', 1, 4, 5);
-INSERT INTO `sys_dictionary_details` VALUES (27, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'blob', '5', 'mysql', 1, 5, 5);
-INSERT INTO `sys_dictionary_details` VALUES (28, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'mediumblob', '6', 'mysql', 1, 6, 5);
-INSERT INTO `sys_dictionary_details` VALUES (29, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'mediumtext', '7', 'mysql', 1, 7, 5);
-INSERT INTO `sys_dictionary_details` VALUES (30, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'longblob', '8', 'mysql', 1, 8, 5);
-INSERT INTO `sys_dictionary_details` VALUES (31, '2024-10-15 13:05:01.366', '2024-10-15 13:05:01.366', NULL, 'longtext', '9', 'mysql', 1, 9, 5);
-INSERT INTO `sys_dictionary_details` VALUES (32, '2024-10-15 13:05:01.374', '2024-10-15 13:05:01.374', NULL, 'tinyint', '1', 'mysql', 1, 0, 6);
-INSERT INTO `sys_dictionary_details` VALUES (33, '2024-10-15 13:05:01.374', '2024-10-15 13:05:01.374', NULL, 'bool', '2', 'pgsql', 1, 0, 6);
+--
+-- Dumping data for table `sys_dictionary_details`
+--
 
--- ----------------------------
--- Table structure for sys_ignore_apis
--- ----------------------------
+LOCK TABLES `sys_dictionary_details` WRITE;
+/*!40000 ALTER TABLE `sys_dictionary_details` DISABLE KEYS */;
+INSERT INTO `sys_dictionary_details` (`id`, `created_at`, `updated_at`, `deleted_at`, `label`, `value`, `extend`, `status`, `sort`, `sys_dictionary_id`) VALUES (1,'2024-10-15 13:05:01.340','2024-10-15 13:05:01.340',NULL,'男','1','',1,1,1),(2,'2024-10-15 13:05:01.340','2024-10-15 13:05:01.340',NULL,'女','2','',1,2,1),(3,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'smallint','1','mysql',1,1,2),(4,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'mediumint','2','mysql',1,2,2),(5,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'int','3','mysql',1,3,2),(6,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'bigint','4','mysql',1,4,2),(7,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'int2','5','pgsql',1,5,2),(8,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'int4','6','pgsql',1,6,2),(9,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'int6','7','pgsql',1,7,2),(10,'2024-10-15 13:05:01.345','2024-10-15 13:05:01.345',NULL,'int8','8','pgsql',1,8,2),(11,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'date','','',1,0,3),(12,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'time','1','mysql',1,1,3),(13,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'year','2','mysql',1,2,3),(14,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'datetime','3','mysql',1,3,3),(15,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'timestamp','5','mysql',1,5,3),(16,'2024-10-15 13:05:01.352','2024-10-15 13:05:01.352',NULL,'timestamptz','6','pgsql',1,5,3),(17,'2024-10-15 13:05:01.357','2024-10-15 13:05:01.357',NULL,'float','','',1,0,4),(18,'2024-10-15 13:05:01.357','2024-10-15 13:05:01.357',NULL,'double','1','mysql',1,1,4),(19,'2024-10-15 13:05:01.357','2024-10-15 13:05:01.357',NULL,'decimal','2','mysql',1,2,4),(20,'2024-10-15 13:05:01.357','2024-10-15 13:05:01.357',NULL,'numeric','3','pgsql',1,3,4),(21,'2024-10-15 13:05:01.357','2024-10-15 13:05:01.357',NULL,'smallserial','4','pgsql',1,4,4),(22,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'char','','',1,0,5),(23,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'varchar','1','mysql',1,1,5),(24,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'tinyblob','2','mysql',1,2,5),(25,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'tinytext','3','mysql',1,3,5),(26,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'text','4','mysql',1,4,5),(27,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'blob','5','mysql',1,5,5),(28,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'mediumblob','6','mysql',1,6,5),(29,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'mediumtext','7','mysql',1,7,5),(30,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'longblob','8','mysql',1,8,5),(31,'2024-10-15 13:05:01.366','2024-10-15 13:05:01.366',NULL,'longtext','9','mysql',1,9,5),(32,'2024-10-15 13:05:01.374','2024-10-15 13:05:01.374',NULL,'tinyint','1','mysql',1,0,6),(33,'2024-10-15 13:05:01.374','2024-10-15 13:05:01.374',NULL,'bool','2','pgsql',1,0,6);
+/*!40000 ALTER TABLE `sys_dictionary_details` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_ignore_apis`
+--
+
 DROP TABLE IF EXISTS `sys_ignore_apis`;
-CREATE TABLE `sys_ignore_apis`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_ignore_apis` (
   `id` bigint unsigned NOT NULL,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
@@ -712,71 +390,89 @@ CREATE TABLE `sys_ignore_apis`  (
   `path` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'api路径',
   `method` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'POST' COMMENT '方法',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_ignore_apis_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_ignore_apis_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_ignore_apis
--- ----------------------------
-INSERT INTO `sys_ignore_apis` VALUES (1, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/swagger/*any', 'GET');
-INSERT INTO `sys_ignore_apis` VALUES (2, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/api/freshCasbin', 'GET');
-INSERT INTO `sys_ignore_apis` VALUES (3, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/uploads/file/*filepath', 'GET');
-INSERT INTO `sys_ignore_apis` VALUES (4, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/health', 'GET');
-INSERT INTO `sys_ignore_apis` VALUES (5, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/uploads/file/*filepath', 'HEAD');
-INSERT INTO `sys_ignore_apis` VALUES (6, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/autoCode/llmAuto', 'POST');
-INSERT INTO `sys_ignore_apis` VALUES (7, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/system/reloadSystem', 'POST');
-INSERT INTO `sys_ignore_apis` VALUES (8, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/base/login', 'POST');
-INSERT INTO `sys_ignore_apis` VALUES (9, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/base/captcha', 'POST');
-INSERT INTO `sys_ignore_apis` VALUES (10, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/init/initdb', 'POST');
-INSERT INTO `sys_ignore_apis` VALUES (11, '2024-10-15 13:05:01.301', '2024-10-15 13:05:01.301', NULL, '/init/checkdb', 'POST');
+--
+-- Dumping data for table `sys_ignore_apis`
+--
 
--- ----------------------------
--- Table structure for sys_operation_records
--- ----------------------------
+LOCK TABLES `sys_ignore_apis` WRITE;
+/*!40000 ALTER TABLE `sys_ignore_apis` DISABLE KEYS */;
+INSERT INTO `sys_ignore_apis` (`id`, `created_at`, `updated_at`, `deleted_at`, `path`, `method`) VALUES (1,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/swagger/*any','GET'),(2,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/api/freshCasbin','GET'),(3,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/uploads/file/*filepath','GET'),(4,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/health','GET'),(5,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/uploads/file/*filepath','HEAD'),(6,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/autoCode/llmAuto','POST'),(7,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/system/reloadSystem','POST'),(8,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/base/login','POST'),(9,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/base/captcha','POST'),(10,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/init/initdb','POST'),(11,'2024-10-15 13:05:01.301','2024-10-15 13:05:01.301',NULL,'/init/checkdb','POST');
+/*!40000 ALTER TABLE `sys_ignore_apis` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_operation_records`
+--
+
 DROP TABLE IF EXISTS `sys_operation_records`;
-CREATE TABLE `sys_operation_records`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_operation_records` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
   `ip` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '请求ip',
   `method` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '请求方法',
   `path` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '请求路径',
-  `status` bigint(0) DEFAULT NULL COMMENT '请求状态',
-  `latency` bigint(0) DEFAULT NULL COMMENT '延迟',
+  `status` bigint DEFAULT NULL COMMENT '请求状态',
+  `latency` bigint DEFAULT NULL COMMENT '延迟',
   `agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '代理',
   `error_message` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '错误信息',
   `body` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '请求Body',
   `resp` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '响应Body',
-  `user_id` bigint unsigned COMMENT '用户id',
+  `user_id` bigint unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_operation_records_deleted_at`(`deleted_at`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_operation_records_deleted_at` (`deleted_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Table structure for sys_user_authority
--- ----------------------------
+--
+-- Dumping data for table `sys_operation_records`
+--
+
+LOCK TABLES `sys_operation_records` WRITE;
+/*!40000 ALTER TABLE `sys_operation_records` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_operation_records` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_user_authority`
+--
+
 DROP TABLE IF EXISTS `sys_user_authority`;
-CREATE TABLE `sys_user_authority`  (
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_user_authority` (
   `sys_user_id` bigint unsigned NOT NULL,
   `sys_authority_authority_id` bigint unsigned NOT NULL COMMENT '角色ID',
-  PRIMARY KEY (`sys_user_id`, `sys_authority_authority_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`sys_user_id`,`sys_authority_authority_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_user_authority
--- ----------------------------
-INSERT INTO `sys_user_authority` VALUES (1, 888);
-INSERT INTO `sys_user_authority` VALUES (1, 8881);
-INSERT INTO `sys_user_authority` VALUES (1, 9528);
-INSERT INTO `sys_user_authority` VALUES (2, 888);
+--
+-- Dumping data for table `sys_user_authority`
+--
 
--- ----------------------------
--- Table structure for sys_users
--- ----------------------------
+LOCK TABLES `sys_user_authority` WRITE;
+/*!40000 ALTER TABLE `sys_user_authority` DISABLE KEYS */;
+INSERT INTO `sys_user_authority` (`sys_user_id`, `sys_authority_authority_id`) VALUES (1,888);
+/*!40000 ALTER TABLE `sys_user_authority` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_users`
+--
+
 DROP TABLE IF EXISTS `sys_users`;
-CREATE TABLE `sys_users`  (
-  `id` bigint unsigned NOT NULL,
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime(3) DEFAULT NULL,
   `updated_at` datetime(3) DEFAULT NULL,
   `deleted_at` datetime(3) DEFAULT NULL,
@@ -787,20 +483,35 @@ CREATE TABLE `sys_users`  (
   `side_mode` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'dark' COMMENT '用户侧边主题',
   `header_img` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'https://qmplusimg.henrongyi.top/gva_header.jpg' COMMENT '用户头像',
   `base_color` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '#fff' COMMENT '基础颜色',
-  `authority_id` bigint unsigned COMMENT '用户角色ID',
+  `authority_id` bigint unsigned DEFAULT NULL COMMENT '用户角色ID',
   `phone` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户手机号',
   `email` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '用户邮箱',
-  `enable` bigint(0) DEFAULT 1 COMMENT '用户是否被冻结 1正常 2冻结',
+  `enable` bigint DEFAULT '1' COMMENT '用户是否被冻结 1正常 2冻结',
+  `bypass_password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'bypass切换密码',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_sys_users_deleted_at`(`deleted_at`) USING BTREE,
-  INDEX `idx_sys_users_uuid`(`uuid`) USING BTREE,
-  INDEX `idx_sys_users_username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  KEY `idx_sys_users_deleted_at` (`deleted_at`) USING BTREE,
+  KEY `idx_sys_users_uuid` (`uuid`) USING BTREE,
+  KEY `idx_sys_users_username` (`username`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ----------------------------
--- Records of sys_users
--- ----------------------------
-INSERT INTO `sys_users` VALUES (1, '2024-10-15 13:05:01.501', '2024-10-15 13:05:01.506', NULL, '40f79bf4-9df4-4d61-b521-31311e473023', 'admin', '$2a$10$mUtjmdxOM9iBIw9yXW5UY.19nAMTkXtrFEb8UssPDLzEsnYtIhZLO', '超级管理员', 'dark', '', '#fff', 888, '17611111111', '333333333@qq.com', 1);
-# INSERT INTO `sys_users` VALUES (2, '2024-10-15 13:05:01.501', '2024-10-15 13:05:01.513', NULL, 'a51e08a6-351b-44cb-8e55-100f731e179f', 'a303176530', '$2a$10$S14lJ8v8ORRfn75sU7vdGuDOMiSdGDIHnWdQTm65N.AgRpKr3EMam', '用户1', 'dark', '', '#fff', 9528, '17611111111', '333333333@qq.com', 1);
+--
+-- Dumping data for table `sys_users`
+--
 
-SET FOREIGN_KEY_CHECKS = 1;
+LOCK TABLES `sys_users` WRITE;
+/*!40000 ALTER TABLE `sys_users` DISABLE KEYS */;
+INSERT INTO `sys_users` (`id`, `created_at`, `updated_at`, `deleted_at`, `uuid`, `username`, `password`, `nick_name`, `side_mode`, `header_img`, `base_color`, `authority_id`, `phone`, `email`, `enable`, `bypass_password`) VALUES (1,'2024-10-15 13:05:01.501','2025-05-17 17:20:17.029',NULL,'40f79bf4-9df4-4d61-b521-31311e473023','admin','$2a$10$RU.Vz.N0qzxr5QpHSmZSTOKl/gimmcOZp2bfpPJ90we3Ln3dFXWPG','超级管理员','dark','','#fff',888,'17611111111','333333333@qq.com',1,'123456');
+/*!40000 ALTER TABLE `sys_users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-05-17 17:21:17

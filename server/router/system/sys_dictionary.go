@@ -1,9 +1,9 @@
 package system
 
 import (
-	"github.com/gin-gonic/gin"
 	"fcas_server/api/v1/system"
 	"fcas_server/middleware"
+	"github.com/gin-gonic/gin"
 )
 
 type DictionaryRouter struct{}

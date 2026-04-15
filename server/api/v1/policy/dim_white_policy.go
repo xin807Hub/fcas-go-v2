@@ -2,6 +2,7 @@ package policy
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	"fcas_server/model/policy"
 	servicePolicy "fcas_server/service/policy"
@@ -16,7 +17,7 @@ type DimWhitePolicyApi struct {
 }
 
 func (a DimWhitePolicyApi) Router(Router *gin.RouterGroup) {
-	router := Router.Group("policy/whitePolicy")
+	router := Router.Group("policy/whitePolicy").Use(middleware.OperationRecord())
 	router.POST("page", a.PageWhitePolicy)
 	router.POST("info", a.GetWhitePolicy)
 	router.POST("saveOrUpdate", a.SaveOrUpdate)

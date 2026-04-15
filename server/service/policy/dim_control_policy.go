@@ -16,12 +16,20 @@ import (
 type DimControlPolicyService struct {
 }
 
-func (DimControlPolicyService) List() (result []policy.DimControlPolicyResp, err error) {
-	if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).Find(&result).Error; err != nil {
-		global.Log.Error("策略配置control失败", zap.Error(err))
+func (DimControlPolicyService) List() (result []policy.DimControlPolicy, err error) {
+	if err = global.ServiceDB.Model(&policy.DimControlPolicy{}).Find(&result).Error; err != nil {
+		global.Log.Error("查询策略配置control失败", zap.Error(err))
 		return nil, err
 	}
 	return result, nil
+}
+
+func (DimControlPolicyService) GetPolicyIdList() (idList []int, err error) {
+	if err = global.ServiceDB.Model(&policy.DimControlPolicy{}).Select("id").Scan(&idList).Error; err != nil {
+		global.Log.Error("查询策略配置control失败", zap.Error(err))
+		return nil, err
+	}
+	return idList, nil
 }
 
 func (DimControlPolicyService) PageControlPolicy(policyReq policy.DimControlPolicyReq) (result []policy.DimControlPolicyResp, total int64, err error) {
@@ -29,37 +37,17 @@ func (DimControlPolicyService) PageControlPolicy(policyReq policy.DimControlPoli
 	offset := policyReq.Limit * (policyReq.Page - 1)
 
 	sql := `select %s from (
-            select a.*, c.crowd_name as user_crowd_name from (
-                select a.*, g.group_name as user_crowd_group_name from (
-                    select c.*, b.app_name from (
-                        select w.*, a.app_type_name from dim_control_policy w left join (select DISTINCT app_type_id, app_type_name from dim_app_classify) a on w.app_type_id = a.app_type_id
-                    ) c
-                    left join (select DISTINCT app_type_id, app_id, app_name from dim_app_classify) b on c.app_id = b.app_id and c.app_type_id = b.app_type_id
-                ) a left join dim_user_crowd_group g on a.user_crowd_group_id=g.id
-            ) a left join dim_user_crowd c on a.user_crowd_id = c.id
-        ) a left join dim_user_info u on a.user_id = u.id where 1=1 `
+     select w.*, a.app_type_name 
+     from dim_control_policy w 
+     LEFT JOIN (select DISTINCT app_type_id, app_type_name from dim_app_classify) a 
+      on w.app_type_id = a.app_type_id
+	) a left join dim_user_info u on a.user_id = u.id where 1=1 `
 
 	params := make([]interface{}, 0)
 
 	if len(policyReq.PolicyName) > 0 {
 		sql += " and a.name like ? "
 		params = append(params, "%"+policyReq.PolicyName+"%")
-	}
-	if len(policyReq.UerType) > 0 {
-		sql += " and a.user_type = ? "
-		params = append(params, policyReq.UerType)
-	}
-	if len(policyReq.UerCrowdGroupId) > 0 {
-		sql += " and a.user_crowd_group_id = ? "
-		params = append(params, policyReq.UerCrowdGroupId)
-	}
-	if len(policyReq.UerCrowdId) > 0 {
-		sql += " and a.user_crowd_id = ? "
-		params = append(params, policyReq.UerCrowdId)
-	}
-	if len(policyReq.UerName) > 0 {
-		sql += " and a.user_crowd_name = ? "
-		params = append(params, policyReq.UerName)
 	}
 	if len(policyReq.UerId) > 0 {
 		sql += " and a.user_id = ? "
@@ -69,7 +57,7 @@ func (DimControlPolicyService) PageControlPolicy(policyReq policy.DimControlPoli
 		sql += " and a.app_type_id = ? "
 		params = append(params, policyReq.AppTypeId)
 	}
-	if policyReq.AppTypeId != 0 {
+	if policyReq.AppId != 0 {
 		sql += " and a.app_id = ? "
 		params = append(params, policyReq.AppId)
 	}
@@ -123,24 +111,17 @@ func calculating(value1 int, value2 int, times int) int {
 }
 
 func (d DimControlPolicyService) SaveOrUpdateControlPolicy(controlPolicy policy.DimControlPolicy) error {
-	if controlPolicy.Id == 0 { // 新增
-		controlPolicy.CreateTime = time.Now().Format(global.DateTimeLayout)
-		if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).Save(&controlPolicy).Error; err != nil {
-			global.Log.Error("策略配置control失败", zap.Error(err))
-			return err
-		}
-	} else { // 编辑
-		if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).
-			Where("id = ?", controlPolicy.Id).
-			Updates(&controlPolicy).Error; err != nil {
-			global.Log.Error("策略配置control失败", zap.Error(err))
-			return err
-		}
+	//if controlPolicy.Id == 0 { // 新增
+	controlPolicy.CreateTime = time.Now().Format(global.DateTimeLayout)
+	if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).Save(&controlPolicy).Error; err != nil {
+		global.Log.Error("策略配置control失败", zap.Error(err))
+		return err
 	}
 
 	// 保存策略后,根据生效时间发送绑定/解绑策略
 	ifPolicyEffect, err := ifTimeEffect(controlPolicy)
 	if err != nil {
+		global.Log.Error(err.Error())
 		return err
 	}
 	var sendType = ""
@@ -175,10 +156,10 @@ func ifTimeEffect(controlPolicy policy.DimControlPolicy) (bool, error) {
 
 	// 判断当前时间是否在开始时间和结束时间之间
 	if now.After(start) && now.Before(end) {
-		fmt.Println("当前时间处于生效时间内")
+		global.Log.Info("当前时间处于生效时间内")
 		return true, nil
 	} else {
-		fmt.Println("当前时间不在生效时间内")
+		global.Log.Info("当前时间不在生效时间内")
 		return false, nil
 	}
 }
@@ -192,7 +173,7 @@ func (d DimControlPolicyService) InfoControlPolicy(id int) (result *policy.DimCo
 }
 
 func (d DimControlPolicyService) getByPolicyId(policyId int) (result *policy.DimControlPolicy) {
-	if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).Where("policy_id = ?", policyId).Find(&result).Error; err != nil {
+	if err := global.ServiceDB.Model(&policy.DimControlPolicy{}).Where("id = ?", policyId).Find(&result).Error; err != nil {
 		global.Log.Error("策略policyId查询配置control失败", zap.Error(err))
 		return nil
 	}
@@ -256,9 +237,9 @@ func BuildPolicyJson(controlPolicy policy.DimControlPolicy, bindFlag string) str
 		}
 		periodInfoList = append(periodInfoList, periodInfo)
 	} else {
-		if controlPolicy.PeriodType == 1 {
+		if *controlPolicy.PeriodType == 1 {
 			timeInfo.Period = "day"
-		} else if controlPolicy.PeriodType == 2 {
+		} else if *controlPolicy.PeriodType == 2 {
 			timeInfo.Period = "week"
 		}
 		periodArr := strings.Split(controlPolicy.PolicyPeriod, ",")
@@ -280,19 +261,20 @@ func BuildPolicyJson(controlPolicy policy.DimControlPolicy, bindFlag string) str
 	// 构造control_policy
 	control := struct {
 		ThresholdUpIds int   `json:"threshold_up_ids"`
-		ThreshlodDnIds int   `json:"threshlod_dn_ids"`
+		ThresholdDnIds int   `json:"threshold_dn_ids"`
 		LinkIds        []int `json:"link_ids"`
 	}{
 		ThresholdUpIds: controlPolicy.UlFlowRate * 1024,
-		ThreshlodDnIds: controlPolicy.DlFlowRate * 1024,
+		ThresholdDnIds: controlPolicy.DlFlowRate * 1024,
 	}
 
-	lineList := getListByLinkIds(strings.Split(controlPolicy.LinkIds, ","))
+	//lineList := getListByLinkIds(strings.Split(controlPolicy.LinkIds, ","))
+	vlanIdStrList := strings.Split(controlPolicy.LinkIds, ",")
 
 	lineValArr := make([]int, 0)
-	for i := 0; i < len(lineList); i++ {
-		lineDto := lineList[i]
-		lineValArr = append(lineValArr, lineDto.LineVlan)
+	for i := 0; i < len(vlanIdStrList); i++ {
+		vlanId, _ := strconv.Atoi(vlanIdStrList[i])
+		lineValArr = append(lineValArr, vlanId)
 	}
 	control.LinkIds = lineValArr
 
@@ -317,34 +299,35 @@ func BuildPolicyJson(controlPolicy policy.DimControlPolicy, bindFlag string) str
 	// 构造五元组信息
 	userInfoList := getUserInfoList(controlPolicy)
 	// 构造feature_list
-	targetArr := make([]string, 0)
-	dip := controlPolicy.DstIp
-	if len(dip) > 0 {
-		var dipArr []map[string]interface{}
-		err := json.Unmarshal([]byte(dip), &dipArr)
-		if err == nil {
-			for i := 0; i < len(dipArr); i++ {
-				mapDip := dipArr[i]
-				dipStart := mapDip["dipStart"]
-				dipEnd := mapDip["dipEnd"]
-				dport := mapDip["dport"]
-				targetItem := struct {
-					DipStart interface{} `json:"dip_start"`
-					DipEnd   interface{} `json:"dip_end"`
-					Dport    interface{} `json:"dport"`
-				}{
-					DipStart: dipStart,
-					DipEnd:   dipEnd,
-					Dport:    dport,
-				}
 
-				byts, _ := json.Marshal(targetItem)
-				targetArr = append(targetArr, string(byts))
-			}
-		}
-	}
+	//targetArr := make([]string, 0)
+	//dip := controlPolicy.IpData
+	//if len(dip) > 0 {
+	//	var dipArr []map[string]interface{}
+	//	err := json.Unmarshal([]byte(dip), &dipArr)
+	//	if err == nil {
+	//		for i := 0; i < len(dipArr); i++ {
+	//			mapDip := dipArr[i]
+	//			dipStart := mapDip["dipStart"]
+	//			dipEnd := mapDip["dipEnd"]
+	//			dport := mapDip["dport"]
+	//			targetItem := struct {
+	//				DipStart interface{} `json:"dip_start"`
+	//				DipEnd   interface{} `json:"dip_end"`
+	//				Dport    interface{} `json:"dport"`
+	//			}{
+	//				DipStart: dipStart,
+	//				DipEnd:   dipEnd,
+	//				Dport:    dport,
+	//			}
+	//
+	//			byts, _ := json.Marshal(targetItem)
+	//			targetArr = append(targetArr, string(byts))
+	//		}
+	//	}
+	//}
 
-	tupleList := buildTupleJsonList(userInfoList, targetArr)
+	tupleList := buildTupleJsonList(userInfoList, controlPolicy.IpData)
 
 	featureList := map[string]interface{}{}
 	if len(appInfoList) > 0 && len(tupleList) > 0 {
@@ -399,90 +382,132 @@ func getUserInfoList(controlPolicy policy.DimControlPolicy) (userInfos []modelCo
 }
 
 // 构造tupleList
-func buildTupleJsonList(userInfos []modelConfiguration.DimUserInfo, dstAddrArray []string) []interface{} {
+func buildTupleJsonList(userInfos []modelConfiguration.DimUserInfo, dstAddrs []policy.IpData) []interface{} {
 	var tupleList = make([]interface{}, 0)
-	if len(userInfos) == 0 && len(dstAddrArray) > 0 {
-		for i := 0; i < len(dstAddrArray); i++ {
-			tupleItem := map[string]string{}
-			jsonStr := dstAddrArray[i]
-			mapStr := map[string]string{}
-			err := json.Unmarshal([]byte(jsonStr), mapStr)
-			if err != nil {
-				dipStart := mapStr["dipStart"]
-				dipEnd := mapStr["dipEnd"]
-				dport := mapStr["dport"]
-				if dipStart != "0" {
-					tupleItem["dip"] = dipStart + "-" + dipEnd
-				}
-				if dport != "-1" {
-					tupleItem["dport"] = dport
-				}
-				tupleList = append(tupleList, tupleItem)
+
+	transformUserAddrToSip := func(addr string) string {
+		if strings.Contains(addr, "-") {
+			// ip pair
+			return addr
+		}
+		return addr + "-" + addr
+	}
+
+	switch {
+	case len(userInfos) == 0 && len(dstAddrs) > 0:
+		for _, addr := range dstAddrs {
+			tupleList = append(tupleList, map[string]any{
+				"dip":   addr.StartIP + "-" + addr.EndIP,
+				"dport": addr.DstPort,
+			})
+		}
+
+	case len(userInfos) > 0 && len(dstAddrs) == 0:
+		for _, user := range userInfos {
+			for _, addr := range user.IpAddress {
+				tupleList = append(tupleList, map[string]any{
+					"sip": transformUserAddrToSip(addr),
+				})
 			}
 		}
-	} else if len(userInfos) > 0 && len(dstAddrArray) == 0 {
-		for i := 0; i < len(userInfos); i++ {
-			userDto := userInfos[i]
-			ipSectionArray := userDto.IpAddress
-			for j := 0; j < len(ipSectionArray); j++ {
-				ipSection := ipSectionArray[j]
-				tupleItem := map[string]string{}
-				if strings.Contains(ipSection, "/") {
-					if strings.Contains(ipSection, ":") {
-					} else {
-						startIp := utils.GetStartIp(ipSection)
-						endIp := utils.GetEndIp(ipSection)
-						tupleItem["sip"] = startIp + "-" + endIp
-					}
-				} else if strings.Contains(ipSection, "-") {
-					tupleItem["sip"] = ipSection
-				} else { // 单个IP
-					tupleItem["sip"] = ipSection + "-" + ipSection
-				}
-				tupleList = append(tupleList, tupleItem)
-			}
-		}
-	} else if len(userInfos) > 0 && len(dstAddrArray) > 0 {
-		for i := 0; i < len(userInfos); i++ {
-			userDto := userInfos[i]
-			ipSectionArray := userDto.IpAddress
-			for j := 0; j < len(ipSectionArray); j++ {
-				ipSection := ipSectionArray[j]
-				var sip string
-				if strings.Contains(ipSection, "/") {
-					if strings.Contains(ipSection, ":") {
-						startIp := utils.GetStartIp(ipSection)
-						endIp := utils.GetEndIp(ipSection)
-						sip = startIp + "-" + endIp
-					}
-				} else if strings.Contains(ipSection, "-") {
-					sip = ipSection
-				} else { // 单个IP
-					sip = ipSection + "-" + ipSection
-				}
 
-				for z := 0; z < len(dstAddrArray); z++ {
-					targetItem := dstAddrArray[z]
-					tupleItem := map[string]string{}
-					mapStr := map[string]string{}
-					_ = json.Unmarshal([]byte(targetItem), mapStr)
-
-					dipStart := mapStr["dipStart"]
-					dipEnd := mapStr["dipEnd"]
-					dport := mapStr["dport"]
-
-					tupleItem["sip"] = sip
-					if dipStart != "0" {
-						tupleItem["dip"] = dipStart + "-" + dipEnd
-					}
-					if dport != "-1" {
-						tupleItem["dport"] = dport
-					}
-					tupleList = append(tupleList, tupleItem)
+	case len(userInfos) > 0 && len(dstAddrs) > 0:
+		for _, user := range userInfos {
+			for _, userAddr := range user.IpAddress {
+				for _, dstAddr := range dstAddrs {
+					tupleList = append(tupleList, map[string]any{
+						"sip":   transformUserAddrToSip(userAddr),
+						"dip":   dstAddr.StartIP + "-" + dstAddr.EndIP,
+						"dport": dstAddr.DstPort,
+					})
 				}
 			}
 		}
 	}
+
+	/*	if len(userInfos) == 0 && len(dstAddrs) > 0 {
+			for i := 0; i < len(dstAddrs); i++ {
+				//tupleItem := map[string]string{}
+				//jsonStr := dstIpData[i]
+				//mapStr := map[string]string{}
+				//err := json.Unmarshal([]byte(jsonStr), mapStr)
+				//if err != nil {
+				//	dipStart := mapStr["dipStart"]
+				//	dipEnd := mapStr["dipEnd"]
+				//	dport := mapStr["dport"]
+				//	if dipStart != "0" {
+				//		tupleItem["dip"] = dipStart + "-" + dipEnd
+				//	}
+				//	if dport != "-1" {
+				//		tupleItem["dport"] = dport
+				//	}
+				//	tupleList = append(tupleList, tupleItem)
+				//}
+
+			}
+		} else if len(userInfos) > 0 && len(dstAddrs) == 0 {
+			for i := 0; i < len(userInfos); i++ {
+				userDto := userInfos[i]
+				ipSectionArray := userDto.IpAddress
+				for j := 0; j < len(ipSectionArray); j++ {
+					ipSection := ipSectionArray[j]
+					tupleItem := map[string]string{}
+					if strings.Contains(ipSection, "/") {
+						if strings.Contains(ipSection, ":") {
+						} else {
+							startIp := utils.GetStartIp(ipSection)
+							endIp := utils.GetEndIp(ipSection)
+							tupleItem["sip"] = startIp + "-" + endIp
+						}
+					} else if strings.Contains(ipSection, "-") {
+						tupleItem["sip"] = ipSection
+					} else { // 单个IP
+						tupleItem["sip"] = ipSection + "-" + ipSection
+					}
+					tupleList = append(tupleList, tupleItem)
+				}
+			}
+		} else if len(userInfos) > 0 && len(dstAddrs) > 0 {
+			for i := 0; i < len(userInfos); i++ {
+				userDto := userInfos[i]
+				ipSectionArray := userDto.IpAddress
+				for j := 0; j < len(ipSectionArray); j++ {
+					ipSection := ipSectionArray[j]
+					var sip string
+					if strings.Contains(ipSection, "/") {
+						if strings.Contains(ipSection, ":") {
+							startIp := utils.GetStartIp(ipSection)
+							endIp := utils.GetEndIp(ipSection)
+							sip = startIp + "-" + endIp
+						}
+					} else if strings.Contains(ipSection, "-") {
+						sip = ipSection
+					} else { // 单个IP
+						sip = ipSection + "-" + ipSection
+					}
+
+					for z := 0; z < len(dstAddrs); z++ {
+						targetItem := dstAddrs[z]
+						tupleItem := map[string]string{}
+						mapStr := map[string]string{}
+						_ = json.Unmarshal([]byte(targetItem), mapStr)
+
+						dipStart := mapStr["dipStart"]
+						dipEnd := mapStr["dipEnd"]
+						dport := mapStr["dport"]
+
+						tupleItem["sip"] = sip
+						if dipStart != "0" {
+							tupleItem["dip"] = dipStart + "-" + dipEnd
+						}
+						if dport != "-1" {
+							tupleItem["dport"] = dport
+						}
+						tupleList = append(tupleList, tupleItem)
+					}
+				}
+			}
+		}*/
 	return tupleList
 }
 

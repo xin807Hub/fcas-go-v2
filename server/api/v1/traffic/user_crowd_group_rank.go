@@ -2,6 +2,7 @@ package traffic
 
 import (
 	"fcas_server/global"
+	"fcas_server/middleware"
 	"fcas_server/model/common/response"
 	trafficModel "fcas_server/model/traffic"
 	"fcas_server/service/traffic"
@@ -19,7 +20,7 @@ type userCrowdGroupRankApi struct {
 
 func NewUserCrowdGroupRankRouter(rg *gin.RouterGroup) {
 
-	router := rg.Group("traffic/userCrowdGroupRank")
+	router := rg.Group("traffic/userCrowdGroupRank").Use(middleware.OperationRecord())
 	dbName := global.CONFIG.ClickHouse.DbName
 	api := userCrowdGroupRankApi{
 		svc: traffic.NewUserCrowdGroupRankSvc(global.Log, global.ServiceDB, global.V2ClickhouseDB, dbName.V1, dbName.V2),
