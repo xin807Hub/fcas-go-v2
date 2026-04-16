@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-2">
     <el-card>
-      <div class=" inline-flex gap-2 justify-self-center w-full">
+      <div class="inline-flex w-full gap-2 justify-self-center">
         <date-picker
           v-model:start-time="searchForm.startTime"
           v-model:end-time="searchForm.endTime"
@@ -11,9 +11,10 @@
 
         <el-select
           v-model="searchForm.dataType"
+          clearable
           size="small"
+          placeholder="请选择目的IP或应用小类"
           style="width: 200px"
-          @change="onQuery"
         >
           <el-option
             v-for="item in dataTypeOptions"
@@ -25,13 +26,12 @@
 
         <el-input
           v-model="searchForm.srcIp"
-          :placeholder="`请输入源IP`"
+          placeholder="请输入源IP"
           clearable
           size="small"
           style="width: 200px"
         />
 
-        <!--按钮-->
         <el-button
           icon="Search"
           type="primary"
@@ -44,7 +44,7 @@
       </div>
     </el-card>
 
-    <div class="p-2 bg-white rounded-md shadow-md ">
+    <div class="rounded-md bg-white p-2 shadow-md">
       <el-table
         v-loading="loading"
         size="small"
@@ -60,7 +60,7 @@
         />
         <el-table-column
           prop="name"
-          :label="dataTypeOptions.find(item=>item.value===searchForm.dataType)?.label || 'keyword'"
+          :label="dataTypeOptions.find((item) => item.value === searchForm.dataType)?.label || '名称'"
           width="380"
           show-overflow-tooltip
         />
@@ -89,81 +89,105 @@
 
       <el-pagination
         v-model:current-page="pagination.page"
-        v-model:page-size="pagination.pageSize"
+        v-model:page-size="pagination.limit"
         class="mt-2"
         background
         size="small"
         :total="tableData.total"
         :page-sizes="[10, 50, 100]"
         layout="sizes, prev, pager, next, total"
-        @current-change="onQuery"
-        @size-change="onQuery"
+        @current-change="onPageChange"
+        @size-change="onPageChange"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue"
-import {userActionPageDataApi} from "@/api/traffic";
-import DatePicker from "@/components/searchItem/DatePicker.vue";
+import { onMounted, ref } from "vue";
 import dayjs from "dayjs";
-import {formatSize} from "@/utils/format";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
+import { userActionPageDataApi } from "@/api/traffic";
+import DatePicker from "@/components/searchItem/DatePicker.vue";
+import { formatSize } from "@/utils/format";
 
 const dataTypeOptions = [
-  {label: "目的IP", value: "dst_ip"},
-  {label: "应用小类", value: "app_id"}
-]
+  { label: "目的IP", value: "dst_ip" },
+  { label: "应用小类", value: "app_id" },
+];
 
-// 列表查询逻辑
 const searchForm = ref({
-  startTime: dayjs().subtract(1, 'hour').format('YYYY-MM-DD HH:mm:ss'),
-  endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  startTime: dayjs().subtract(1, "hour").format("YYYY-MM-DD HH:mm:ss"),
+  endTime: dayjs().format("YYYY-MM-DD HH:mm:ss"),
   dataType: "dst_ip",
-  srcIp: ''
-})
+  srcIp: "",
+});
 
 const tableData = ref({
   list: [],
   total: 0,
-})
+});
+
 const pagination = ref({
   page: 1,
   limit: 20,
-})
+});
 
-const loading = ref(false)
+const loading = ref(false);
+
+const resetTableData = () => {
+  tableData.value.list = [];
+  tableData.value.total = 0;
+};
+
+const validateQuery = () => {
+  if (!searchForm.value.dataType) {
+    ElMessage.warning("请选择目的IP或应用小类");
+    return false;
+  }
+  if (searchForm.value.srcIp.trim() === "") {
+    ElMessage.warning("请输入源IP");
+    return false;
+  }
+  return true;
+};
+
 const fetchTableData = async () => {
   const params = {
     ...searchForm.value,
     ...pagination.value,
-  }
-  // console.log('searchForm.value.srcIp ' ,searchForm.value.srcIp )
+  };
+
   try {
-    loading.value = true
-    const resp = await userActionPageDataApi(params)
-    tableData.value.list = resp?.data?.list || []  // 添加用于展开列的id字段
-    tableData.value.total = resp?.data?.totalCount || 0
+    loading.value = true;
+    const resp = await userActionPageDataApi(params);
+    tableData.value.list = resp?.data?.list || [];
+    tableData.value.total = resp?.data?.totalCount || 0;
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const onQuery = async () => {
-  console.log('xxxxxx')
-  if (searchForm.value.srcIp === '') {
-    ElMessage.warning(`请输入源IP`)
-    return
+  pagination.value.page = 1;
+  if (!validateQuery()) {
+    resetTableData();
+    return;
   }
-  await fetchTableData()
-}
+  await fetchTableData();
+};
 
-onMounted(async () => {
-  await fetchTableData()
-})
+const onPageChange = async () => {
+  if (!validateQuery()) {
+    resetTableData();
+    return;
+  }
+  await fetchTableData();
+};
+
+onMounted(() => {
+  resetTableData();
+});
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

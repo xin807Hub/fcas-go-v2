@@ -6,27 +6,62 @@ import (
 	"fcas_server/model/common/request"
 	"fcas_server/model/common/response"
 	"fcas_server/model/traffic"
+	"fcas_server/utils"
 	"fmt"
 	"gorm.io/gorm"
+	"time"
 )
 
-func GetGatherData(ckDb *gorm.DB, level1Data traffic.Level1Data, groupBy string) (traffic.Level1Data, error) {
-	var gatherData traffic.GatherData
-	subSelectSql := fmt.Sprintf(`%s,
-										avg(traffic_up_bps) AS avg_up_bps,
-										avg(traffic_dn_bps) AS avg_dn_bps, 
-										sum(traffic_up) AS up_byte, 
-										sum(traffic_dn) AS dn_byte, 
-										up_byte + dn_byte AS total_byte`, groupBy)
-	subTx := global.V2ClickhouseDB.Table("(?)", ckDb).Select(subSelectSql).Group(groupBy)
+func getQuerySpanSeconds(startTime, endTime string) (int, error) {
+	particle, err := utils.GetParticleByTimeRange(startTime, endTime)
+	if err != nil {
+		return 0, err
+	}
 
-	err := global.V2ClickhouseDB.Table("(?)", subTx).
-		Select(`sum(avg_up_bps) AS avg_up_bps,
-						sum(avg_dn_bps) AS avg_dn_bps, 
-						sum(up_byte) AS up_byte, 
-						sum(dn_byte) AS dn_byte, 
-						up_byte + dn_byte AS total_byte`).
-		Find(&gatherData).Error
+	start, err := time.Parse(global.DateTimeLayout, startTime)
+	if err != nil {
+		return 0, err
+	}
+	end, err := time.Parse(global.DateTimeLayout, endTime)
+	if err != nil {
+		return 0, err
+	}
+	if !end.After(start) {
+		return 0, fmt.Errorf("end time must be after start time")
+	}
+
+	totalSeconds := int(end.Sub(start).Seconds())
+	slotCount := totalSeconds / particle
+	if totalSeconds%particle != 0 {
+		slotCount++
+	}
+	return slotCount * particle, nil
+}
+
+func buildLevel1AverageExpr(totalExpr string, totalSpanSeconds int, alias string) string {
+	return fmt.Sprintf("Round((%s) * 8 / %d, 2) AS %s", totalExpr, totalSpanSeconds, alias)
+}
+
+func buildGatherDataQuery(ckDb *gorm.DB, totalSpanSeconds int) *gorm.DB {
+	aggregateTx := global.V2ClickhouseDB.Table("(?)", ckDb).
+		Select(`sum(traffic_up) AS total_up_byte,
+				sum(traffic_dn) AS total_dn_byte`)
+
+	// Wrap one more time so ClickHouse does not expand aliases back into aggregate
+	// expressions like sum(total_up_byte) when building avg_up_bps/up_byte.
+	return global.V2ClickhouseDB.Table("(?)", aggregateTx).
+		Select(fmt.Sprintf(`%s,
+				%s,
+				total_up_byte AS up_byte,
+				total_dn_byte AS dn_byte,
+				total_up_byte + total_dn_byte AS total_byte`,
+			buildLevel1AverageExpr("total_up_byte", totalSpanSeconds, "avg_up_bps"),
+			buildLevel1AverageExpr("total_dn_byte", totalSpanSeconds, "avg_dn_bps")))
+}
+
+func GetGatherData(ckDb *gorm.DB, level1Data traffic.Level1Data, _ string, totalSpanSeconds int) (traffic.Level1Data, error) {
+	var gatherData traffic.GatherData
+	err := buildGatherDataQuery(ckDb, totalSpanSeconds).Find(&gatherData).Error
 	if err != nil {
 		return level1Data, err
 	}

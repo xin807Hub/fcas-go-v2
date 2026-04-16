@@ -41,21 +41,51 @@ func TestGetIspDbMatchesV1DirectionAndFiltersEmptyISP(t *testing.T) {
 func TestBuildIspLevel1TableQueryFiltersEmptyISP(t *testing.T) {
 	setupDryRunDBs(t)
 
-	ckDb, err := getIspDb(buildIspReqParam())
+	param := buildIspReqParam()
+	ckDb, err := getIspDb(param)
+	require.NoError(t, err)
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
 	require.NoError(t, err)
 
-	stmt := buildIspLevel1TableQuery(ckDb).
+	stmt := buildIspLevel1TableQuery(ckDb, totalSpanSeconds).
 		Limit(20).
 		Find(&[]modelTraffic.IspLevel1TableData{}).
 		Statement
 	sql := stmt.SQL.String()
 
 	require.Contains(t, sql, "max(traffic_up_bps) AS max_up_bps")
-	require.Contains(t, sql, "avg(traffic_up_bps) AS avg_up_bps")
+	require.Contains(t, sql, "Round((sum(traffic_up)) * 8 / 3600, 2) AS avg_up_bps")
 	require.Contains(t, sql, "sum(traffic_up) AS up_byte")
 	require.Contains(t, sql, "ifNull(isp, '') != ''")
 	require.Contains(t, sql, "GROUP BY")
 	require.Contains(t, sql, "isp")
+}
+
+func TestGetQuerySpanSecondsRoundsUpToParticleBoundary(t *testing.T) {
+	seconds, err := getQuerySpanSeconds("2026-04-15 00:00:00", "2026-04-15 10:58:00")
+	require.NoError(t, err)
+	require.Equal(t, 39600, seconds)
+}
+
+func TestBuildGatherDataQueryAvoidsNestedAggregateAliases(t *testing.T) {
+	setupDryRunDBs(t)
+
+	param := buildIspReqParam()
+	ckDb, err := getIspDb(param)
+	require.NoError(t, err)
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
+	require.NoError(t, err)
+
+	stmt := buildGatherDataQuery(ckDb, totalSpanSeconds).
+		Find(&modelTraffic.GatherData{}).
+		Statement
+	sql := stmt.SQL.String()
+
+	require.Contains(t, sql, "sum(traffic_up) AS total_up_byte")
+	require.Contains(t, sql, "sum(traffic_dn) AS total_dn_byte")
+	require.Contains(t, sql, "Round((total_up_byte) * 8 / 3600, 2) AS avg_up_bps")
+	require.Contains(t, sql, "total_up_byte AS up_byte")
+	require.NotContains(t, sql, "sum(up_byte) AS up_byte")
 }
 
 func TestGetIspDbUsesConditionalIspForV2WithoutUserScope(t *testing.T) {

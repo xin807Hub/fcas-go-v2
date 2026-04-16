@@ -92,8 +92,15 @@ func getAppTypeDb(param traffic.AppTypeReqParam) (ckDb *gorm.DB, err error) {
 func (service AppTypeService) GetAppTypeRankLevel1(param traffic.AppTypeReqParam) (traffic.Level1Data, error) {
 	var level1Data = traffic.Level1Data{}
 	ckDb, err := getAppTypeDb(param)
+	if err != nil {
+		return level1Data, err
+	}
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
+	if err != nil {
+		return level1Data, err
+	}
 
-	level1Data, err = GetGatherData(ckDb, level1Data, "app_type")
+	level1Data, err = GetGatherData(ckDb, level1Data, "app_type", totalSpanSeconds)
 	if err != nil {
 		global.Log.Error("获取app大类1级汇总数据错误", zap.Error(err))
 		return level1Data, err
@@ -112,15 +119,22 @@ func (service AppTypeService) GetLevel1TableData(param traffic.AppTypeReqParam) 
 	var result response.PageResult
 	var level1Tables []traffic.AppTypeLevel1TableData
 	ckDb, err := getAppTypeDb(param)
+	if err != nil {
+		return result, err
+	}
 	if param.Limit == 0 {
 		param.Limit = 10
+	}
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
+	if err != nil {
+		return result, err
 	}
 	selectStr := "app_type, " +
 		"dictGet('app_type_dict','name',app_type) AS name," +
 		"max(traffic_up_bps) AS max_up_bps, " +
 		"max(traffic_dn_bps) AS max_dn_bps, " +
-		"avg(traffic_up_bps) AS avg_up_bps, " +
-		"avg(traffic_dn_bps) AS avg_dn_bps, " +
+		buildLevel1AverageExpr("sum(traffic_up)", totalSpanSeconds, "avg_up_bps") + ", " +
+		buildLevel1AverageExpr("sum(traffic_dn)", totalSpanSeconds, "avg_dn_bps") + ", " +
 		"sum(traffic_up) AS up_byte," +
 		"sum(traffic_dn) AS dn_byte," +
 		"up_byte + dn_byte AS total_byte"

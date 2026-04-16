@@ -210,7 +210,10 @@ const createPieStyleConfig = () => ({
   gradientBottomAlpha: 0.6,
   shadowBlur: 10,
   optimizeForMixed: true,
-  palette: props.styleConfig.theme || "default",
+  palette:
+    props.styleConfig.theme && props.styleConfig.theme !== "default"
+      ? props.styleConfig.theme
+      : "categorical",
   enableModernTooltip: true,
   ...props.styleConfig,
 });

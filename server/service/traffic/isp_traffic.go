@@ -195,9 +195,16 @@ func buildV2IspDbWithoutUserScope(tableName string, particle int, param traffic.
 
 // GetIspRankLevel1 1级运营商排名入口
 func (service IspService) GetIspRankLevel1(param traffic.IspReqParam) (level1Data traffic.Level1Data, err error) {
-	ckDb, _ := getIspDb(param)
+	ckDb, err := getIspDb(param)
+	if err != nil {
+		return level1Data, err
+	}
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
+	if err != nil {
+		return level1Data, err
+	}
 
-	level1Data, err = GetGatherData(ckDb, level1Data, "isp")
+	level1Data, err = GetGatherData(ckDb, level1Data, "isp", totalSpanSeconds)
 	if err != nil {
 		global.Log.Error("获取运营商1级汇总数据错误", zap.Error(err))
 		return level1Data, err
@@ -219,8 +226,15 @@ func (service IspService) GetLevel1TableData(param traffic.IspReqParam) (respons
 		param.Limit = 10
 	}
 
-	ckDb, _ := getIspDb(param)
-	err := buildIspLevel1TableQuery(ckDb).
+	ckDb, err := getIspDb(param)
+	if err != nil {
+		return result, err
+	}
+	totalSpanSeconds, err := getQuerySpanSeconds(param.StartTime, param.EndTime)
+	if err != nil {
+		return result, err
+	}
+	err = buildIspLevel1TableQuery(ckDb, totalSpanSeconds).
 		Count(&total).
 		Limit(param.Limit).
 		Offset((param.Page - 1) * param.Limit).
@@ -339,12 +353,12 @@ func buildIspTrafficQuery(baseDB *gorm.DB, subUserDb *gorm.DB, subDUserDb *gorm.
 	return applyNonEmptyIspFilter(ckDb, "isp")
 }
 
-func buildIspLevel1TableQuery(ckDb *gorm.DB) *gorm.DB {
+func buildIspLevel1TableQuery(ckDb *gorm.DB, totalSpanSeconds int) *gorm.DB {
 	selectSQL := "isp," +
 		"max(traffic_up_bps) AS max_up_bps, " +
 		"max(traffic_dn_bps) AS max_dn_bps, " +
-		"avg(traffic_up_bps) AS avg_up_bps, " +
-		"avg(traffic_dn_bps) AS avg_dn_bps, " +
+		buildLevel1AverageExpr("sum(traffic_up)", totalSpanSeconds, "avg_up_bps") + ", " +
+		buildLevel1AverageExpr("sum(traffic_dn)", totalSpanSeconds, "avg_dn_bps") + ", " +
 		"sum(traffic_up) AS up_byte," +
 		"sum(traffic_dn) AS dn_byte, " +
 		"up_byte + dn_byte AS total_byte "
