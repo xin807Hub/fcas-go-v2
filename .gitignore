@@ -31,3 +31,8 @@ server/log/
 
 *.cmd
 *.ps1
+!run_server_windows.cmd
+!server/run_windows.cmd
+!server/run_windows.ps1
+!server/setup_zmq_env.ps1
+!build_server_windows.cmd

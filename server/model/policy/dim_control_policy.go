@@ -6,16 +6,20 @@ import (
 
 type DimControlPolicyReq struct {
 	request.PageInfo
-	Id              int    `json:"id"`
-	Ids             []int  `json:"ids"`
-	PolicyName      string `json:"policyName" form:"policyName" `
-	UerType         string `json:"uerType" form:"uerType" `
-	UerCrowdGroupId string `json:"uerCrowdGroupId" form:"uerCrowdGroupId" `
-	UerCrowdId      string `json:"uerCrowdId" form:"uerCrowdId" `
-	UerName         string `json:"uerName" form:"uerName" `
-	UerId           string `json:"uerId" form:"uerId" `
-	AppTypeId       int    `json:"appTypeId" form:"appTypeId" `
-	AppId           int    `json:"appId" form:"appId" `
+	Id               int    `json:"id"`
+	Ids              []int  `json:"ids"`
+	PolicyName       string `json:"policyName" form:"policyName" `
+	UserType         string `json:"userType" form:"userType" `
+	UserCrowdGroupId string `json:"userCrowdGroupId" form:"userCrowdGroupId" `
+	UserCrowdId      string `json:"userCrowdId" form:"userCrowdId" `
+	UserId           string `json:"userId" form:"userId" `
+	UerType          string `json:"uerType" form:"uerType" `
+	UerCrowdGroupId  string `json:"uerCrowdGroupId" form:"uerCrowdGroupId" `
+	UerCrowdId       string `json:"uerCrowdId" form:"uerCrowdId" `
+	UerName          string `json:"uerName" form:"uerName" `
+	UerId            string `json:"uerId" form:"uerId" `
+	AppTypeId        int    `json:"appTypeId" form:"appTypeId" `
+	AppId            int    `json:"appId" form:"appId" `
 }
 
 type DimControlPolicy struct {

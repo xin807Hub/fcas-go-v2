@@ -8,9 +8,30 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"os"
+	"path/filepath"
 
 	"fcas_server/global"
 )
+
+func resolveConfigPath(config string) string {
+	if config == "" {
+		return config
+	}
+	if filepath.IsAbs(config) {
+		return config
+	}
+
+	for _, candidate := range []string{
+		config,
+		filepath.Join("server", config),
+	} {
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+	}
+
+	return config
+}
 
 // Config 优先级: 命令行 > 环境变量 > 默认值
 func Config(path ...string) {
@@ -42,6 +63,12 @@ func Config(path ...string) {
 	} else { // 函数传递的可变参数的第一个值赋值于config
 		config = path[0]
 		fmt.Printf("您正在使用func Config()传递的值,config的路径为%s\n", config)
+	}
+
+	originalConfig := config
+	config = resolveConfigPath(config)
+	if originalConfig != config {
+		fmt.Printf("resolved config path: %s\n", config)
 	}
 
 	v := viper.New()

@@ -44,3 +44,14 @@ func (DimControlPolicyActionService) SaveOrUpdate(action policy.DimControlPolicy
 	}
 	return nil
 }
+
+func (DimControlPolicyActionService) DeleteByPolicyIDs(policyIDs []int) error {
+	if len(policyIDs) == 0 {
+		return nil
+	}
+	if err := global.ServiceDB.Where("policy_id in ?", policyIDs).Delete(&policy.DimControlPolicyAction{}).Error; err != nil {
+		global.Log.Error("删除流控策略action失败", zap.Error(err))
+		return err
+	}
+	return nil
+}
