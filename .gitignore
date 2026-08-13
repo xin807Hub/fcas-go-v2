@@ -3,6 +3,9 @@ Thumbs.db
 
 .idea/
 .vscode/
+.run/
+
+*.exe
 
 *.log
 *.out
